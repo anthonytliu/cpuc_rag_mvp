@@ -1,5 +1,6 @@
 # 📁 rag_core.py
 # The core RAG system logic.
+
 import hashlib
 import json
 import logging
@@ -12,8 +13,9 @@ from typing import List, Dict, Optional
 from langchain.docstore.document import Document
 from langchain.prompts import PromptTemplate
 from langchain_community.vectorstores import Chroma
+from langchain_community.tools import DuckDuckGoSearchResults
+from tqdm import tqdm
 
-# Internal imports
 import config
 import data_processing
 import models
@@ -23,135 +25,325 @@ from memory import ConversationMemory
 logger = logging.getLogger(__name__)
 
 
-
 class CPUCRAGSystem:
     def __init__(self):
-        # --- Configuration ---
+        # --- Base Configuration ---
         self.base_dir = config.BASE_PDF_DIR
         self.db_dir = config.DB_DIR
         self.chunk_size = config.CHUNK_SIZE
         self.chunk_overlap = config.CHUNK_OVERLAP
 
-        # --- Model Initialization ---
+        # --- Models and Prompts ---
         self.embedding_model = models.get_embedding_model()
         self.llm = models.get_llm()
+        self.technical_prompt = PromptTemplate.from_template(config.ACCURACY_PROMPT_TEMPLATE)
+        # ENHANCEMENT: Initialize the new prompt and search tool
+        self.layman_prompt = PromptTemplate.from_template(config.LAYMAN_PROMPT_TEMPLATE)
+        self.search_tool = DuckDuckGoSearchResults()
 
-        # --- Component Initialization ---
+        # --- State and Components ---
         self.conversation_memory = ConversationMemory()
         self.vectordb: Optional[Chroma] = None
         self.retriever = None
         self.doc_hashes_file = self.db_dir / "document_hashes.json"
         self.doc_hashes = self._load_doc_hashes()
-        self.prompt = PromptTemplate.from_template(config.ACCURACY_PROMPT_TEMPLATE)
 
-        # --- Setup Checks ---
+        # --- Initial Setup ---
         self.db_dir.mkdir(exist_ok=True)
         if not self.base_dir.exists():
-            raise FileNotFoundError(f"Base directory does not exist: {self.base_dir}")
+            raise FileNotFoundError(f"Base PDF directory does not exist: {self.base_dir}")
         logger.info(f"CPUCRAGSystem initialized. PDF source: {self.base_dir.absolute()}")
 
-    ### ENHANCEMENT: New method to parse dates from filenames for sorting.
+    def query(self, question: str) -> Dict:
+        if not self.retriever:
+            logger.error("Query attempted but retriever is not initialized.")
+            return {"answer": "Error: RAG system's retriever is not ready.", "sources": [], "confidence_indicators": {}}
+        logger.info(f"--- Starting new query: '{question}' ---")
+        logger.info("Step 1: Performing RAG retrieval for technical answer.")
+        relevant_docs = self._hybrid_retrieval(question)
+        logger.info(f"Retrieved {len(relevant_docs)} documents for context.")
+        default_no_answer = "The provided context does not contain sufficient information to answer this question."
+        part1_answer = default_no_answer
+        if self.llm and relevant_docs:
+            context = self._enhance_context_for_llm(relevant_docs, question)
+            formatted_technical_prompt = self.technical_prompt.format(context=context, question=question,
+                                                                      current_date=datetime.now().strftime("%B %d, %Y"))
+            try:
+                # ### FIX: The invoke method returns an AIMessage object. Extract the string content. ###
+                response_message = self.llm.invoke(formatted_technical_prompt)
+                part1_answer = response_message.content  # <-- This is the fix
+
+                logger.info(f"Successfully generated Part 1 (technical answer). Length: {len(part1_answer)} chars.")
+            except Exception as e:
+                logger.error(f"Error invoking LLM for Part 1: {e}", exc_info=True)
+                part1_answer = "An error occurred while generating the technical answer from the corpus."
+        else:
+            logger.warning("No relevant documents found or LLM not available for Part 1.")
+
+        logger.info("Step 2: Generating layman's summary.")
+        part2_summary = "A simplified explanation could not be generated as no detailed technical answer was available."
+        if self.llm and part1_answer != default_no_answer:
+            formatted_layman_prompt = self.layman_prompt.format(technical_answer=part1_answer)
+            try:
+                # ### FIX: Apply the same fix here for the second LLM call. ###
+                response_summary_message = self.llm.invoke(formatted_layman_prompt)
+                part2_summary = response_summary_message.content  # <-- This is the fix
+
+                logger.info("Successfully generated Part 2 (layman's summary).")
+            except Exception as e:
+                logger.error(f"Error invoking LLM for Part 2: {e}", exc_info=True)
+                part2_summary = "An error occurred while simplifying the technical answer."
+        else:
+            logger.warning("Skipping layman's summary because Part 1 did not produce a valid answer.")
+
+        # --- PART 3: Perform an internet search for additional context ---
+        # ... (The rest of the query method is correct and does not need changes)
+        logger.info("Step 3: Performing internet search.")
+        part3_search = "Internet search did not return relevant results."
+        try:
+            search_query = self._create_search_query(question)
+            logger.info(f"Using search query: '{search_query}'")
+            search_results_str = self.search_tool.run(search_query)
+            logger.info(f"Raw search tool output: {search_results_str[:300]}...")
+            pattern = re.compile(r"snippet: (.*?),\s*title: (.*?),\s*link: (https?://[^\s,]+)")
+            matches = pattern.findall(search_results_str)
+            if matches:
+                search_results = [{'snippet': snippet.strip(), 'title': title.strip(), 'link': link.strip()} for
+                                  snippet, title, link in matches]
+                part3_search = self._format_search_results(search_results)
+                logger.info(f"Successfully parsed {len(matches)} search results using enhanced regex.")
+            else:
+                logger.warning("Could not parse search results with enhanced regex. Displaying raw text.")
+                part3_search = f"<p>Search returned results in an unrecognized format. Raw output:</p><p><code>{search_results_str}</code></p>"
+        except Exception as e:
+            logger.error(f"Internet search tool failed entirely: {e}", exc_info=True)
+            part3_search = "<p>An error occurred during the internet search.</p>"
+        sanitized_part1 = re.sub(r'```[\s\S]*?```', '', part1_answer).replace('`', '')
+        sanitized_part2 = re.sub(r'```[\s\S]*?```', '', part2_summary).replace('`', '')
+        final_answer = f"""
+    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+        <h3 style="border-bottom: 2px solid #0d6efd; padding-bottom: 5px; color: #0d6efd;">Part 1: Direct Answer from Corpus</h3>
+        <p style="white-space: pre-wrap;">{sanitized_part1}</p>
+        <br>
+        <h3 style="border-bottom: 2px solid #198754; padding-bottom: 5px; color: #198754;">Part 2: Simplified Explanation</h3>
+        <p style="white-space: pre-wrap;">{sanitized_part2}</p>
+        <br>
+        <h3 style="border-bottom: 2px solid #6c757d; padding-bottom: 5px; color: #6c757d;">Part 3: Additional Context from Web Search</h3>
+        <div style="white-space: pre-wrap;">{part3_search}</div>
+    </div>
+    """
+        sources = self._process_sources(relevant_docs)
+        confidence = self._assess_confidence(relevant_docs, part1_answer, question)
+        self.conversation_memory.add_query_context(question, final_answer, sources,
+                                                   self.conversation_memory.extract_entities(part1_answer))
+        return {"answer": final_answer, "sources": sources, "confidence_indicators": confidence}
+
+    def _format_search_results(self, results: List[Dict]) -> str:
+        """
+        Formats the list of search result dictionaries into a clean, unstyled Markdown string.
+        """
+        if not results:
+            return "No valid search results could be formatted."
+
+        # Use a list to build the parts of the string
+        markdown_parts = []
+        for i, result in enumerate(results):
+            title = result.get('title', 'No Title Provided').strip()
+            link = result.get('link', '').strip()
+            snippet = result.get('snippet', 'No snippet available.').strip()
+
+            # Create a standard Markdown link: [Title](URL)
+            # Only add the link if it's a valid http/https URL
+            if link.startswith('http'):
+                markdown_parts.append(f"{i + 1}. **[{title}]({link})**")
+            else:
+                markdown_parts.append(f"{i + 1}. **{title}** (Link not available)")
+
+            # Add the snippet on a new line, formatted as a blockquote
+            markdown_parts.append(f"> {snippet}")
+
+        # Join all parts with double newlines for proper spacing in Markdown
+        return "\n\n".join(markdown_parts)
+
+    # --- New Private Helper Methods for Search ---
+    def _create_search_query(self, question: str) -> str:
+        """Creates a search-engine friendly query from the user's question."""
+        # A more advanced version could use an LLM to generate a good search query.
+        return f"CPUC regulatory information on: {question}"
+
     def _parse_date_from_filename(self, pdf_path: Path) -> datetime:
-        """Parses a date from a filename, assuming YYYY-MM-DD or YYMMDD format."""
-        name = pdf_path.stem
-        # Try YYYY-MM-DD
-        match = re.search(r'(\d{4}-\d{2}-\d{2})', name)
-        if match:
-            return datetime.strptime(match.group(1), '%Y-%m-%d')
-        # Try YYMMDD
-        match = re.search(r'(\d{2})(\d{2})(\d{2})', name)
-        if match:
-            # Assumes 20xx century
-            return datetime.strptime(f"20{match.group(1)}-{match.group(2)}-{match.group(3)}", '%Y-%m-%d')
-        # Return a very old date if no date is found, to push it to the end
+        name = pdf_path.stem.lower()
+        decision_match = re.search(r'(?:d|r)\.(\d{2})-(\d{2})-\d{3}', name)
+        if decision_match:
+            try:
+                year_yy, month_mm = decision_match.groups()
+                year, month = 2000 + int(year_yy), int(month_mm)
+                if 1 <= month <= 12: return datetime(year, month, 1)
+            except (ValueError, IndexError):
+                pass
+
+        date_match = re.search(
+            r'(\d{4})[-_](\d{2})[-_](\d{2})|'r'(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+(\d{1,2}),?\s+(\d{4})',
+            name)
+        if date_match:
+            try:
+                if date_match.group(1):
+                    year, month, day = map(int, date_match.groups()[0:3])
+                    if 1 <= month <= 12: return datetime(year, month, day)
+                elif date_match.group(4):
+                    month_map = {'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6, 'jul': 7, 'aug': 8,
+                                 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12}
+                    month_str, day, year = date_match.group(4), int(date_match.group(5)), int(date_match.group(6))
+                    return datetime(year, month_map[month_str[:3]], day)
+            except (ValueError, IndexError, KeyError):
+                pass
+
         return datetime(1900, 1, 1)
 
     def build_vector_store(self, force_rebuild: bool = False):
-        """Builds or updates the vector store, prioritizing the latest PDFs."""
-        if not force_rebuild and self.db_dir.exists() and any(self.db_dir.iterdir()):
-            logger.info("Vector store already exists. Loading...")
-            self.setup_qa_pipeline()
-            return
-
         if force_rebuild and self.db_dir.exists():
+            logger.warning("Force rebuild requested. Deleting existing vector store.")
             shutil.rmtree(self.db_dir)
-        self.db_dir.mkdir(exist_ok=True)
+            self.vectordb = None
 
-        all_docs = []
-        pdf_files = list(self.base_dir.rglob("*.pdf"))
+        if not force_rebuild and self.vectordb is None and self.db_dir.exists() and any(self.db_dir.iterdir()):
+            try:
+                logger.info("Attempting to load existing vector store...")
+                self.vectordb = Chroma(persist_directory=str(self.db_dir), embedding_function=self.embedding_model)
+                logger.info("Vector store loaded successfully.")
+            except Exception as e:
+                logger.warning(f"Failed to load database: {e}. Rebuilding...")
+                shutil.rmtree(self.db_dir)
+                self.vectordb = None
 
-        ### ENHANCEMENT: Sort PDF files by date in filename (newest first).
-        pdf_files.sort(key=self._parse_date_from_filename, reverse=True)
-        logger.info(f"Found {len(pdf_files)} PDFs. Processing order (newest first): {[p.name for p in pdf_files[:5]]}...")
+        if self.vectordb is None:
+            logger.info("Building new vector store...")
+            self.db_dir.mkdir(exist_ok=True)
+            pdf_files = sorted(list(self.base_dir.rglob("*.pdf")), key=self._parse_date_from_filename, reverse=True)
 
-        for pdf_path in pdf_files:
-            if self._needs_update(pdf_path):
-                docs = data_processing.extract_text_from_pdf(pdf_path)
-                all_docs.extend(docs)
-                self.doc_hashes[str(pdf_path)] = data_processing.get_file_hash(pdf_path)
+            all_docs = []
+            for pdf_path in pdf_files:
+                if self._needs_update(pdf_path):
+                    docs = data_processing.extract_text_from_pdf(pdf_path)
+                    all_docs.extend(docs)
+                    self.doc_hashes[str(pdf_path)] = data_processing.get_file_hash(pdf_path)
+
+            if not all_docs:
+                logger.warning("No new documents to process. Existing DB (if any) will be used.")
             else:
-                logger.info(f"Skipping unchanged file: {pdf_path.name}")
+                chunked_docs = self._create_hierarchical_chunks(all_docs)
+                if chunked_docs:
+                    logger.info(f"Generating embeddings for {len(chunked_docs)} chunks. This will take a while...")
 
-        if not all_docs:
-            logger.warning("No new or updated documents to process.")
-            return
+                    ### FIX: Replace from_documents with a manual loop + progress bar ###
+                    # Create an empty DB first
+                    self.vectordb = Chroma(
+                        embedding_function=self.embedding_model,
+                        persist_directory=str(self.db_dir)
+                    )
 
-        # ### FIX: Hierarchical chunking is now a method of the class.
-        chunked_docs = self._create_hierarchical_chunks(all_docs)
+                    # Add documents in batches with a progress bar
+                    batch_size = 128  # A good batch size for local processing
+                    for i in tqdm(range(0, len(chunked_docs), batch_size), desc="Embedding Chunks"):
+                        batch = chunked_docs[i:i + batch_size]
+                        self.vectordb.add_documents(documents=batch)
 
-        if not chunked_docs:
-            logger.error("No chunks created. Aborting vector store build.")
-            return
+                    self.vectordb.persist()
+                    self._save_doc_hashes()
+                    logger.info("New vector store built and persisted.")
 
-        logger.info(f"Creating new vector store with {len(chunked_docs)} chunks.")
-        self.vectordb = Chroma.from_documents(
-            documents=chunked_docs,
-            embedding=self.embedding_model,
-            persist_directory=str(self.db_dir)
-        )
-        self.vectordb.persist()
-        self._save_doc_hashes()
-        logger.info("Vector store built successfully.")
         self.setup_qa_pipeline()
 
     def setup_qa_pipeline(self):
         if self.vectordb is None:
-            self.vectordb = Chroma(
-                persist_directory=str(self.db_dir),
-                embedding_function=self.embedding_model
-            )
+            logger.error("Vector DB is not available. Cannot setup QA pipeline.")
+            return
         self.retriever = self.vectordb.as_retriever(
             search_type="mmr",
-            search_kwargs={"k": 12, "fetch_k": 24, "lambda_mult": 0.3}
+            search_kwargs={"k": 20, "fetch_k": 50}
         )
         logger.info("QA pipeline and retriever are ready.")
 
-    def _rank_by_regulatory_relevance(self, documents: List[Document], query: str) -> List[Document]:
-        """Rank documents by regulatory relevance, prioritizing decisions over proposals."""
-        section_weights = {'order': 1.0, 'finding': 0.9, 'rule': 0.8, 'requirement': 0.7}
+    def _rank_by_regulatory_relevance(self, documents: List[Document]) -> List[Document]:
         scored_docs = []
-
         for doc in documents:
             score = 0.0
             doc_name_lower = doc.metadata.get('source', '').lower()
-            section_type = doc.metadata.get('section_type', 'unknown')
-            score += section_weights.get(section_type, 0.5)
-
-            ### ENHANCEMENT: Prioritize document types based on filename.
             if any(term in doc_name_lower for term in ["decision", "order", "ruling"]):
-                score += 0.4  # High boost for confirmed actions
-            if any(term in doc_name_lower for term in ["proposal", "draft", "testimony", "comment"]):
-                score -= 0.2  # Penalize preliminary documents
-
+                score += 0.5
+            elif any(term in doc_name_lower for term in ["resolution"]):
+                score += 0.4
+            elif any(term in doc_name_lower for term in ["proposal", "draft"]):
+                score -= 0.2
+            elif any(term in doc_name_lower for term in ["testimony", "comment"]):
+                score -= 0.3
+            try:
+                mod_time = doc.metadata.get('last_modified')
+                if mod_time:
+                    doc_date = datetime.fromisoformat(mod_time)
+                    days_old = (datetime.now() - doc_date).days
+                    if days_old < 90:
+                        score += 0.3
+                    elif days_old < 365:
+                        score += 0.1
+            except ValueError:
+                pass
             doc.metadata['relevance_score'] = round(score, 2)
             scored_docs.append((doc, score))
-
         scored_docs.sort(key=lambda x: x[1], reverse=True)
         return [doc for doc, score in scored_docs]
 
+    def _hybrid_retrieval(self, query: str) -> List[Document]:
+        enhanced_question = self._preprocess_query(query)
+        retrieved_docs = self.retriever.get_relevant_documents(enhanced_question)
+        ranked_docs = self._rank_by_regulatory_relevance(retrieved_docs)
+        unique_docs_map = {}
+        for doc in ranked_docs:
+            content_hash = hashlib.sha256(doc.page_content.encode()).hexdigest()
+            if content_hash not in unique_docs_map: unique_docs_map[content_hash] = doc
+        return list(unique_docs_map.values())[:config.TOP_K_DOCS]
+
+    def _identify_regulatory_sections(self, text: str) -> List[Dict]:
+        sections = []
+        section_patterns = {
+            'order': r'((?:IT IS ORDERED|O R D E R|O R D E R S)[\s\S]+)',
+            'finding': r'((?:FINDINGS OF FACT|F I N D I N G S)[\s\S]+?(?=(?:IT IS ORDERED|O R D E R|CONCLUSION)))',
+        }
+        for sec_type, pattern in section_patterns.items():
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match: sections.append({'type': sec_type, 'content': match.group(1).strip()})
+        return sections
+
+    def _create_hierarchical_chunks(self, documents: List[Document]) -> List[Document]:
+        all_chunks = []
+        for doc in documents:
+            sections = self._identify_regulatory_sections(doc.page_content)
+            if sections:
+                for section in sections:
+                    if len(section['content']) > self.chunk_size:
+                        section_doc = Document(page_content=section['content'],
+                                               metadata={**doc.metadata, 'section_type': section['type']})
+                        child_chunks = data_processing.chunk_documents([section_doc], self.chunk_size,
+                                                                       self.chunk_overlap)
+                        all_chunks.extend(child_chunks)
+                    else:
+                        parent_chunk = Document(
+                            page_content=section['content'],
+                            metadata={**doc.metadata, 'chunk_type': 'parent', 'section_type': section['type']}
+                        )
+                        all_chunks.append(parent_chunk)
+            else:
+                all_chunks.extend(data_processing.chunk_documents([doc], self.chunk_size, self.chunk_overlap))
+        logger.info(f"Hierarchical chunking complete. Total chunks created: {len(all_chunks)}")
+        return all_chunks
+
     def _load_doc_hashes(self) -> Dict[str, str]:
         if self.doc_hashes_file.exists():
-            with open(self.doc_hashes_file, 'r') as f: return json.load(f)
+            try:
+                with open(self.doc_hashes_file, 'r') as f:
+                    return json.load(f)
+            except json.JSONDecodeError:
+                return {}
         return {}
 
     def _save_doc_hashes(self):
@@ -162,437 +354,62 @@ class CPUCRAGSystem:
         return current_hash != self.doc_hashes.get(str(file_path))
 
     def _process_sources(self, documents: List[Document]) -> List[Dict]:
-        sources = []
-        for i, doc in enumerate(documents):
-            sources.append({
-                "rank": i + 1,
-                "document": doc.metadata.get("source", "Unknown"),
-                "proceeding": doc.metadata.get("proceeding", "Unknown"),
-                "page": doc.metadata.get("page", "Unknown"),
-                "excerpt": doc.page_content[:400] + "...",
-                ### FIX: Pass the relevance score calculated during ranking.
-                "relevance_score": doc.metadata.get("relevance_score", "N/A")
-            })
-        return sources
+        return [{
+            "rank": i + 1, "document": doc.metadata.get("source", "Unknown"),
+            "proceeding": doc.metadata.get("proceeding", "Unknown"), "page": doc.metadata.get("page", "Unknown"),
+            "excerpt": doc.page_content[:400] + "...", "relevance_score": doc.metadata.get("relevance_score", "N/A")
+        } for i, doc in enumerate(documents)]
 
     def _assess_confidence(self, documents: List[Document], answer: str, question: str) -> Dict:
-        """Enhanced confidence assessment with regulatory-specific indicators"""
-        # ### FIX: This is now a class method.
-        indicators = {
-            "num_sources": len(documents),
-            "has_exact_quotes": '"' in answer,
-            "source_consistency": utils.check_source_consistency(documents),
-            "model_type": "Local (Ollama)" if self.llm else "Retrieval Only",
-            # ... (your other confidence logic)
+        num_sources = len(documents)
+        question_words = set(question.lower().split())
+        answer_words = set(answer.lower().split())
+        alignment_score = len(question_words.intersection(answer_words)) / len(question_words) if question_words else 0
+        score_factors = [
+            (num_sources >= 3), (num_sources >= 5), utils.check_source_consistency(documents),
+            (alignment_score > 0.3), (alignment_score > 0.5),
+            bool(re.search(r'\[Source:.*?Page: \d+\]', answer))
+        ]
+        confidence_score = sum(score_factors) / len(score_factors)
+        if confidence_score > 0.8:
+            confidence_level = "High"
+        elif confidence_score > 0.5:
+            confidence_level = "Medium"
+        else:
+            confidence_level = "Low"
+        return {
+            "num_sources": num_sources, "source_consistency": utils.check_source_consistency(documents),
+            "question_alignment": round(alignment_score, 2), "overall_confidence": confidence_level,
+            "has_citations": '✅ Yes' if 'Source:' in answer else '❌ No',
         }
-        return indicators
 
-    def _hybrid_retrieval(self, query: str) -> List[Document]:
-        initial_docs = self.retriever.get_relevant_documents(query)
-        cross_refs = utils.find_cross_references(initial_docs)
-        try:
-            # 1. Standard semantic retrieval
-            semantic_docs = self.semantic_retriever.get_relevant_documents(query)
+    def _preprocess_query(self, question: str) -> str:
+        expansions = {"deadline": "deadline due date filing date", "requirement": "requirement must shall obligation",
+                      "cost": "cost rate tariff fee charge"}
+        processed_q = question.lower()
+        for term, terms in expansions.items():
+            if term in processed_q: return question + " " + terms
+        return question
 
-            # 2. Multi-pass retrieval for cross-references
-            cross_ref_docs = self._multi_pass_retrieval(query)
+    def _enhance_context_for_llm(self, relevant_docs: List[Document], question: str) -> str:
+        context_parts = []
+        for i, doc in enumerate(relevant_docs):
+            source_info = f"[Source: {doc.metadata.get('source', 'Unknown')}, Page: {doc.metadata.get('page', 'Unknown')}]"
+            content = utils.extract_and_enhance_dates(doc.page_content)
+            content = utils.highlight_regulatory_terms(content, question)
+            context_parts.append(f"{source_info}\n{content}")
+        return "\n\n---\n\n".join(context_parts)
 
-            # 3. Get parent sections for any child chunks
-            parent_docs = self._get_parent_sections(semantic_docs)
-
-            # 4. Combine and deduplicate
-            all_docs = semantic_docs + cross_ref_docs + parent_docs
-            seen_content = set()
-            unique_docs = []
-
-            for doc in all_docs:
-                content_hash = hashlib.sha256(doc.page_content.encode()).hexdigest()
-                if content_hash not in seen_content:
-                    seen_content.add(content_hash)
-                    unique_docs.append(doc)
-
-            unique_docs = initial_docs  # In a real scenario, combine with cross-ref docs
-            ranked_docs = self._rank_by_regulatory_relevance(unique_docs, query)
-            return ranked_docs[:config.TOP_K_DOCS]
-
-        except Exception as e:
-            logger.error(f"Enhanced hybrid retrieval error: {e}")
-            return self.retriever.get_relevant_documents(query)
-
-    def _get_parent_sections(self, documents: List[Document]) -> List[Document]:
-        """Get parent sections for child chunks"""
-        parent_docs = []
-
-        for doc in documents:
-            if doc.metadata.get('chunk_type') == 'child':
-                parent_title = doc.metadata.get('parent_title', '')
-                parent_section = doc.metadata.get('parent_section', '')
-
-                if parent_title:
-                    # Search for a parent document
-                    parent_query = f"section_title:{parent_title} OR section_type:{parent_section}"
-                    try:
-                        parent_results = self.vectordb.similarity_search(parent_query, k=2)
-                        for parent in parent_results:
-                            if parent.metadata.get('chunk_type') == 'parent':
-                                parent_docs.append(parent)
-                    except:
-                        pass
-
-        return parent_docs
-
-    def _multi_pass_retrieval(self, query: str) -> List[Document]:
-        """Enhanced multi-pass retrieval with cross-document analysis"""
-        # First pass - standard retrieval
-        initial_docs = self.retriever.get_relevant_documents(query)
-
-        # Second pass - find cross-referenced documents
-        cross_refs = utils._find_cross_references(initial_docs)
-
-        additional_docs = []
-        for source, refs in cross_refs.items():
-            for ref in refs:
-                # Search for documents containing these references
-                ref_query = f"proceeding {ref} OR docket {ref} OR case {ref}"
-                ref_docs = self.retriever.get_relevant_documents(ref_query)
-                additional_docs.extend(ref_docs[:2])  # Limit to avoid explosion
-
-        # Combine and deduplicate
-        all_docs = initial_docs + additional_docs
-        seen_content = set()
-        unique_docs = []
-
-        for doc in all_docs:
-            content_hash = hashlib.sha256(doc.page_content.encode()).hexdigest()
-            if content_hash not in seen_content:
-                seen_content.add(content_hash)
-                unique_docs.append(doc)
-
-        return unique_docs[:15]
-
-    def query(self, question: str) -> Dict:
-        """Enhanced query with better retrieval and context"""
-        if self.retriever is None:
-            self.setup_qa_pipeline()
-
-        if self.retriever is None:
-            return {"answer": "Error: System not properly initialized.", "sources": [], "confidence_indicators": {}}
-
-        try:
-            # Enhanced query preprocessing
-            enhanced_question = _preprocess_query(question)
-            logger.info(f"Enhanced query: {enhanced_question[:100]}...")
-
-            # Use hybrid retrieval if available
-            if hasattr(self, '_hybrid_retrieval'):
-                relevant_docs = self._hybrid_retrieval(enhanced_question)
-            else:
-                relevant_docs = self.retriever.get_relevant_documents(enhanced_question)
-
-            logger.info(f"Retrieved {len(relevant_docs)} documents")
-
-            # Enhanced context creation
-            context = _enhance_context_for_llm(relevant_docs, question)
-
-            # Add conversation context
-            conversation_context = self.conversation_memory.get_relevant_history(question)
-            if conversation_context:
-                context = f"CONVERSATION CONTEXT:\n{conversation_context}\n\n{context}"
-
-            # Generate answer with enhanced prompt
-            if self.llm is not None:
-                try:
-                    current_date = datetime.now().strftime("%B %d, %Y")
-
-                    # Enhanced prompt with better instructions
-                    enhanced_prompt = f"""You are a CPUC regulatory analyst. Current date: {current_date}
-
-                CONTEXT: {context}
-
-                QUESTION: {question}
-
-                INSTRUCTIONS: Provide a comprehensive answer that:
-                1. Directly answers the question with specific details
-                2. Cites exact sources (document name and page number)
-                3. Notes any time-sensitive information relative to {current_date}
-                4. Identifies any regulatory obligations, deadlines, or requirements
-                5. Explains the regulatory significance and implications
-                6. Clearly states if information is incomplete or if additional research is needed
-
-                Focus on being thorough and analytical - a human analyst would catch nuances, cross-references, and implications that might not be immediately obvious.
-
-                ANSWER:"""
-
-                    answer = self.llm(enhanced_prompt)
-
-                except Exception as e:
-                    logger.error(f"LLM error: {e}")
-                    answer = utils._create_fallback_answer(context, question)
-            else:
-                answer = utils._create_fallback_answer(context, question)
-
-            # Extract entities from answer for memory
-            entities = self.conversation_memory.extract_entities(answer)
-
-            # Enhanced result processing
-            processed_result = {
-                "answer": answer,
-                "sources": _process_sources(relevant_docs),
-                "confidence_indicators": utils._assess_confidence(self, relevant_docs, answer, question),
-                "query_enhancement": {
-                    "original_query": question,
-                    "enhanced_query": enhanced_question,
-                    "documents_retrieved": len(relevant_docs)
-                }
-            }
-
-            # Store in conversation memory
-            self.conversation_memory.add_query_context(question, answer, processed_result["sources"], entities)
-
-            return processed_result
-
-        except Exception as e:
-            logger.error(f"Query error: {e}")
-            return {
-                "answer": f"Error occurred during query: {e}",
-                "sources": [],
-                "confidence_indicators": {}
-            }
-
-    def _load_doc_hashes(self) -> Dict[str, str]:
-        """Load document hashes for change detection"""
-        if self.doc_hashes_file.exists():
-            try:
-                with open(self.doc_hashes_file, 'r') as f:
-                    return json.load(f)
-            except Exception as e:
-                logger.error(f"Error loading doc hashes: {e}")
-                return {}
-        return {}
-
-    def _save_doc_hashes(self):
-        """Save document hashes"""
-        try:
-            with open(self.doc_hashes_file, 'w') as f:
-                json.dump(self.doc_hashes, f, indent=2)
-        except Exception as e:
-            logger.error(f"Error saving doc hashes: {e}")
-
-    def _needs_update(self, file_path: Path) -> bool:
-        """Check if the file needs to be reprocessed"""
-        current_hash = data_processing._get_file_hash(file_path)
-        if not current_hash:
-            return False
-
-        stored_hash = self.doc_hashes.get(str(file_path), "")
-        needs_update = current_hash != stored_hash
-
-        if needs_update:
-            logger.info(f"File needs update: {file_path.name}")
-
-        return needs_update
-
-    def get_system_stats(self) -> Dict:
-        """Get system statistics"""
+    def get_system_stats(self) -> dict:
         stats = {
-            "embedding_model": self.embedding_model,
-            "llm_model": self.llm_model if self.llm else "None (Retrieval Only)",
-            "device": "MPS (M4 MacBook)",
-            "total_documents": len(self.doc_hashes),
-            "database_location": str(self.db_dir),
-            "chunk_size": self.chunk_size,
-            "chunk_overlap": self.chunk_overlap,
-            "base_directory": str(self.base_dir.absolute()),
+            "embedding_model": config.EMBEDDING_MODEL_NAME, "llm_model": config.OPENAI_MODEL_NAME,
+            "total_documents": len(self.doc_hashes), "chunk_size": self.chunk_size,
+            "chunk_overlap": self.chunk_overlap, "base_directory": str(self.base_dir),
             "base_directory_exists": self.base_dir.exists()
         }
-
         if self.vectordb:
             try:
-                collection = self.vectordb._collection
-                stats["total_chunks"] = collection.count()
-            except:
-                stats["total_chunks"] = "Unknown"
-
+                stats["total_chunks"] = self.vectordb._collection.count()
+            except Exception:
+                stats["total_chunks"] = "N/A"
         return stats
-
-
-def _process_sources(documents: List[Document]) -> List[Dict]:
-    """Enhanced source processing with better metadata"""
-    sources = []
-
-    for i, doc in enumerate(documents):
-        source_info = {
-            "rank": i + 1,
-            "document": doc.metadata.get("source", "Unknown"),
-            "proceeding": doc.metadata.get("proceeding", "Unknown"),
-            "page": doc.metadata.get("page", "Unknown"),
-            "excerpt": doc.page_content[:400] + "..." if len(doc.page_content) > 400 else doc.page_content,
-            "last_modified": doc.metadata.get("last_modified", "Unknown"),
-            "chunk_id": doc.metadata.get("chunk_id", "Unknown"),
-            "file_path": doc.metadata.get("file_path", "Unknown")
-        }
-        sources.append(source_info)
-
-    return sources
-
-
-def _enhance_context_for_llm(relevant_docs: List[Document], question: str) -> str:
-    """Enhanced context creation with better organization and analysis"""
-
-    # Sort documents by relevance score if available, otherwise by source
-    sorted_docs = sorted(relevant_docs, key=lambda x: (
-        x.metadata.get('source', 'Z'),
-        x.metadata.get('page', 999)
-    ))
-
-    # Group by document and analyze content
-    doc_groups = {}
-    for doc in sorted_docs:
-        source = doc.metadata.get('source', 'Unknown')
-        page = doc.metadata.get('page', 'Unknown')
-        key = f"{source}_p{page}"
-
-        if key not in doc_groups:
-            doc_groups[key] = {
-                'docs': [],
-                'combined_content': '',
-                'relevance_score': 0
-            }
-
-        doc_groups[key]['docs'].append(doc)
-        doc_groups[key]['combined_content'] += ' ' + doc.page_content
-
-        # Simple relevance scoring based on question keywords
-        question_words = set(question.lower().split())
-        content_words = set(doc.page_content.lower().split())
-        overlap = len(question_words.intersection(content_words))
-        doc_groups[key]['relevance_score'] += overlap
-
-    # Sort groups by relevance (handle both dict and list structures)
-    sorted_groups = sorted(doc_groups.items(),
-                           key=lambda x: x[1].get('relevance_score', 0) if isinstance(x[1], dict) else 0,
-                           reverse=True)
-
-    # Create enhanced context
-    context_parts = []
-    current_date = datetime.now().strftime("%B %d, %Y")
-
-    # Add context header with analysis guidance
-    context_header = f"""REGULATORY ANALYSIS CONTEXT (Current Date: {current_date})
-        Question: {question}
-
-        INSTRUCTIONS: The following document excerpts contain information relevant to the question. 
-        Pay special attention to:
-        - Specific deadlines, dates, and time-sensitive requirements
-        - Regulatory obligations and compliance requirements  
-        - Cross-references to other proceedings or documents
-        - Any conditional language ("if", "unless", "provided that")
-        - Effective dates and implementation timelines
-
-        DOCUMENT EXCERPTS:
-        """
-
-    # Process each document group
-    for i, (key, group_data) in enumerate(sorted_groups[:8]):  # Limit to top 8 most relevant
-        source_info = key.replace('_p', ' (Page ')
-        if not source_info.endswith('Unknown)'):
-            source_info += ')'
-
-        # Enhanced content processing
-        combined_content = group_data['combined_content'].strip()
-
-        # Add date contextualization
-        enhanced_content = utils._extract_and_enhance_dates(combined_content)
-
-        # Add regulatory term highlighting
-        enhanced_content = utils._highlight_regulatory_terms(enhanced_content, question)
-
-        # Truncate if too long but preserve important parts
-        if len(enhanced_content) > 2000:
-            # Try to keep content that matches question keywords
-            question_words = question.lower().split()
-            sentences = enhanced_content.split('. ')
-
-            # Score sentences by keyword overlap
-            scored_sentences = []
-            for sentence in sentences:
-                score = sum(1 for word in question_words if word in sentence.lower())
-                scored_sentences.append((sentence, score))
-
-            # Keep the highest scoring sentences
-            scored_sentences.sort(key=lambda x: x[1], reverse=True)
-            kept_sentences = [s[0] for s in scored_sentences[:10]]  # Top 10 sentences
-            enhanced_content = '. '.join(kept_sentences) + '...'
-
-        context_parts.append(f"[{i + 1}] {source_info}:\n{enhanced_content}")
-
-    return context_header + "\n\n".join(context_parts)
-
-
-def _preprocess_query(question: str) -> str:
-    """Enhanced query preprocessing with regulatory domain knowledge"""
-
-    # Regulatory domain expansions
-    regulatory_expansions = {
-        "deadline": ["deadline", "due date", "filing date", "submission date", "time limit", "expiration"],
-        "requirement": ["requirement", "must", "shall", "obligation", "mandate", "necessary", "required"],
-        "process": ["process", "procedure", "steps", "method", "timeline", "workflow", "protocol"],
-        "decision": ["decision", "ruling", "order", "determination", "finding", "conclusion", "resolution"],
-        "compliance": ["compliance", "comply", "adherence", "conformity", "meet requirements"],
-        "filing": ["filing", "submit", "file", "lodge", "present", "submission"],
-        "comment": ["comment", "public comment", "stakeholder input", "feedback", "response"],
-        "effective": ["effective", "implementation", "takes effect", "becomes effective", "in force"],
-        "proceeding": ["proceeding", "docket", "case", "matter", "rulemaking", "investigation"],
-        "party": ["party", "participant", "intervenor", "respondent", "applicant", "petitioner"],
-        "rate": ["rate", "tariff", "charge", "fee", "cost", "price", "billing"],
-        "utility": ["utility", "company", "corporation", "provider", "service provider"],
-        "commission": ["commission", "CPUC", "authority", "regulator", "agency"],
-        "hearing": ["hearing", "proceeding", "session", "meeting", "conference"],
-        "notice": ["notice", "notification", "announcement", "advisory", "alert"],
-        "application": ["application", "petition", "request", "proposal", "filing"],
-        "approval": ["approval", "authorization", "permit", "license", "consent"],
-        "review": ["review", "examination", "assessment", "evaluation", "analysis"],
-        "modification": ["modification", "amendment", "change", "revision", "update"],
-        "suspension": ["suspension", "halt", "stop", "pause", "discontinue"],
-        "violation": ["violation", "breach", "non-compliance", "infringement", "contravention"]
-    }
-
-    # Legal/regulatory phrases
-    legal_phrases = {
-        "burden of proof": ["burden of proof", "evidentiary standard", "proof required"],
-        "due process": ["due process", "procedural rights", "fair hearing"],
-        "good cause": ["good cause", "just cause", "sufficient reason"],
-        "public interest": ["public interest", "public benefit", "public welfare"],
-        "just and reasonable": ["just and reasonable", "fair and reasonable", "appropriate"]
-    }
-
-    original_query = question.lower()
-    expanded_terms = []
-
-    # Add regulatory term expansions
-    for base_term, expansions in regulatory_expansions.items():
-        if any(term in original_query for term in expansions):
-            expanded_terms.extend(expansions)
-
-    # Add legal phrase expansions
-    for phrase, expansions in legal_phrases.items():
-        if phrase in original_query:
-            expanded_terms.extend(expansions)
-
-    # Add temporal context terms
-    temporal_indicators = ["when", "deadline", "date", "time", "schedule", "expire", "effective", "due", "until"]
-    if any(indicator in original_query for indicator in temporal_indicators):
-        expanded_terms.extend(
-            ["date", "deadline", "timeline", "schedule", "effective date", "expiration", "due date"])
-
-    # Add proceeding context
-    expanded_terms.extend(["CPUC", "proceeding", "regulatory", "commission"])
-
-    # Create enhanced query
-    enhanced_query = question
-    if expanded_terms:
-        # Add unique terms only
-        unique_terms = list(set(expanded_terms))
-        enhanced_query += " " + " ".join(unique_terms)
-
-    return enhanced_query

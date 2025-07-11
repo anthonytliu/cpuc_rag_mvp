@@ -1,7 +1,9 @@
+# 📁 requirements.txt
 langchain
 langchain-community
 langchain-huggingface
 ollama
+langchain-openai
 chromadb
 pdfplumber
 streamlit

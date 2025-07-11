@@ -1,34 +1,41 @@
-# 📁 models.py
-# Initializes and provides access to LLM and embedding models.
+# 📁 models.py (Code Changes Only)
 
 import logging
+import streamlit as st
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.llms import Ollama
-from config import EMBEDDING_MODEL_NAME, LLM_MODEL, OLLAMA_BASE_URL
+from langchain_openai import ChatOpenAI
+
+import config
+from config import EMBEDDING_MODEL_NAME, OPENAI_MODEL_NAME, OPENAI_API_KEY
 
 logger = logging.getLogger(__name__)
 
+
 def get_embedding_model():
-    """Initializes and returns the HuggingFace embedding model."""
     logger.info(f"Loading embedding model: {EMBEDDING_MODEL_NAME}")
-    # ### FIX: You can add device mapping for GPU/MPS acceleration if needed
-    # model_kwargs = {'device': 'mps'} # for Apple Silicon
-    # return HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME, model_kwargs=model_kwargs)
     return HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
 
+
 def get_llm():
-    """Initializes and returns the Ollama LLM."""
+    """Initializes and returns the OpenAI LLM."""
+    if not OPENAI_API_KEY:
+        logger.error("OPENAI_API_KEY not found in environment variables.")
+        st.error("OpenAI API key is not configured. Please set it in your .env file.")
+        return None
+
     try:
-        llm = Ollama(
-            model=LLM_MODEL,
+        llm = ChatOpenAI(
+            model=config.OPENAI_MODEL_NAME,
             temperature=0,
-            base_url=OLLAMA_BASE_URL
+            api_key=OPENAI_API_KEY,
+            max_tokens=4096  # gpt-4o-mini has a large context window, but we can cap output
         )
-        # Test connection
+        # A lightweight test to ensure the key is valid
         llm.invoke("Hi")
-        logger.info(f"Successfully connected to Ollama with model: {LLM_MODEL}")
+        logger.info(f"Successfully connected to OpenAI with model: {OPENAI_MODEL_NAME}")
         return llm
     except Exception as e:
-        logger.error(f"Failed to connect to Ollama at {OLLAMA_BASE_URL}. Please ensure Ollama is running.")
-        logger.error(f"Error: {e}")
+        logger.error(f"Failed to connect to OpenAI API: {e}")
+        # This will also catch authentication errors from a bad key
+        st.error(f"Failed to initialize OpenAI model: {e}")
         return None

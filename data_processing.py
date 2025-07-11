@@ -25,6 +25,7 @@ def get_file_hash(file_path: Path) -> str:
         logger.error(f"Error calculating hash for {file_path}: {e}")
         return ""
 
+
 def extract_text_from_pdf(pdf_path: Path) -> List[Document]:
     """Extracts text from each page of a PDF and returns a list of Documents."""
     documents = []
@@ -48,21 +49,24 @@ def extract_text_from_pdf(pdf_path: Path) -> List[Document]:
     logger.info(f"Extracted {len(documents)} pages from {pdf_path.name}")
     return documents
 
+
 def chunk_documents(documents: List[Document], chunk_size: int, chunk_overlap: int) -> List[Document]:
-    """Split documents into chunks with overlap"""
+    """Splits a list of Documents into smaller chunks."""
     if not documents:
-        logger.warning("No documents to chunk")
         return []
-    logger.info(f"Chunking {len(documents)} documents...")
+
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
         length_function=len,
-        separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""]
+        separators=["\n\n", "\n", ". ", "! ", "? ", ", ", " ", ""],
+        add_start_index=True,
     )
     chunked_docs = splitter.split_documents(documents)
+
     for i, doc in enumerate(chunked_docs):
-        doc.metadata["chunk_id"] = i
+        doc.metadata["chunk_id"] = f"{doc.metadata.get('source', 'unknown')}_chunk_{i}"
         doc.metadata["chunk_length"] = len(doc.page_content)
-    logger.info(f"Created {len(chunked_docs)} chunks")
+
+    logger.info(f"Created {len(chunked_docs)} chunks from {len(documents)} documents.")
     return chunked_docs
