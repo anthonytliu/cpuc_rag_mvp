@@ -2,9 +2,13 @@
 langchain
 langchain-community
 langchain-huggingface
-ollama
 langchain-openai
 chromadb
-pdfplumber
+pdfplumber>=0.10.0
 streamlit
 python-dotenv
+tqdm
+streamlit-timeline
+pytesseract
+pillow
+tabulate

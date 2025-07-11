@@ -4,8 +4,21 @@
 import re
 from datetime import datetime
 from typing import List, Dict
+import pytesseract
+from PIL import Image
+import io
 
 from langchain.docstore.document import Document
+
+def extract_text_from_image(image_bytes: bytes) -> str:
+    """Extracts text from an image using OCR (Tesseract)."""
+    try:
+        image = Image.open(io.BytesIO(image_bytes))  # Open from bytes
+        text = pytesseract.image_to_string(image)
+        return text.strip()
+    except Exception as e:
+        print(f"OCR Error: {e}")  # Log the error
+        return ""
 
 def extract_and_enhance_dates(text: str) -> str:
     """Advanced date extraction with regulatory timeline intelligence."""

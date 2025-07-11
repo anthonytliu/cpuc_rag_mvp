@@ -1,7 +1,6 @@
 # 📁 rag_core.py
 # The core RAG system logic.
 
-import hashlib
 import json
 import logging
 import re
@@ -10,10 +9,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Optional
 
+from langchain.chains import LLMChain
+from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.docstore.document import Document
 from langchain.prompts import PromptTemplate
-from langchain_community.vectorstores import Chroma
+from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain_community.tools import DuckDuckGoSearchResults
+from langchain_community.vectorstores import Chroma
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from tqdm import tqdm
 
 import config
@@ -28,6 +32,7 @@ logger = logging.getLogger(__name__)
 class CPUCRAGSystem:
     def __init__(self):
         # --- Base Configuration ---
+        self.num_chunks = None
         self.base_dir = config.BASE_PDF_DIR
         self.db_dir = config.DB_DIR
         self.chunk_size = config.CHUNK_SIZE
@@ -54,89 +59,176 @@ class CPUCRAGSystem:
             raise FileNotFoundError(f"Base PDF directory does not exist: {self.base_dir}")
         logger.info(f"CPUCRAGSystem initialized. PDF source: {self.base_dir.absolute()}")
 
-    def query(self, question: str) -> Dict:
+    def query(self, question: str):
         if not self.retriever:
-            logger.error("Query attempted but retriever is not initialized.")
-            return {"answer": "Error: RAG system's retriever is not ready.", "sources": [], "confidence_indicators": {}}
+            yield "Error: RAG system's retriever is not ready."
+            return
+
+        yield "Step 1: Analyzing query and generating a hypothetical answer for smarter search (HyDE)..."
         logger.info(f"--- Starting new query: '{question}' ---")
-        logger.info("Step 1: Performing RAG retrieval for technical answer.")
-        relevant_docs = self._hybrid_retrieval(question)
-        logger.info(f"Retrieved {len(relevant_docs)} documents for context.")
+
+        hyde_prompt = ChatPromptTemplate.from_messages([
+            ("system",
+             "You are an expert on regulatory documents. Generate a detailed, hypothetical answer to the user's question. This answer should contain the kind of language, data, and specific terms you would expect to find in a real document that answers the question."),
+            ("human", "{question}")
+        ])
+        hyde_chain = hyde_prompt | self.llm | StrOutputParser()
+        hypothetical_answer = hyde_chain.invoke({"question": question})
+        logger.info(f"Generated Hypothetical Answer for embedding: {hypothetical_answer[:200]}...")
+
+        yield "Step 2: Retrieving relevant documents from the corpus..."
+        base_retriever = self.vectordb.as_retriever(search_kwargs={"k": 20})
+        retrieved_docs = base_retriever.get_relevant_documents(hypothetical_answer)
+
+        if re.search(r'["$]\d', question) or re.search(r'\d{1,2}[/-]\d{1,2}[/-]\d{2,4}', question):
+            yield "Literal term detected. Performing additional keyword search..."
+            keyword_docs = self.vectordb.similarity_search(question, k=10)
+            retrieved_docs.extend(keyword_docs)
+            unique_ids = set()
+            all_docs = retrieved_docs
+            retrieved_docs = []
+            for doc in all_docs:
+                if doc.metadata['chunk_id'] not in unique_ids:
+                    retrieved_docs.append(doc)
+                    unique_ids.add(doc.metadata['chunk_id'])
+
+        if not retrieved_docs:
+            yield "Could not find relevant documents to answer the question."
+            return
+
+        yield "Step 3: Re-ranking documents for precision..."
+        reranked_docs = self._rerank_documents(question, retrieved_docs)
+        final_docs = reranked_docs[:config.TOP_K_DOCS]
+        logger.info(f"Re-ranked documents. Top source: {final_docs[0].metadata['source'] if final_docs else 'None'}")
+
+        yield "Step 4: Synthesizing technical answer..."
         default_no_answer = "The provided context does not contain sufficient information to answer this question."
         part1_answer = default_no_answer
-        if self.llm and relevant_docs:
-            context = self._enhance_context_for_llm(relevant_docs, question)
-            formatted_technical_prompt = self.technical_prompt.format(context=context, question=question,
-                                                                      current_date=datetime.now().strftime("%B %d, %Y"))
-            try:
-                # ### FIX: The invoke method returns an AIMessage object. Extract the string content. ###
-                response_message = self.llm.invoke(formatted_technical_prompt)
-                part1_answer = response_message.content  # <-- This is the fix
+        if self.llm:
+            context = self._enhance_context_for_llm(final_docs, question)
+            prompt = self.technical_prompt.format(context=context, question=question,
+                                                  current_date=datetime.now().strftime("%B %d, %Y"))
+            part1_answer_obj = self.llm.invoke(prompt)
+            part1_answer = part1_answer_obj.content
 
-                logger.info(f"Successfully generated Part 1 (technical answer). Length: {len(part1_answer)} chars.")
-            except Exception as e:
-                logger.error(f"Error invoking LLM for Part 1: {e}", exc_info=True)
-                part1_answer = "An error occurred while generating the technical answer from the corpus."
-        else:
-            logger.warning("No relevant documents found or LLM not available for Part 1.")
-
-        logger.info("Step 2: Generating layman's summary.")
-        part2_summary = "A simplified explanation could not be generated as no detailed technical answer was available."
+        yield "Step 5: Generating a simplified explanation..."
+        part2_summary = "A simplified explanation could not be generated."
         if self.llm and part1_answer != default_no_answer:
-            formatted_layman_prompt = self.layman_prompt.format(technical_answer=part1_answer)
-            try:
-                # ### FIX: Apply the same fix here for the second LLM call. ###
-                response_summary_message = self.llm.invoke(formatted_layman_prompt)
-                part2_summary = response_summary_message.content  # <-- This is the fix
+            prompt = self.layman_prompt.format(technical_answer=part1_answer)
+            part2_summary_obj = self.llm.invoke(prompt)
+            part2_summary = part2_summary_obj.content
 
-                logger.info("Successfully generated Part 2 (layman's summary).")
-            except Exception as e:
-                logger.error(f"Error invoking LLM for Part 2: {e}", exc_info=True)
-                part2_summary = "An error occurred while simplifying the technical answer."
-        else:
-            logger.warning("Skipping layman's summary because Part 1 did not produce a valid answer.")
+        yield "Step 6: Performing internet search for additional context..."
+        part3_search = self._perform_internet_search(question)
 
-        # --- PART 3: Perform an internet search for additional context ---
-        # ... (The rest of the query method is correct and does not need changes)
-        logger.info("Step 3: Performing internet search.")
-        part3_search = "Internet search did not return relevant results."
+        yield "Finalizing the response..."
+        final_answer = self._assemble_final_answer(part1_answer, part2_summary, part3_search)
+
+        result_payload = {
+            "answer": final_answer,
+            "sources": self._process_sources(final_docs),
+            "confidence_indicators": self._assess_confidence(final_docs, part1_answer, question)
+        }
+        yield result_payload
+
+        # Replace the query function and add these new helper methods in rag_core.py
+
+    def _perform_internet_search(self, question: str) -> str:
+        """Performs and formats an internet search."""
         try:
             search_query = self._create_search_query(question)
-            logger.info(f"Using search query: '{search_query}'")
             search_results_str = self.search_tool.run(search_query)
-            logger.info(f"Raw search tool output: {search_results_str[:300]}...")
             pattern = re.compile(r"snippet: (.*?),\s*title: (.*?),\s*link: (https?://[^\s,]+)")
             matches = pattern.findall(search_results_str)
             if matches:
-                search_results = [{'snippet': snippet.strip(), 'title': title.strip(), 'link': link.strip()} for
-                                  snippet, title, link in matches]
-                part3_search = self._format_search_results(search_results)
-                logger.info(f"Successfully parsed {len(matches)} search results using enhanced regex.")
-            else:
-                logger.warning("Could not parse search results with enhanced regex. Displaying raw text.")
-                part3_search = f"<p>Search returned results in an unrecognized format. Raw output:</p><p><code>{search_results_str}</code></p>"
+                search_results = [{'snippet': s.strip(), 'title': t.strip(), 'link': l.strip()} for s, t, l in
+                                  matches]
+                return self._format_search_results(search_results)
+            return f"<p>Search returned unstructured results.</p>"
         except Exception as e:
-            logger.error(f"Internet search tool failed entirely: {e}", exc_info=True)
-            part3_search = "<p>An error occurred during the internet search.</p>"
-        sanitized_part1 = re.sub(r'```[\s\S]*?```', '', part1_answer).replace('`', '')
-        sanitized_part2 = re.sub(r'```[\s\S]*?```', '', part2_summary).replace('`', '')
-        final_answer = f"""
+            logger.error(f"Internet search failed: {e}")
+            return "<p>An error occurred during internet search.</p>"
+
+    def _assemble_final_answer(self, part1, part2, part3) -> str:
+        """Assembles the final HTML-formatted answer string."""
+        sanitized_part1 = re.sub(r'```[\s\S]*?```', '', part1).replace('`', '')
+        sanitized_part2 = re.sub(r'```[\s\S]*?```', '', part2).replace('`', '')
+        return f"""
     <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #dee2e6;">
         <h3 style="border-bottom: 2px solid #0d6efd; padding-bottom: 5px; color: #0d6efd;">Part 1: Direct Answer from Corpus</h3>
         <p style="white-space: pre-wrap;">{sanitized_part1}</p>
-        <br>
+    </div>
+    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #dee2e6;">
         <h3 style="border-bottom: 2px solid #198754; padding-bottom: 5px; color: #198754;">Part 2: Simplified Explanation</h3>
         <p style="white-space: pre-wrap;">{sanitized_part2}</p>
-        <br>
+    </div>
+    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #dee2e6;">
         <h3 style="border-bottom: 2px solid #6c757d; padding-bottom: 5px; color: #6c757d;">Part 3: Additional Context from Web Search</h3>
-        <div style="white-space: pre-wrap;">{part3_search}</div>
+        <div style="white-space: pre-wrap;">{part3}</div>
     </div>
     """
-        sources = self._process_sources(relevant_docs)
-        confidence = self._assess_confidence(relevant_docs, part1_answer, question)
-        self.conversation_memory.add_query_context(question, final_answer, sources,
-                                                   self.conversation_memory.extract_entities(part1_answer))
-        return {"answer": final_answer, "sources": sources, "confidence_indicators": confidence}
+
+    def _rerank_documents(self, question: str, documents: List[Document]) -> List[Document]:
+        """Uses an LLM to re-rank documents based on their direct relevance to the query."""
+        if not documents:
+            return []
+
+        prompt = ChatPromptTemplate.from_messages([
+            SystemMessagePromptTemplate.from_template(
+                "You are a helpful expert relevance-ranking assistant. Your task is to re-rank the following documents based on their relevance to the user's question. "
+                "Output ONLY a comma-separated list of the document chunk_ids, from most relevant to least relevant. "
+                "Pay close attention to specific numbers, dates, or names mentioned in the question."
+            ),
+            HumanMessagePromptTemplate.from_template(
+                "QUESTION: {question}\n\n"
+                "DOCUMENTS:\n{context}\n\n"
+                "RANKED CHUNK_IDS:"
+            )
+        ])
+
+        # Format the context with clear separators
+        context_str = "\n---\n".join(
+            [f"CHUNK_ID: {doc.metadata['chunk_id']}\nCONTENT: {doc.page_content}" for doc in documents])
+
+        rerank_chain = prompt | self.llm | StrOutputParser()
+
+        try:
+            result = rerank_chain.invoke({"question": question, "context": context_str})
+            ranked_ids = [id.strip() for id in result.split(',')]
+
+            # Create a mapping of id to document for easy sorting
+            doc_map = {doc.metadata['chunk_id']: doc for doc in documents}
+
+            # Return documents in the new order, adding any that the LLM missed to the end
+            sorted_docs = [doc_map[id] for id in ranked_ids if id in doc_map]
+
+            # Add any documents that the LLM might have missed
+            seen_ids = set(ranked_ids)
+            sorted_docs.extend([doc for id, doc in doc_map.items() if id not in seen_ids])
+
+            return sorted_docs
+        except Exception as e:
+            logger.error(f"Re-ranking failed: {e}. Returning original order.")
+            return documents
+
+    # def _get_all_docs_for_timeline(self):
+    #     """Retrieves metadata for all unique documents in the DB."""
+    #     if not self.vectordb:
+    #         return []
+    #
+    #     # This is a bit of a hack for Chroma; for a production system, you'd use a proper metadata store.
+    #     all_results = self.vectordb._collection.get(include=["metadatas"])
+    #
+    #     unique_docs = {}
+    #     for metadata in all_results['metadatas']:
+    #         source_name = metadata.get('source')
+    #         if source_name not in unique_docs:
+    #             unique_docs[source_name] = {
+    #                 'source': source_name,
+    #                 'file_path': metadata.get('file_path'),
+    #                 'last_modified': metadata.get('last_modified')
+    #             }
+    #     return list(unique_docs.values())
 
     def _format_search_results(self, results: List[Dict]) -> str:
         """
@@ -231,7 +323,9 @@ class CPUCRAGSystem:
             if not all_docs:
                 logger.warning("No new documents to process. Existing DB (if any) will be used.")
             else:
-                chunked_docs = self._create_hierarchical_chunks(all_docs)
+                logger.info(f"Chunking {len(all_docs)} documents...")
+                chunked_docs = data_processing.chunk_documents(all_docs, self.chunk_size, self.chunk_overlap)
+                self.num_chunks = len(chunked_docs)  # <- NEW! Store this.
                 if chunked_docs:
                     logger.info(f"Generating embeddings for {len(chunked_docs)} chunks. This will take a while...")
 
@@ -255,53 +349,64 @@ class CPUCRAGSystem:
         self.setup_qa_pipeline()
 
     def setup_qa_pipeline(self):
+        """
+        Sets up an advanced retrieval pipeline using a Self-Querying Retriever.
+        This allows the LLM to write its own filters based on the user's query.
+        """
         if self.vectordb is None:
             logger.error("Vector DB is not available. Cannot setup QA pipeline.")
             return
-        self.retriever = self.vectordb.as_retriever(
-            search_type="mmr",
-            search_kwargs={"k": 20, "fetch_k": 50}
+
+        # --- Define the metadata fields that the LLM can use to filter ---
+        metadata_field_info = [
+            AttributeInfo(
+                name="source",
+                description="The filename of the document, e.g., 'D.24-05-015 Decision.pdf'",
+                type="string",
+            ),
+            AttributeInfo(
+                name="page",
+                description="The page number within the document.",
+                type="integer",
+            ),
+            # You could add more, like 'content_type' if you wanted to query only tables.
+        ]
+        document_content_description = "Regulatory text from CPUC documents."
+
+        # --- Set up the Self-Querying Retriever ---
+        # It uses the LLM to translate a user's question into a structured query
+        self.retriever = SelfQueryRetriever.from_llm(
+            self.llm,
+            self.vectordb,
+            document_content_description,
+            metadata_field_info,
+            verbose=True,  # Set to True for great debugging logs
         )
-        logger.info("QA pipeline and retriever are ready.")
+        logger.info("Advanced Self-Querying QA pipeline is ready.")
 
     def _rank_by_regulatory_relevance(self, documents: List[Document]) -> List[Document]:
+        """Rank documents by regulatory relevance, prioritizing decisions over proposals."""
+        section_weights = {'order': 1.0, 'finding': 0.9, 'rule': 0.8, 'requirement': 0.7}
         scored_docs = []
         for doc in documents:
             score = 0.0
             doc_name_lower = doc.metadata.get('source', '').lower()
+            section_type = doc.metadata.get('section_type', 'unknown')
+            chunk_type = doc.metadata.get('chunk_type', 'regular')
+            score += section_weights.get(section_type, 0.5)  # Base score
+            score += section_weights.get(chunk_type, 0.5)
+
+            ### ENHANCEMENT: Prioritize document types based on filename.
             if any(term in doc_name_lower for term in ["decision", "order", "ruling"]):
-                score += 0.5
-            elif any(term in doc_name_lower for term in ["resolution"]):
-                score += 0.4
-            elif any(term in doc_name_lower for term in ["proposal", "draft"]):
-                score -= 0.2
-            elif any(term in doc_name_lower for term in ["testimony", "comment"]):
-                score -= 0.3
-            try:
-                mod_time = doc.metadata.get('last_modified')
-                if mod_time:
-                    doc_date = datetime.fromisoformat(mod_time)
-                    days_old = (datetime.now() - doc_date).days
-                    if days_old < 90:
-                        score += 0.3
-                    elif days_old < 365:
-                        score += 0.1
-            except ValueError:
-                pass
+                score += 0.4  # High boost for confirmed actions
+            if any(term in doc_name_lower for term in ["proposal", "draft"]):
+                score -= 0.2  # Penalize preliminary documents
+
             doc.metadata['relevance_score'] = round(score, 2)
             scored_docs.append((doc, score))
+
         scored_docs.sort(key=lambda x: x[1], reverse=True)
         return [doc for doc, score in scored_docs]
-
-    def _hybrid_retrieval(self, query: str) -> List[Document]:
-        enhanced_question = self._preprocess_query(query)
-        retrieved_docs = self.retriever.get_relevant_documents(enhanced_question)
-        ranked_docs = self._rank_by_regulatory_relevance(retrieved_docs)
-        unique_docs_map = {}
-        for doc in ranked_docs:
-            content_hash = hashlib.sha256(doc.page_content.encode()).hexdigest()
-            if content_hash not in unique_docs_map: unique_docs_map[content_hash] = doc
-        return list(unique_docs_map.values())[:config.TOP_K_DOCS]
 
     def _identify_regulatory_sections(self, text: str) -> List[Dict]:
         sections = []
