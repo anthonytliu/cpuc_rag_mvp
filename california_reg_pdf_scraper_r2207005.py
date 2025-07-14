@@ -1,16 +1,17 @@
 # 📁 california-reg-rag (Enhanced version with diff check for new PDFs)
 # Scrape all documents and metadata for CPUC Proceeding R2207005
 
+import hashlib
 import json
 import os
 import re
 import time
-import hashlib
 from datetime import datetime
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from googlesearch import search
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
@@ -132,6 +133,63 @@ def update_download_history(proceeding_num, document_url, file_name, download_st
     }
 
     save_download_history(proceeding_num, history_data)
+
+
+# Add this new function definition after your existing helper functions
+# (e.g., after update_download_history)
+
+def download_pdfs_from_url(page_url, proceeding_num, pdf_dir):
+    """Visits a URL, finds all PDF links, and downloads unique ones."""
+    print(f"  -> Visiting search result: {page_url}")
+    new_downloads_count = 0
+    try:
+        page_response = requests.get(page_url, timeout=30, headers={'User-Agent': 'Mozilla/5.0'})
+        page_response.raise_for_status()
+        soup = BeautifulSoup(page_response.text, 'html.parser')
+
+        history = load_download_history(proceeding_num)
+
+        # Find all links that end with .pdf
+        pdf_links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].lower().endswith('.pdf')]
+
+        for link in pdf_links:
+            # Construct the full URL if it's relative
+            if link.startswith('/'):
+                pdf_url = "https://www.cpuc.ca.gov" + link
+            else:
+                pdf_url = link
+
+            # Use the URL itself as a unique identifier to check against history
+            url_hash = create_url_hash(pdf_url)
+            if url_hash not in history:
+                filename = sanitize_filename(os.path.basename(pdf_url))
+                pdf_path = os.path.join(pdf_dir, filename)
+
+                print(f"    Found new PDF: {filename}")
+                try:
+                    pdf_response = requests.get(pdf_url, stream=True, timeout=60)
+                    pdf_response.raise_for_status()
+
+                    with open(pdf_path, 'wb') as f:
+                        for chunk in pdf_response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+
+                    print(f"    ✅ Downloaded: {filename}")
+                    # Use the full PDF URL for the history entry
+                    update_download_history(proceeding_num, pdf_url, filename, "downloaded_from_google_search")
+                    new_downloads_count += 1
+                    time.sleep(0.5)  # Be respectful
+
+                except Exception as download_error:
+                    print(f"    ⚠️ Failed to download {pdf_url}: {download_error}")
+                    update_download_history(proceeding_num, pdf_url, filename, "error_google_search")
+            else:
+                print(f"    Skipping already downloaded PDF: {history[url_hash]['filename']}")
+
+    except Exception as e:
+        print(f"  ⚠️ Could not process page {page_url}: {e}")
+
+    return new_downloads_count
 
 
 print("🚀 Launching Chrome...")
@@ -315,6 +373,36 @@ for PROCEEDING in PROCEEDING_LIST:
         print(f"  📚 URLs in download history: {len(download_history)}")
         print(f"  🆕 New URLs downloaded: {len(new_urls)}")
         print(f"  📄 CSV files processed: {len(csv_files_downloaded)}")
+
+        # ### NEW FEATURE: Google Search for supplementary documents ###
+        print("\n" + "=" * 50)
+        print(f"🔎 Starting Google Search for supplementary documents related to {PROCEEDING}...")
+
+        # Format proceeding number for search (e.g., R2207005 -> "R.22-07-005")
+        search_term_formatted = f"R.{PROCEEDING[1:3]}-{PROCEEDING[3:5]}-{PROCEEDING[5:]}"
+        query = f'"{search_term_formatted}" site:cpuc.ca.gov'
+        print(f"  -> Using search query: {query}")
+
+        google_results_to_check = []
+        try:
+            # Use tld="com" for google.com, num=5 to get top 5 results
+            for url in search(query):
+                if "cpuc.ca.gov" in url:
+                    google_results_to_check.append(url)
+        except Exception as search_error:
+            print(f"  ⚠️ Google search failed: {search_error}")
+
+        # Process the top 3 valid results
+        if not google_results_to_check:
+            print("  -> No relevant cpuc.ca.gov links found in top Google results.")
+        else:
+            print(f"  -> Found {len(google_results_to_check)} relevant links. Checking top 3 for unique PDFs...")
+            total_new_from_google = 0
+            for page_url in google_results_to_check[:3]:
+                total_new_from_google += download_pdfs_from_url(page_url, PROCEEDING, PDF_DIR)
+
+            print(f"  ✅ Google search supplementary download complete. Found {total_new_from_google} new PDFs.")
+        print("=" * 50 + "\n")
 
     except Exception as e:
         print(f"❌ Failed: {e}")

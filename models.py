@@ -2,6 +2,7 @@
 
 import logging
 import streamlit as st
+from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
 
@@ -12,8 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 def get_embedding_model():
-    logger.info(f"Loading embedding model: {EMBEDDING_MODEL_NAME}")
-    return HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+    return SentenceTransformerEmbeddings(
+        model_name="BAAI/bge-base-en-v1.5",
+        model_kwargs={"device": "mps"}
+    )
 
 
 def get_llm():

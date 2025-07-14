@@ -18,6 +18,8 @@ from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_community.vectorstores import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
+from concurrent.futures import ProcessPoolExecutor, as_completed
+
 from tqdm import tqdm
 
 import config
@@ -211,25 +213,6 @@ class CPUCRAGSystem:
             logger.error(f"Re-ranking failed: {e}. Returning original order.")
             return documents
 
-    # def _get_all_docs_for_timeline(self):
-    #     """Retrieves metadata for all unique documents in the DB."""
-    #     if not self.vectordb:
-    #         return []
-    #
-    #     # This is a bit of a hack for Chroma; for a production system, you'd use a proper metadata store.
-    #     all_results = self.vectordb._collection.get(include=["metadatas"])
-    #
-    #     unique_docs = {}
-    #     for metadata in all_results['metadatas']:
-    #         source_name = metadata.get('source')
-    #         if source_name not in unique_docs:
-    #             unique_docs[source_name] = {
-    #                 'source': source_name,
-    #                 'file_path': metadata.get('file_path'),
-    #                 'last_modified': metadata.get('last_modified')
-    #             }
-    #     return list(unique_docs.values())
-
     def _format_search_results(self, results: List[Dict]) -> str:
         """
         Formats the list of search result dictionaries into a clean, unstyled Markdown string.
@@ -259,7 +242,7 @@ class CPUCRAGSystem:
 
     # --- New Private Helper Methods for Search ---
     def _create_search_query(self, question: str) -> str:
-        """Creates a search-engine friendly query from the user's question."""
+        """Creates a search-engine-friendly query from the user's question."""
         # A more advanced version could use an LLM to generate a good search query.
         return f"CPUC regulatory information on: {question}"
 
@@ -293,60 +276,116 @@ class CPUCRAGSystem:
         return datetime(1900, 1, 1)
 
     def build_vector_store(self, force_rebuild: bool = False):
+        """
+        Builds or incrementally updates the vector store in parallel.
+        - On first run, processes all PDFs in parallel and builds the DB.
+        - On subsequent runs, finds new/modified/deleted PDFs and syncs the DB.
+        """
         if force_rebuild and self.db_dir.exists():
             logger.warning("Force rebuild requested. Deleting existing vector store.")
             shutil.rmtree(self.db_dir)
             self.vectordb = None
+            self.doc_hashes = {}  # Reset hashes on rebuild
 
-        if not force_rebuild and self.vectordb is None and self.db_dir.exists() and any(self.db_dir.iterdir()):
+        # --- Load or Initialize VectorDB ---
+        if self.db_dir.exists() and any(self.db_dir.iterdir()):
+            logger.info("Loading existing vector store...")
             try:
-                logger.info("Attempting to load existing vector store...")
-                self.vectordb = Chroma(persist_directory=str(self.db_dir), embedding_function=self.embedding_model)
-                logger.info("Vector store loaded successfully.")
+                self.vectordb = Chroma(
+                    persist_directory=str(self.db_dir),
+                    embedding_function=self.embedding_model
+                )
             except Exception as e:
-                logger.warning(f"Failed to load database: {e}. Rebuilding...")
+                logger.error(f"Failed to load existing DB, it might be corrupt. Rebuilding. Error: {e}")
                 shutil.rmtree(self.db_dir)
                 self.vectordb = None
+                self.doc_hashes = {}
 
         if self.vectordb is None:
-            logger.info("Building new vector store...")
-            self.db_dir.mkdir(exist_ok=True)
-            pdf_files = sorted(list(self.base_dir.rglob("*.pdf")), key=self._parse_date_from_filename, reverse=True)
+            logger.info("Initializing new vector store.")
+            # We initialize an empty DB. We will add documents to it incrementally.
+            self.vectordb = Chroma(
+                embedding_function=self.embedding_model,
+                persist_directory=str(self.db_dir)
+            )
 
-            all_docs = []
-            for pdf_path in pdf_files:
-                if self._needs_update(pdf_path):
-                    docs = data_processing.extract_text_from_pdf(pdf_path)
-                    all_docs.extend(docs)
-                    self.doc_hashes[str(pdf_path)] = data_processing.get_file_hash(pdf_path)
+        # --- Sync Files: Find new, modified, and deleted PDFs ---
+        current_pdf_paths = {p for p in self.base_dir.rglob("*.pdf")}
+        stored_pdf_paths = set(Path(p) for p in self.doc_hashes.keys())
 
-            if not all_docs:
-                logger.warning("No new documents to process. Existing DB (if any) will be used.")
-            else:
-                logger.info(f"Chunking {len(all_docs)} documents...")
-                chunked_docs = data_processing.chunk_documents(all_docs, self.chunk_size, self.chunk_overlap)
-                self.num_chunks = len(chunked_docs)  # <- NEW! Store this.
-                if chunked_docs:
-                    logger.info(f"Generating embeddings for {len(chunked_docs)} chunks. This will take a while...")
+        # Files to add/update are those present on disk whose hash is new or different.
+        files_to_process = []
+        for pdf_path in current_pdf_paths:
+            if self._needs_update(pdf_path):
+                files_to_process.append(pdf_path)
 
-                    ### FIX: Replace from_documents with a manual loop + progress bar ###
-                    # Create an empty DB first
-                    self.vectordb = Chroma(
-                        embedding_function=self.embedding_model,
-                        persist_directory=str(self.db_dir)
-                    )
+        # Files to delete are those in the hash map but no longer on disk.
+        files_to_delete = stored_pdf_paths - current_pdf_paths
 
-                    # Add documents in batches with a progress bar
-                    batch_size = 128  # A good batch size for local processing
-                    for i in tqdm(range(0, len(chunked_docs), batch_size), desc="Embedding Chunks"):
-                        batch = chunked_docs[i:i + batch_size]
-                        self.vectordb.add_documents(documents=batch)
+        # --- Process Deletions ---
+        if files_to_delete:
+            logger.info(f"Found {len(files_to_delete)} files to delete from vector store.")
+            ids_to_delete = []
+            for pdf_path in files_to_delete:
+                # Find all chunks associated with this file to delete them
+                results = self.vectordb.get(where={"source": pdf_path.name})
+                ids_to_delete.extend(results['ids'])
+                del self.doc_hashes[str(pdf_path)]  # Remove from our hash tracking
 
-                    self.vectordb.persist()
-                    self._save_doc_hashes()
-                    logger.info("New vector store built and persisted.")
+            if ids_to_delete:
+                logger.info(f"Deleting {len(ids_to_delete)} chunks from the database.")
+                self.vectordb.delete(ids=ids_to_delete)
 
+        if not files_to_process:
+            logger.info("No new or modified files to process. Vector store is up to date.")
+        else:
+            logger.info(f"Found {len(files_to_process)} new/modified files to process in parallel.")
+            all_new_chunks = []
+
+            with ProcessPoolExecutor() as executor:
+                futures = {executor.submit(data_processing.extract_and_chunk_with_docling, pdf_path): pdf_path for
+                           pdf_path in files_to_process}
+
+                # ### FIX: Initialize tqdm and update its description in the loop ###
+                progress_bar = tqdm(as_completed(futures), total=len(files_to_process), desc="Processing PDFs")
+
+                for future in progress_bar:
+                    pdf_path = futures[future]
+                    # Update the progress bar to show which file is currently being processed or has just finished.
+                    progress_bar.set_description(f"Processing {pdf_path.name}")
+
+                    try:
+                        doc_chunks = future.result()
+                        if doc_chunks:
+                            all_new_chunks.extend(doc_chunks)
+                            self.doc_hashes[str(pdf_path)] = data_processing.get_file_hash(pdf_path)
+                            # Optionally, log completion here as well
+                            logger.info(f"✅ Completed processing for: {pdf_path.name}")
+                    except Exception as exc:
+                        logger.error(f'{pdf_path.name} generated an exception: {exc}')
+
+            # --- Add new chunks to the database ---
+            if all_new_chunks:
+                logger.info(f"Adding {len(all_new_chunks)} new chunks to the vector store...")
+                # Add the newly processed chunks to the existing DB instance
+                self.vectordb.add_documents(documents=all_new_chunks)
+                logger.info("Finished adding new chunks.")
+
+        # --- Persist all changes and save hashes ---
+        logger.info("Persisting all database changes...")
+        self.vectordb.persist()
+        self._save_doc_hashes()
+        logger.info("Database sync complete.")
         self.setup_qa_pipeline()
+
+    # The helper _needs_update is still required.
+    def _needs_update(self, file_path: Path) -> bool:
+        """Checks if a file is new or has been modified since the last run."""
+        current_hash = data_processing.get_file_hash(file_path)
+        if not current_hash:
+            return False
+        stored_hash = self.doc_hashes.get(str(file_path))
+        return current_hash != stored_hash
 
     def setup_qa_pipeline(self):
         """
@@ -419,29 +458,6 @@ class CPUCRAGSystem:
             if match: sections.append({'type': sec_type, 'content': match.group(1).strip()})
         return sections
 
-    def _create_hierarchical_chunks(self, documents: List[Document]) -> List[Document]:
-        all_chunks = []
-        for doc in documents:
-            sections = self._identify_regulatory_sections(doc.page_content)
-            if sections:
-                for section in sections:
-                    if len(section['content']) > self.chunk_size:
-                        section_doc = Document(page_content=section['content'],
-                                               metadata={**doc.metadata, 'section_type': section['type']})
-                        child_chunks = data_processing.chunk_documents([section_doc], self.chunk_size,
-                                                                       self.chunk_overlap)
-                        all_chunks.extend(child_chunks)
-                    else:
-                        parent_chunk = Document(
-                            page_content=section['content'],
-                            metadata={**doc.metadata, 'chunk_type': 'parent', 'section_type': section['type']}
-                        )
-                        all_chunks.append(parent_chunk)
-            else:
-                all_chunks.extend(data_processing.chunk_documents([doc], self.chunk_size, self.chunk_overlap))
-        logger.info(f"Hierarchical chunking complete. Total chunks created: {len(all_chunks)}")
-        return all_chunks
-
     def _load_doc_hashes(self) -> Dict[str, str]:
         if self.doc_hashes_file.exists():
             try:
@@ -453,10 +469,6 @@ class CPUCRAGSystem:
 
     def _save_doc_hashes(self):
         with open(self.doc_hashes_file, 'w') as f: json.dump(self.doc_hashes, f, indent=2)
-
-    def _needs_update(self, file_path: Path) -> bool:
-        current_hash = data_processing.get_file_hash(file_path)
-        return current_hash != self.doc_hashes.get(str(file_path))
 
     def _process_sources(self, documents: List[Document]) -> List[Dict]:
         return [{
