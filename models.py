@@ -5,17 +5,36 @@ import streamlit as st
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
+import torch
 
 import config
 from config import EMBEDDING_MODEL_NAME, OPENAI_MODEL_NAME, OPENAI_API_KEY
 
 logger = logging.getLogger(__name__)
 
+def get_optimal_device():
+    """Detects and returns the optimal PyTorch device for this machine."""
+    # Check for NVIDIA CUDA GPU
+    if torch.cuda.is_available():
+        logger.info("✅ Found NVIDIA CUDA GPU. Using 'cuda'.")
+        return "cuda"
+    # Check for Apple Silicon GPU
+    if torch.backends.mps.is_available():
+        logger.info("✅ Found Apple Silicon GPU. Using 'mps'.")
+        return "mps"
+    # Fallback to CPU
+    logger.info("⚠️ No GPU found. Falling back to 'cpu'.")
+    return "cpu"
+
+# Determine the device once when the module is loaded.
+DEVICE = get_optimal_device()
+
 
 def get_embedding_model():
+
     return SentenceTransformerEmbeddings(
         model_name="BAAI/bge-base-en-v1.5",
-        model_kwargs={"device": "mps"}
+        model_kwargs={"device": DEVICE}
     )
 
 
