@@ -25,8 +25,10 @@ EMBEDDING_MODEL_NAME = "intfloat/e5-large-v2"
 # LLM_MODEL = "llama3.2"
 # OLLAMA_BASE_URL = "http://localhost:11434"
 
+PDF_SERVER_PORT = 8001
+
 # New OpenAI Model Settings
-OPENAI_MODEL_NAME = "gpt-4o-mini"
+OPENAI_MODEL_NAME = "gpt-4.1-2025-04-14"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # --- RAG/CHUNKING SETTINGS ---

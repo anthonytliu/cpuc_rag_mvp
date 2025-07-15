@@ -3,6 +3,7 @@
 
 import json
 import logging
+import multiprocessing
 import re
 import shutil
 from datetime import datetime
@@ -62,113 +63,119 @@ class CPUCRAGSystem:
         logger.info(f"CPUCRAGSystem initialized. PDF source: {self.base_dir.absolute()}")
 
     def query(self, question: str):
+        """Enhanced query method with superseding logic."""
         if not self.retriever:
             yield "Error: RAG system's retriever is not ready."
             return
 
-        yield "Step 1: Analyzing query and generating a hypothetical answer for smarter search (HyDE)..."
-        logger.info(f"--- Starting new query: '{question}' ---")
-
+        yield "Step 1: Generating hypothetical answer for search..."
         hyde_prompt = ChatPromptTemplate.from_messages([
             ("system",
-             "You are an expert on regulatory documents. Generate a detailed, hypothetical answer to the user's question. This answer should contain the kind of language, data, and specific terms you would expect to find in a real document that answers the question."),
+             "You are a helpful assistant that generates a hypothetical, detailed answer to the user's question. This answer will be used to find similar real documents."),
             ("human", "{question}")
         ])
         hyde_chain = hyde_prompt | self.llm | StrOutputParser()
         hypothetical_answer = hyde_chain.invoke({"question": question})
-        logger.info(f"Generated Hypothetical Answer for embedding: {hypothetical_answer[:200]}...")
 
-        yield "Step 2: Retrieving relevant documents from the corpus..."
-        base_retriever = self.vectordb.as_retriever(search_kwargs={"k": 20})
+        base_retriever = self.vectordb.as_retriever(search_kwargs={"k": 30})  # Get more docs initially
         retrieved_docs = base_retriever.get_relevant_documents(hypothetical_answer)
 
-        if re.search(r'["$]\d', question) or re.search(r'\d{1,2}[/-]\d{1,2}[/-]\d{2,4}', question):
-            yield "Literal term detected. Performing additional keyword search..."
-            keyword_docs = self.vectordb.similarity_search(question, k=10)
-            retrieved_docs.extend(keyword_docs)
-            unique_ids = set()
-            all_docs = retrieved_docs
-            retrieved_docs = []
-            for doc in all_docs:
-                if doc.metadata['chunk_id'] not in unique_ids:
-                    retrieved_docs.append(doc)
-                    unique_ids.add(doc.metadata['chunk_id'])
+        # Apply the enhanced reranking with recency and superseding logic
+        reranked_docs = data_processing.rerank_documents_with_recency(self, question, retrieved_docs)
 
-        if not retrieved_docs:
-            yield "Could not find relevant documents to answer the question."
-            return
-
-        yield "Step 3: Re-ranking documents for precision..."
-        reranked_docs = self._rerank_documents(question, retrieved_docs)
         final_docs = reranked_docs[:config.TOP_K_DOCS]
-        logger.info(f"Re-ranked documents. Top source: {final_docs[0].metadata['source'] if final_docs else 'None'}")
+        logger.info(f"Using {len(final_docs)} final documents for context.")
 
-        yield "Step 4: Synthesizing technical answer..."
+        yield "Step 2: Synthesizing technical answer with citation placeholders..."
         default_no_answer = "The provided context does not contain sufficient information to answer this question."
         part1_answer = default_no_answer
-        if self.llm:
+        raw_part1_answer = ""
+
+        if self.llm and final_docs:
             context = self._enhance_context_for_llm(final_docs, question)
             prompt = self.technical_prompt.format(context=context, question=question,
                                                   current_date=datetime.now().strftime("%B %d, %Y"))
-            part1_answer_obj = self.llm.invoke(prompt)
-            part1_answer = part1_answer_obj.content
+            response_message = self.llm.invoke(prompt)
+            raw_part1_answer = response_message.content
 
-        yield "Step 5: Generating a simplified explanation..."
+            # Post-process the raw answer to insert HTML links for citations
+            part1_answer = self._add_inline_citations(raw_part1_answer)
+
+        yield "Step 3: Generating simplified explanation..."
         part2_summary = "A simplified explanation could not be generated."
-        if self.llm and part1_answer != default_no_answer:
-            prompt = self.layman_prompt.format(technical_answer=part1_answer)
-            part2_summary_obj = self.llm.invoke(prompt)
-            part2_summary = part2_summary_obj.content
-
-        yield "Step 6: Performing internet search for additional context..."
-        part3_search = self._perform_internet_search(question)
+        if self.llm and raw_part1_answer != default_no_answer:
+            prompt = self.layman_prompt.format(technical_answer=raw_part1_answer)  # Use the raw answer for summary
+            summary_message = self.llm.invoke(prompt)
+            part2_summary = summary_message.content
 
         yield "Finalizing the response..."
-        final_answer = self._assemble_final_answer(part1_answer, part2_summary, part3_search)
+
+        # Assemble the final answer with clean HTML.
+        final_answer = self._assemble_final_answer(part1_answer, part2_summary)
 
         result_payload = {
             "answer": final_answer,
+            "raw_part1_answer": raw_part1_answer,  # For debugging
             "sources": self._process_sources(final_docs),
-            "confidence_indicators": self._assess_confidence(final_docs, part1_answer, question)
+            "confidence_indicators": self._assess_confidence(final_docs, raw_part1_answer, question)
         }
         yield result_payload
 
-        # Replace the query function and add these new helper methods in rag_core.py
+        ### FIX: New method to process citation placeholders and create HTML links.
 
-    def _perform_internet_search(self, question: str) -> str:
-        """Performs and formats an internet search."""
-        try:
-            search_query = self._create_search_query(question)
-            search_results_str = self.search_tool.run(search_query)
-            pattern = re.compile(r"snippet: (.*?),\s*title: (.*?),\s*link: (https?://[^\s,]+)")
-            matches = pattern.findall(search_results_str)
-            if matches:
-                search_results = [{'snippet': s.strip(), 'title': t.strip(), 'link': l.strip()} for s, t, l in
-                                  matches]
-                return self._format_search_results(search_results)
-            return f"<p>Search returned unstructured results.</p>"
-        except Exception as e:
-            logger.error(f"Internet search failed: {e}")
-            return "<p>An error occurred during internet search.</p>"
+    def _add_inline_citations(self, text: str) -> str:
+        """Finds [CITATION:...] placeholders and replaces them with HTML links."""
 
-    def _assemble_final_answer(self, part1, part2, part3) -> str:
-        """Assembles the final HTML-formatted answer string."""
-        sanitized_part1 = re.sub(r'```[\s\S]*?```', '', part1).replace('`', '')
-        sanitized_part2 = re.sub(r'```[\s\S]*?```', '', part2).replace('`', '')
-        return f"""
-    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #dee2e6;">
-        <h3 style="border-bottom: 2px solid #0d6efd; padding-bottom: 5px; color: #0d6efd;">Part 1: Direct Answer from Corpus</h3>
-        <p style="white-space: pre-wrap;">{sanitized_part1}</p>
-    </div>
-    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #dee2e6;">
-        <h3 style="border-bottom: 2px solid #198754; padding-bottom: 5px; color: #198754;">Part 2: Simplified Explanation</h3>
-        <p style="white-space: pre-wrap;">{sanitized_part2}</p>
-    </div>
-    <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #dee2e6;">
-        <h3 style="border-bottom: 2px solid #6c757d; padding-bottom: 5px; color: #6c757d;">Part 3: Additional Context from Web Search</h3>
-        <div style="white-space: pre-wrap;">{part3}</div>
-    </div>
+        # Define the replacement function at the correct scope (top-level inside the method)
+        def replace_match(match):
+            filename = match.group("filename").strip()
+            # The page number in the prompt is now just a number, not "page_N"
+            page = match.group("page").strip()
+
+            # The URL points to our local PDF server.
+            # Adobe's format for opening a PDF to a specific page is #page=N
+            url = f"http://localhost:{config.PDF_SERVER_PORT}/{filename}#page={page}"
+
+            # The HTML for the clickable, styled citation
+            # The title attribute provides the hover-over text.
+            return f"""
+    <a href="{url}" target="_blank" title="Source: {filename}, Page: {page}" style="
+        text-decoration: none;
+        font-size: 0.75em;
+        font-weight: bold;
+        color: #fff;
+        background-color: #0d6efd;
+        border-radius: 4px;
+        padding: 2px 6px;
+        margin-left: 3px;
+        vertical-align: super;
+    ">[{page}]</a>
     """
+
+        # Regex to find all placeholders, capturing filename and page
+        # Updated to match the prompt's `page_12` format.
+        citation_pattern = re.compile(r"\[CITATION:\s*(?P<filename>[^,]+),\s*page_(?P<page>\d+)\s*]")
+
+        # Use re.sub with the now-defined replacement function to process all matches
+        processed_text = citation_pattern.sub(replace_match, text)
+
+        # Ensure the function always returns a string and handle newlines for HTML
+        final_text = processed_text if processed_text is not None else text
+        return final_text.replace("\n", "<br>")
+
+    def _assemble_final_answer(self, part1, part2) -> str:
+        """Assembles the final HTML-formatted answer string."""
+        return f"""
+        <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+            <h3 style="border-bottom: 2px solid #0d6efd; padding-bottom: 10px; margin-top: 0; color: #0d6efd;">Part 1: Direct Answer from Corpus</h3>
+            <p style="white-space: pre-wrap; line-height: 1.6;">{part1}</p>
+        </div>
+    
+        <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+            <h3 style="border-bottom: 2px solid #198754; padding-bottom: 10px; margin-top: 0; color: #198754;">Part 2: Simplified Explanation</h3>
+            <p style="white-space: pre-wrap; line-height: 1.6;">{part2}</p>
+        </div>
+        """
 
     def _rerank_documents(self, question: str, documents: List[Document]) -> List[Document]:
         """Uses an LLM to re-rank documents based on their direct relevance to the query."""
@@ -213,170 +220,124 @@ class CPUCRAGSystem:
             logger.error(f"Re-ranking failed: {e}. Returning original order.")
             return documents
 
-    def _format_search_results(self, results: List[Dict]) -> str:
-        """
-        Formats the list of search result dictionaries into a clean, unstyled Markdown string.
-        """
-        if not results:
-            return "No valid search results could be formatted."
-
-        # Use a list to build the parts of the string
-        markdown_parts = []
-        for i, result in enumerate(results):
-            title = result.get('title', 'No Title Provided').strip()
-            link = result.get('link', '').strip()
-            snippet = result.get('snippet', 'No snippet available.').strip()
-
-            # Create a standard Markdown link: [Title](URL)
-            # Only add the link if it's a valid http/https URL
-            if link.startswith('http'):
-                markdown_parts.append(f"{i + 1}. **[{title}]({link})**")
-            else:
-                markdown_parts.append(f"{i + 1}. **{title}** (Link not available)")
-
-            # Add the snippet on a new line, formatted as a blockquote
-            markdown_parts.append(f"> {snippet}")
-
-        # Join all parts with double newlines for proper spacing in Markdown
-        return "\n\n".join(markdown_parts)
-
-    # --- New Private Helper Methods for Search ---
-    def _create_search_query(self, question: str) -> str:
-        """Creates a search-engine-friendly query from the user's question."""
-        # A more advanced version could use an LLM to generate a good search query.
-        return f"CPUC regulatory information on: {question}"
-
-    def _parse_date_from_filename(self, pdf_path: Path) -> datetime:
-        name = pdf_path.stem.lower()
-        decision_match = re.search(r'(?:d|r)\.(\d{2})-(\d{2})-\d{3}', name)
-        if decision_match:
-            try:
-                year_yy, month_mm = decision_match.groups()
-                year, month = 2000 + int(year_yy), int(month_mm)
-                if 1 <= month <= 12: return datetime(year, month, 1)
-            except (ValueError, IndexError):
-                pass
-
-        date_match = re.search(
-            r'(\d{4})[-_](\d{2})[-_](\d{2})|'r'(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+(\d{1,2}),?\s+(\d{4})',
-            name)
-        if date_match:
-            try:
-                if date_match.group(1):
-                    year, month, day = map(int, date_match.groups()[0:3])
-                    if 1 <= month <= 12: return datetime(year, month, day)
-                elif date_match.group(4):
-                    month_map = {'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6, 'jul': 7, 'aug': 8,
-                                 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12}
-                    month_str, day, year = date_match.group(4), int(date_match.group(5)), int(date_match.group(6))
-                    return datetime(year, month_map[month_str[:3]], day)
-            except (ValueError, IndexError, KeyError):
-                pass
-
-        return datetime(1900, 1, 1)
 
     def build_vector_store(self, force_rebuild: bool = False):
         """
         Builds or incrementally updates the vector store in parallel.
-        - On first run, processes all PDFs in parallel and builds the DB.
-        - On subsequent runs, finds new/modified/deleted PDFs and syncs the DB.
+        Processes and saves progress one file at a time.
         """
+        # ... (force_rebuild and DB loading logic is unchanged)
         if force_rebuild and self.db_dir.exists():
             logger.warning("Force rebuild requested. Deleting existing vector store.")
             shutil.rmtree(self.db_dir)
             self.vectordb = None
-            self.doc_hashes = {}  # Reset hashes on rebuild
-
-        # --- Load or Initialize VectorDB ---
-        if self.db_dir.exists() and any(self.db_dir.iterdir()):
-            logger.info("Loading existing vector store...")
-            try:
-                self.vectordb = Chroma(
-                    persist_directory=str(self.db_dir),
-                    embedding_function=self.embedding_model
-                )
-            except Exception as e:
-                logger.error(f"Failed to load existing DB, it might be corrupt. Rebuilding. Error: {e}")
-                shutil.rmtree(self.db_dir)
-                self.vectordb = None
-                self.doc_hashes = {}
-
+            self.doc_hashes = {}
+            if self.doc_hashes_file.exists():
+                self.doc_hashes_file.unlink()
         if self.vectordb is None:
-            logger.info("Initializing new vector store.")
-            # We initialize an empty DB. We will add documents to it incrementally.
-            self.vectordb = Chroma(
-                embedding_function=self.embedding_model,
-                persist_directory=str(self.db_dir)
-            )
+            if self.db_dir.exists() and any(self.db_dir.iterdir()):
+                logger.info("Loading existing vector store...")
+                try:
+                    self.vectordb = Chroma(persist_directory=str(self.db_dir), embedding_function=self.embedding_model)
+                except Exception as e:
+                    logger.error(f"Failed to load existing DB, it might be corrupt. Rebuilding. Error: {e}")
+                    shutil.rmtree(self.db_dir)
+                    self.vectordb = None
+                    self.doc_hashes = {}
+            if self.vectordb is None:
+                logger.info("Initializing new vector store.")
+                self.vectordb = Chroma(embedding_function=self.embedding_model, persist_directory=str(self.db_dir))
 
-        # --- Sync Files: Find new, modified, and deleted PDFs ---
+        # --- Sync Files ---
         current_pdf_paths = {p for p in self.base_dir.rglob("*.pdf")}
         stored_pdf_paths = set(Path(p) for p in self.doc_hashes.keys())
-
-        # Files to add/update are those present on disk whose hash is new or different.
-        files_to_process = []
-        for pdf_path in current_pdf_paths:
-            if self._needs_update(pdf_path):
-                files_to_process.append(pdf_path)
-
-        # Files to delete are those in the hash map but no longer on disk.
+        files_to_process = [p for p in current_pdf_paths if self._needs_update(p)]
         files_to_delete = stored_pdf_paths - current_pdf_paths
 
         # --- Process Deletions ---
         if files_to_delete:
-            logger.info(f"Found {len(files_to_delete)} files to delete from vector store.")
-            ids_to_delete = []
-            for pdf_path in files_to_delete:
-                # Find all chunks associated with this file to delete them
-                results = self.vectordb.get(where={"source": pdf_path.name})
-                ids_to_delete.extend(results['ids'])
-                del self.doc_hashes[str(pdf_path)]  # Remove from our hash tracking
+            self._delete_files_from_db(files_to_delete)
 
-            if ids_to_delete:
-                logger.info(f"Deleting {len(ids_to_delete)} chunks from the database.")
-                self.vectordb.delete(ids=ids_to_delete)
-
+        # --- Process New/Modified Files ---
         if not files_to_process:
             logger.info("No new or modified files to process. Vector store is up to date.")
         else:
-            logger.info(f"Found {len(files_to_process)} new/modified files to process in parallel.")
+            logger.info(f"Found {len(files_to_process)} new/modified files to process.")
             all_new_chunks = []
-
-            with ProcessPoolExecutor() as executor:
+            max_workers = min(10, multiprocessing.cpu_count())
+            with ProcessPoolExecutor(max_workers=max_workers) as executor:
                 futures = {executor.submit(data_processing.extract_and_chunk_with_docling, pdf_path): pdf_path for
                            pdf_path in files_to_process}
 
-                # ### FIX: Initialize tqdm and update its description in the loop ###
                 progress_bar = tqdm(as_completed(futures), total=len(files_to_process), desc="Processing PDFs")
-
                 for future in progress_bar:
                     pdf_path = futures[future]
-                    # Update the progress bar to show which file is currently being processed or has just finished.
                     progress_bar.set_description(f"Processing {pdf_path.name}")
-
                     try:
                         doc_chunks = future.result()
                         if doc_chunks:
                             all_new_chunks.extend(doc_chunks)
                             self.doc_hashes[str(pdf_path)] = data_processing.get_file_hash(pdf_path)
-                            # Optionally, log completion here as well
-                            logger.info(f"✅ Completed processing for: {pdf_path.name}")
+                            # IMPORTANT: Don't save hashes here yet. Save only after successful DB write.
                     except Exception as exc:
-                        logger.error(f'{pdf_path.name} generated an exception: {exc}')
+                        logger.error(f'{pdf_path.name} generated an exception during processing: {exc}', exc_info=True)
 
-            # --- Add new chunks to the database ---
+            # ### FIX: Add new chunks to the database IN BATCHES with a progress bar. ###
             if all_new_chunks:
                 logger.info(f"Adding {len(all_new_chunks)} new chunks to the vector store...")
-                # Add the newly processed chunks to the existing DB instance
-                self.vectordb.add_documents(documents=all_new_chunks)
+
+                # Use a smaller batch size for adding to the DB to provide more frequent progress updates
+                db_batch_size = 64
+                for i in tqdm(range(0, len(all_new_chunks), db_batch_size), desc="Writing to VectorDB"):
+                    batch = all_new_chunks[i:i + db_batch_size]
+                    try:
+                        self.vectordb.add_documents(documents=batch)
+                    except Exception as db_exc:
+                        logger.error(f"Failed to add a batch of {len(batch)} chunks to DB: {db_exc}")
+
                 logger.info("Finished adding new chunks.")
 
         # --- Persist all changes and save hashes ---
-        logger.info("Persisting all database changes...")
+        logger.info("Persisting all database changes and saving file hashes...")
         self.vectordb.persist()
-        self._save_doc_hashes()
+        self._save_doc_hashes()  # Save all hashes at the end of a successful sync.
         logger.info("Database sync complete.")
         self.setup_qa_pipeline()
+
+        ### FIX: A more robust way to handle deletions that avoids complex `where` filters.
+
+    def _delete_files_from_db(self, files_to_delete: set[Path]):
+        """Finds and deletes all chunks associated with a set of file paths."""
+        if not files_to_delete:
+            return
+
+        logger.info(f"Found {len(files_to_delete)} files to delete from vector store.")
+        source_names_to_delete = {p.name for p in files_to_delete}
+
+        # 1. Get ALL records from the collection.
+        # For very large databases, this can be memory intensive. An alternative is to
+        # query for each file to delete, but this is much faster for a moderate number of deletions.
+        all_data = self.vectordb.get(include=["metadatas"])
+
+        # 2. Filter in Python to find the IDs to delete.
+        ids_to_delete = [
+            record_id
+            for record_id, metadata in zip(all_data['ids'], all_data['metadatas'])
+            if metadata and metadata.get('source') in source_names_to_delete
+        ]
+
+        if ids_to_delete:
+            logger.info(f"Deleting {len(ids_to_delete)} chunks for {len(files_to_delete)} deleted files.")
+            try:
+                self.vectordb.delete(ids=ids_to_delete)
+                # Update the hash map only after successful deletion from DB.
+                for pdf_path in files_to_delete:
+                    if str(pdf_path) in self.doc_hashes:
+                        del self.doc_hashes[str(pdf_path)]
+            except Exception as e:
+                logger.error(f"Failed to delete chunks from the database: {e}")
+        else:
+            logger.warning("Found files marked for deletion, but no corresponding chunks were found in the DB.")
 
     # The helper _needs_update is still required.
     def _needs_update(self, file_path: Path) -> bool:
@@ -423,40 +384,6 @@ class CPUCRAGSystem:
         )
         logger.info("Advanced Self-Querying QA pipeline is ready.")
 
-    def _rank_by_regulatory_relevance(self, documents: List[Document]) -> List[Document]:
-        """Rank documents by regulatory relevance, prioritizing decisions over proposals."""
-        section_weights = {'order': 1.0, 'finding': 0.9, 'rule': 0.8, 'requirement': 0.7}
-        scored_docs = []
-        for doc in documents:
-            score = 0.0
-            doc_name_lower = doc.metadata.get('source', '').lower()
-            section_type = doc.metadata.get('section_type', 'unknown')
-            chunk_type = doc.metadata.get('chunk_type', 'regular')
-            score += section_weights.get(section_type, 0.5)  # Base score
-            score += section_weights.get(chunk_type, 0.5)
-
-            ### ENHANCEMENT: Prioritize document types based on filename.
-            if any(term in doc_name_lower for term in ["decision", "order", "ruling"]):
-                score += 0.4  # High boost for confirmed actions
-            if any(term in doc_name_lower for term in ["proposal", "draft"]):
-                score -= 0.2  # Penalize preliminary documents
-
-            doc.metadata['relevance_score'] = round(score, 2)
-            scored_docs.append((doc, score))
-
-        scored_docs.sort(key=lambda x: x[1], reverse=True)
-        return [doc for doc, score in scored_docs]
-
-    def _identify_regulatory_sections(self, text: str) -> List[Dict]:
-        sections = []
-        section_patterns = {
-            'order': r'((?:IT IS ORDERED|O R D E R|O R D E R S)[\s\S]+)',
-            'finding': r'((?:FINDINGS OF FACT|F I N D I N G S)[\s\S]+?(?=(?:IT IS ORDERED|O R D E R|CONCLUSION)))',
-        }
-        for sec_type, pattern in section_patterns.items():
-            match = re.search(pattern, text, re.IGNORECASE)
-            if match: sections.append({'type': sec_type, 'content': match.group(1).strip()})
-        return sections
 
     def _load_doc_hashes(self) -> Dict[str, str]:
         if self.doc_hashes_file.exists():
@@ -485,7 +412,7 @@ class CPUCRAGSystem:
         score_factors = [
             (num_sources >= 3), (num_sources >= 5), utils.check_source_consistency(documents),
             (alignment_score > 0.3), (alignment_score > 0.5),
-            bool(re.search(r'\[Source:.*?Page: \d+\]', answer))
+            bool(re.search(r'\[Source:.*?Page: \d+]', answer))
         ]
         confidence_score = sum(score_factors) / len(score_factors)
         if confidence_score > 0.8:
@@ -500,13 +427,6 @@ class CPUCRAGSystem:
             "has_citations": '✅ Yes' if 'Source:' in answer else '❌ No',
         }
 
-    def _preprocess_query(self, question: str) -> str:
-        expansions = {"deadline": "deadline due date filing date", "requirement": "requirement must shall obligation",
-                      "cost": "cost rate tariff fee charge"}
-        processed_q = question.lower()
-        for term, terms in expansions.items():
-            if term in processed_q: return question + " " + terms
-        return question
 
     def _enhance_context_for_llm(self, relevant_docs: List[Document], question: str) -> str:
         context_parts = []

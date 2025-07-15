@@ -1,31 +1,34 @@
-# 📁 utils.py
-# Helper functions for text processing, date enhancement, and context manipulation.
-
 import re
 from datetime import datetime
 from typing import List, Dict
-import pytesseract
-from PIL import Image
-import io
 
 from langchain.docstore.document import Document
 
-def extract_text_from_image(image_bytes: bytes) -> str:
-    """Extracts text from an image using OCR (Tesseract)."""
-    try:
-        image = Image.open(io.BytesIO(image_bytes))  # Open from bytes
-        text = pytesseract.image_to_string(image)
-        return text.strip()
-    except Exception as e:
-        print(f"OCR Error: {e}")  # Log the error
-        return ""
-
 def extract_and_enhance_dates(text: str) -> str:
-    """Advanced date extraction with regulatory timeline intelligence."""
+    """
+    Advanced date extraction with regulatory timeline intelligence.
+    
+    This function parses text to find date patterns and enhances them with context
+    about whether they are past, present, or future dates relative to today.
+    It's specifically designed for regulatory documents where timing context is crucial.
+    
+    Args:
+        text (str): The input text containing potential date references
+        
+    Returns:
+        str: The enhanced text with dates annotated with timing context
+             such as [EXPIRED], [URGENT], [UPCOMING], etc.
+             
+    Examples:
+        >>> extract_and_enhance_dates("Deadline: December 15, 2023")
+        "Deadline: December 15, 2023 [PAST: 45 days ago]"
+        
+        >>> extract_and_enhance_dates("Filing due 12/15/2025")
+        "Filing due 12/15/2025 [FUTURE: in 365 days]"
+    """
     current_date = datetime.now()
     enhanced_text = text
 
-    # Combined regex to find various date formats
     date_regex = re.compile(
         r"""
         \b
@@ -48,8 +51,6 @@ def extract_and_enhance_dates(text: str) -> str:
     for match in date_regex.finditer(text):
         date_str = match.group(0)
         try:
-            # Attempt to parse the found date string
-            # This requires a more robust parser for different formats
             parsed_date = None
             if re.match(r'\w+\s+\d{1,2},?\s+\d{4}', date_str, re.IGNORECASE):
                 date_str_clean = date_str.replace(',', '')
@@ -70,13 +71,34 @@ def extract_and_enhance_dates(text: str) -> str:
                 enhanced_text = enhanced_text.replace(date_str, f"{date_str}{context}")
 
         except (ValueError, IndexError):
-            continue # Ignore if parsing fails
+            continue
 
     return enhanced_text
 
 
 def highlight_regulatory_terms(text: str, question: str) -> str:
-    """Highlights important regulatory terms in context for the LLM's attention."""
+    """
+    Highlights important regulatory terms in context for the LLM's attention.
+    
+    This function processes text to emphasize regulatory keywords and question-specific
+    terms by wrapping them in markdown bold formatting. This helps the LLM focus on
+    the most relevant information when processing regulatory documents.
+    
+    Args:
+        text (str): The input text to be processed
+        question (str): The user's question to extract relevant terms from
+        
+    Returns:
+        str: The text with regulatory terms and question keywords highlighted
+             using markdown bold formatting (**term**)
+             
+    Examples:
+        >>> highlight_regulatory_terms("The deadline shall be met", "deadline requirements")
+        "The **deadline** **shall** be met"
+        
+        >>> highlight_regulatory_terms("CPUC ruling on compliance", "ruling")
+        "CPUC **ruling** on **compliance**"
+    """
     key_terms = [
         "shall", "must", "required", "deadline", "due date", "effective date",
         "compliance", "violation", "penalty", "approval", "authorization",
@@ -87,7 +109,6 @@ def highlight_regulatory_terms(text: str, question: str) -> str:
 
     highlighted_text = text
     for term in all_terms:
-        # Use word boundaries to avoid matching parts of words
         highlighted_text = re.sub(
             f'\\b({re.escape(term)})\\b',
             r'**\1**',
@@ -97,39 +118,32 @@ def highlight_regulatory_terms(text: str, question: str) -> str:
     return highlighted_text
 
 
-def find_cross_references(documents: List[Document]) -> Dict[str, List[str]]:
-    """Finds cross-references (e.g., docket numbers) within documents."""
-    cross_refs = {}
-    ref_pattern = r'(?:[A-Z]\.)?\d{2}-\d{2}-\d{3}'
-
-    for doc in documents:
-        source = doc.metadata.get('source', 'Unknown')
-        matches = re.findall(ref_pattern, doc.page_content)
-        if matches:
-            if source not in cross_refs:
-                cross_refs[source] = []
-            cross_refs[source].extend(matches)
-
-    for source in cross_refs:
-        cross_refs[source] = list(set(cross_refs[source]))
-
-    return cross_refs
-
-def create_fallback_answer(context: str, question: str) -> str:
-    """Creates a structured fallback answer when the LLM is unavailable."""
-    current_date = datetime.now().strftime("%B %d, %Y")
-    return f"""LLM is not available. Based on retrieved documents (analyzed as of {current_date}):
-
-**Question:** {question}
-
-**Relevant Information Found:**
-{context[:3000]}{"..." if len(context) > 3000 else ""}
-
-**Analysis Note:** This is a raw data retrieval. Please review the source documents for specific details, deadlines, and requirements."""
 
 
 def check_source_consistency(documents: List[Document]) -> bool:
-    """Checks if retrieved documents are from a small number of proceedings."""
+    """
+    Checks if retrieved documents are from a small number of proceedings.
+    
+    This function evaluates whether the retrieved documents come from a limited
+    number of regulatory proceedings, which indicates good source consistency.
+    Documents from fewer proceedings suggest more focused and coherent results.
+    
+    Args:
+        documents (List[Document]): List of retrieved documents to analyze
+        
+    Returns:
+        bool: True if documents come from 3 or fewer proceedings, False otherwise.
+              Returns True for empty document lists.
+              
+    Examples:
+        >>> docs = [doc1, doc2, doc3]  # All from same proceeding
+        >>> check_source_consistency(docs)
+        True
+        
+        >>> docs = [doc1, doc2, doc3, doc4]  # From 4 different proceedings
+        >>> check_source_consistency(docs)
+        False
+    """
     if not documents:
         return True
     proceedings = {doc.metadata.get("proceeding", "unknown") for doc in documents}

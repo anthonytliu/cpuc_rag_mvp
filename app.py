@@ -1,18 +1,17 @@
-# 📁 app.py
-# The Streamlit web application for the CPUC RAG system.
-
 import logging
 import sys
+import threading
 from pathlib import Path
 
 import streamlit as st
+import http.server
+import socketserver
+import config
 
-# Add project root to path to allow imports
 sys.path.append(str(Path(__file__).parent.resolve()))
 
 from rag_core import CPUCRAGSystem
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -43,6 +42,26 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=str(config.BASE_PDF_DIR), **kwargs)
+
+@st.cache_resource
+def start_pdf_server():
+    """Starts the PDF server in a background thread."""
+    if '_pdf_server_thread' in st.session_state and st.session_state._pdf_server_thread.is_alive():
+        logger.info("PDF server is already running.")
+        return
+
+    def run_server():
+        with socketserver.TCPServer(("", config.PDF_SERVER_PORT), Handler) as httpd:
+            logger.info(f"Starting PDF server at http://localhost:{config.PDF_SERVER_PORT}")
+            httpd.serve_forever()
+
+    thread = threading.Thread(target=run_server, daemon=True)
+    st.session_state._pdf_server_thread = thread
+    thread.start()
+    logger.info("PDF server thread started.")
 
 @st.cache_resource
 def initialize_rag_system():
@@ -58,8 +77,6 @@ def initialize_rag_system():
         st.error(f"Could not initialize RAG System: {e}")
         return None
 
-
-# Replace the entire main() function in app.py with this one.
 
 def main():
     st.title("⚖️ CPUC Regulatory Document Analysis System")
@@ -108,10 +125,7 @@ def main():
             sources = final_result.get("sources", [])
             confidence = final_result.get("confidence_indicators", {})
 
-            # Display the final 3-part answer
             st.markdown(answer, unsafe_allow_html=True)
-
-            # Display confidence and sources in an expander
             with st.expander("Confidence & Sources Analysis", expanded=False):
                 st.subheader("🎯 Confidence Analysis")
                 col1, col2, col3 = st.columns(3)
@@ -130,6 +144,12 @@ def main():
                         st.markdown(f"<div class='source-box'>{source['excerpt']}</div>", unsafe_allow_html=True)
                 else:
                     st.warning("No sources were retrieved from the local corpus for this query.")
+
+            with st.expander("🕵️‍♀️ Debug Information"):
+                st.subheader("Raw LLM Output (Part 1)")
+                st.text(final_result.get("raw_part1_answer", "Not available."))
+                st.subheader("Final Rendered HTML")
+                st.code(final_result.get("answer", "Not available."), language="html")
 
 
 if __name__ == "__main__":
