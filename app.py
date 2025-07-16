@@ -82,58 +82,33 @@ def initialize_rag_system():
 def main():
     st.title("⚖️ CPUC Regulatory Document Analysis System")
 
-    with st.sidebar:
-        st.header("System Controls")
-        rag_system = initialize_rag_system()
-        if rag_system:
-            # Refresh stats button to update without cache
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                st.subheader("📊 System Stats")
-            with col2:
-                if st.button("🔄", help="Refresh Stats"):
-                    st.rerun()
-            
-            # Get fresh stats (not cached)
-            stats = rag_system.get_system_stats()
-            
-            # Show document counts
-            col1, col2 = st.columns(2)
-            with col1:
-                st.metric("Documents on Disk", stats.get('total_documents_on_disk', 'N/A'))
-                st.metric("Documents Processed", stats.get('total_documents_hashed', 'N/A'))
-            with col2:
-                st.metric("Total Chunks in DB", stats.get('total_chunks', 'N/A'))
-                st.metric("Files Pending", stats.get('files_not_hashed', 'N/A'))
-            
-            # Show status indicators
-            vs_status = stats.get('vector_store_status', 'unknown')
-            if vs_status == "loaded":
-                st.success(f"✅ Vector Store: {vs_status}")
-            elif vs_status == "not_loaded":
-                st.warning(f"⚠️ Vector Store: {vs_status}")
-            else:
-                st.error(f"❌ Vector Store: {vs_status}")
-                
-            st.info(f"**Model**: `{stats.get('llm_model', 'N/A')}`")
-            
-            # Manual rebuild button (only if needed)
-            if stats.get('total_chunks', 0) == 0 and stats.get('total_documents_on_disk', 0) > 0:
-                st.warning("Vector store appears empty but PDFs exist")
-                if st.button("🔨 Build Vector Store", type="primary"):
-                    with st.spinner("Building vector store... This may take a while."):
-                        rag_system.build_vector_store()
-                    st.success("Vector store build complete!")
-                    st.rerun()
-            
-            if st.button("🔄 Force Rebuild Vector Store", help="Only use if vector store is corrupted"):
-                if st.button("⚠️ Confirm Force Rebuild", type="secondary"):
-                    with st.spinner("Force rebuilding vector store... This may take a while."):
-                        rag_system.build_vector_store(force_rebuild=True)
-                    st.success("Vector store rebuild complete!")
-                    st.rerun()
-        else:
-            st.error("System failed to initialize. Check logs.")
+    # Initialize system and log stats to console (no sidebar)
+    rag_system = initialize_rag_system()
+    if rag_system:
+        # Get system stats and log to console
+        stats = rag_system.get_system_stats()
+        print("\n" + "="*60)
+        print("📊 CPUC RAG SYSTEM STATISTICS")
+        print("="*60)
+        print(f"📁 Documents on Disk:     {stats.get('total_documents_on_disk', 'N/A')}")
+        print(f"✅ Documents Processed:   {stats.get('total_documents_hashed', 'N/A')}")
+        print(f"🔢 Total Chunks in DB:    {stats.get('total_chunks', 'N/A')}")
+        print(f"⏳ Files Pending:         {stats.get('files_not_hashed', 'N/A')}")
+        print(f"🗄️  Vector Store Status:   {stats.get('vector_store_status', 'unknown')}")
+        print(f"🤖 LLM Model:             {stats.get('llm_model', 'N/A')}")
+        print(f"📂 Base Directory:        {stats.get('base_directory', 'N/A')}")
+        print("="*60)
+        
+        # Show warning if system needs attention
+        if stats.get('total_chunks', 0) == 0 and stats.get('total_documents_on_disk', 0) > 0:
+            print("⚠️  WARNING: Vector store appears empty but PDFs exist")
+            print("   Run: rag_system.build_vector_store() to rebuild")
+        elif stats.get('vector_store_status') == 'loaded':
+            print("✅ System ready for queries")
+        print()
+    else:
+        print("❌ System failed to initialize. Check logs.")
+        st.error("System failed to initialize. Check console logs for details.")
 
     if not rag_system:
         st.error("System is not available. Please check the sidebar and console logs for errors.")
@@ -164,18 +139,109 @@ def main():
             sources = final_result.get("sources", [])
             confidence = final_result.get("confidence_indicators", {})
 
-            st.markdown(answer, unsafe_allow_html=True)
-            with st.expander("Confidence & Sources Analysis", expanded=False):
-                st.subheader("🎯 Confidence Analysis")
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.metric("Overall Confidence", confidence.get('overall_confidence', 'N/A'))
-                with col2:
-                    st.metric("Sources Found", confidence.get('num_sources', 0))
-                with col3:
-                    st.metric("Cited in Answer", confidence.get('has_citations', 'N/A'))
-
-                st.subheader("📚 Retrieved Corpus Sources")
+            # Add yellow highlighting for critical information
+            highlighted_answer = answer.replace(
+                'Technical Analysis from Regulatory Documents',
+                '<span style="background-color: yellow; padding: 2px 4px; border-radius: 3px;">📋 Technical Analysis from Regulatory Documents</span>'
+            ).replace(
+                'Simplified Explanation',
+                '<span style="background-color: yellow; padding: 2px 4px; border-radius: 3px;">💡 Simplified Explanation</span>'
+            )
+            
+            st.markdown(highlighted_answer, unsafe_allow_html=True)
+            
+            # Enhanced Confidence Analysis
+            st.subheader("🎯 Confidence Analysis")
+            
+            # Calculate numerical confidence score (0-100)
+            score_factors = [
+                confidence.get('num_sources', 0) >= 3,
+                confidence.get('num_sources', 0) >= 5,
+                confidence.get('source_consistency', False),
+                confidence.get('question_alignment', 0) > 0.3,
+                confidence.get('question_alignment', 0) > 0.5,
+                confidence.get('has_citations', '❌ No') == '✅ Yes'
+            ]
+            confidence_score = int((sum(score_factors) / len(score_factors)) * 100)
+            
+            # Determine confidence level and color
+            if confidence_score >= 80:
+                confidence_color = "🟢 High"
+                score_color = "#4CAF50"
+            elif confidence_score >= 60:
+                confidence_color = "🟡 Medium"
+                score_color = "#FF9800"
+            else:
+                confidence_color = "🔴 Low"
+                score_color = "#F44336"
+            
+            # Display confidence metrics
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Confidence Score", f"{confidence_score}/100")
+            with col2:
+                st.metric("Sources Found", confidence.get('num_sources', 0))
+            with col3:
+                st.metric("Cited in Answer", confidence.get('has_citations', 'N/A'))
+            with col4:
+                st.markdown(f"**Overall:** <span style='color: {score_color}; font-weight: bold;'>{confidence_color}</span>", unsafe_allow_html=True)
+            
+            # Written analysis of the confidence score
+            st.subheader("📝 Confidence Analysis")
+            
+            analysis = f"""
+            **Score: {confidence_score}/100** - {confidence_color.split(' ')[1]} Confidence
+            
+            **Analysis:**
+            """
+            
+            if confidence_score >= 80:
+                analysis += f"""
+                ✅ **Excellent reliability** - This answer is backed by {confidence.get('num_sources', 0)} sources with strong alignment to your question.
+                The response includes proper citations and demonstrates high consistency across regulatory documents.
+                """
+            elif confidence_score >= 60:
+                analysis += f"""
+                ⚠️ **Good reliability** - This answer draws from {confidence.get('num_sources', 0)} sources but may have some limitations.
+                While generally trustworthy, consider reviewing the source documents for complete context.
+                """
+            else:
+                analysis += f"""
+                🔴 **Limited reliability** - This answer is based on {confidence.get('num_sources', 0)} sources with potentially weak alignment.
+                Use this information cautiously and verify with additional sources or direct document review.
+                """
+            
+            # Add specific factors
+            factors = []
+            if confidence.get('num_sources', 0) >= 5:
+                factors.append("✅ Multiple sources (5+)")
+            elif confidence.get('num_sources', 0) >= 3:
+                factors.append("✅ Adequate sources (3+)")
+            else:
+                factors.append("❌ Few sources")
+                
+            if confidence.get('has_citations', '❌ No') == '✅ Yes':
+                factors.append("✅ Proper citations included")
+            else:
+                factors.append("❌ No citations found")
+                
+            if confidence.get('question_alignment', 0) > 0.5:
+                factors.append("✅ High question alignment")
+            elif confidence.get('question_alignment', 0) > 0.3:
+                factors.append("⚠️ Moderate question alignment")
+            else:
+                factors.append("❌ Low question alignment")
+            
+            analysis += f"""
+            
+            **Key Factors:**
+            {chr(10).join(f"• {factor}" for factor in factors)}
+            """
+            
+            st.markdown(analysis)
+            
+            # Sources section (collapsed by default)
+            with st.expander("📚 Retrieved Sources", expanded=False):
                 if sources:
                     for source in sources:
                         st.markdown(
@@ -183,12 +249,6 @@ def main():
                         st.markdown(f"<div class='source-box'>{source['excerpt']}</div>", unsafe_allow_html=True)
                 else:
                     st.warning("No sources were retrieved from the local corpus for this query.")
-
-            with st.expander("🕵️‍♀️ Debug Information"):
-                st.subheader("Raw LLM Output (Part 1)")
-                st.text(final_result.get("raw_part1_answer", "Not available."))
-                st.subheader("Final Rendered HTML")
-                st.code(final_result.get("answer", "Not available."), language="html")
 
 
 if __name__ == "__main__":
