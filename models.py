@@ -30,7 +30,10 @@ def get_embedding_model():
     """
     return SentenceTransformerEmbeddings(
         model_name="BAAI/bge-base-en-v1.5",
-        model_kwargs={"device": "mps"}
+        model_kwargs={"device": "mps"},
+        encode_kwargs={
+            "batch_size": config.EMBEDDING_BATCH_SIZE if hasattr(config, 'EMBEDDING_BATCH_SIZE') else 32
+        }
     )
 
 
