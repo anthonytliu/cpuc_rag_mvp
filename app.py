@@ -65,11 +65,12 @@ def start_pdf_server():
 
 @st.cache_resource
 def initialize_rag_system():
-    """Initialize the RAG system with caching. This will build the DB on first run."""
+    """Initialize the RAG system with caching. Does NOT build vector store automatically."""
     try:
         with st.spinner("Initializing RAG System... This may take a moment."):
             system = CPUCRAGSystem()
-            system.build_vector_store()
+            # Do NOT automatically build vector store - let it load existing one only
+            
         st.success("RAG System Initialized.")
         return system
     except Exception as e:
@@ -85,14 +86,52 @@ def main():
         st.header("System Controls")
         rag_system = initialize_rag_system()
         if rag_system:
+            # Refresh stats button to update without cache
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.subheader("📊 System Stats")
+            with col2:
+                if st.button("🔄", help="Refresh Stats"):
+                    st.rerun()
+            
+            # Get fresh stats (not cached)
             stats = rag_system.get_system_stats()
-            st.subheader("📊 System Stats")
-            st.metric("Total Documents Indexed", stats.get('total_documents', 'N/A'))
-            st.metric("Total Chunks in DB", stats.get('total_chunks', 'N/A'))
+            
+            # Show document counts
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Documents on Disk", stats.get('total_documents_on_disk', 'N/A'))
+                st.metric("Documents Processed", stats.get('total_documents_hashed', 'N/A'))
+            with col2:
+                st.metric("Total Chunks in DB", stats.get('total_chunks', 'N/A'))
+                st.metric("Files Pending", stats.get('files_not_hashed', 'N/A'))
+            
+            # Show status indicators
+            vs_status = stats.get('vector_store_status', 'unknown')
+            if vs_status == "loaded":
+                st.success(f"✅ Vector Store: {vs_status}")
+            elif vs_status == "not_loaded":
+                st.warning(f"⚠️ Vector Store: {vs_status}")
+            else:
+                st.error(f"❌ Vector Store: {vs_status}")
+                
             st.info(f"**Model**: `{stats.get('llm_model', 'N/A')}`")
-            if st.button("Rebuild Vector Store"):
-                st.cache_resource.clear()
-                st.rerun()
+            
+            # Manual rebuild button (only if needed)
+            if stats.get('total_chunks', 0) == 0 and stats.get('total_documents_on_disk', 0) > 0:
+                st.warning("Vector store appears empty but PDFs exist")
+                if st.button("🔨 Build Vector Store", type="primary"):
+                    with st.spinner("Building vector store... This may take a while."):
+                        rag_system.build_vector_store()
+                    st.success("Vector store build complete!")
+                    st.rerun()
+            
+            if st.button("🔄 Force Rebuild Vector Store", help="Only use if vector store is corrupted"):
+                if st.button("⚠️ Confirm Force Rebuild", type="secondary"):
+                    with st.spinner("Force rebuilding vector store... This may take a while."):
+                        rag_system.build_vector_store(force_rebuild=True)
+                    st.success("Vector store rebuild complete!")
+                    st.rerun()
         else:
             st.error("System failed to initialize. Check logs.")
 

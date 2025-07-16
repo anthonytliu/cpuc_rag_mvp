@@ -71,9 +71,57 @@ class CPUCRAGSystem:
                 chunk_count = self.vectordb._collection.count()
                 logger.info(f"Loaded existing vector store with {chunk_count} chunks")
                 # Set up QA pipeline since we have a working vector store
-                self.setup_qa_pipeline()
+                if chunk_count > 0:
+                    self.setup_qa_pipeline()
+                else:
+                    logger.info("Vector store exists but is empty. QA pipeline not set up.")
             except Exception as e:
                 logger.warning(f"Vector store loaded but chunk count failed: {e}")
+        else:
+            logger.info("No existing vector store found. Use build_vector_store() to create one.")
+
+    def has_new_pdfs(self) -> bool:
+        """
+        Check if there are new PDFs that haven't been processed yet.
+        Returns True if new PDFs are found, False otherwise.
+        
+        This method is designed to be called by external systems (like PDF scrapers)
+        to determine if a vector store rebuild is needed.
+        """
+        try:
+            current_pdf_paths = {p for p in self.base_dir.rglob("*.pdf")}
+            if not current_pdf_paths:
+                logger.info("No PDFs found on disk")
+                return False
+                
+            # Check for files that need processing
+            files_to_process = [p for p in current_pdf_paths if self._needs_update(p)]
+            
+            if files_to_process:
+                logger.info(f"Found {len(files_to_process)} new/updated PDFs that need processing")
+                return True
+            else:
+                logger.info("All PDFs are up to date in vector store")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error checking for new PDFs: {e}")
+            return False
+
+    def sync_if_needed(self) -> bool:
+        """
+        Automatically sync vector store if new PDFs are detected.
+        Returns True if sync was performed, False if no sync was needed.
+        
+        This is the preferred method for automated systems to call.
+        """
+        if self.has_new_pdfs():
+            logger.info("New PDFs detected. Starting incremental sync...")
+            self.build_vector_store()
+            return True
+        else:
+            logger.info("No new PDFs detected. Sync not needed.")
+            return False
 
     def query(self, question: str):
         """Enhanced query method with superseding logic."""
@@ -742,10 +790,11 @@ class CPUCRAGSystem:
                 logger.warning("Hash file indicates processed documents but vector store is empty")
                 return False
             
-            # Additional check: if we have many PDFs on disk but no chunks, validation should fail
+            # Additional check: if we have many PDFs on disk but no chunks AND no hashes, validation should fail
+            # Only fail if BOTH conditions are true: no chunks AND no hash tracking
             pdf_count = len(list(self.pdf_dir.glob("*.pdf")))
-            if pdf_count > 0 and total_count == 0:
-                logger.warning(f"Found {pdf_count} PDFs on disk but vector store is empty")
+            if pdf_count > 0 and total_count == 0 and len(self.doc_hashes) == 0:
+                logger.warning(f"Found {pdf_count} PDFs on disk but vector store and hash file are both empty")
                 return False
                 
             # Check if we can perform a simple query
