@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "WebFetch(domain:docling-project.github.io)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }

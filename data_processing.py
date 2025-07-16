@@ -1,23 +1,130 @@
 import hashlib
 import logging
+import os
 import re
+import requests
 from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
+from urllib.parse import urlparse
 
 from docling.backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
 from docling.datamodel.base_models import InputFormat, ConversionStatus
 from docling.datamodel.document import DocItem, TableItem
+from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode
 from docling.document_converter import DocumentConverter, PdfFormatOption
 from langchain.docstore.document import Document
 
+import config
+
 logger = logging.getLogger(__name__)
+
+# Set Docling threading configuration for performance
+if hasattr(config, 'DOCLING_THREADS') and config.DOCLING_THREADS:
+    os.environ['OMP_NUM_THREADS'] = str(config.DOCLING_THREADS)
+    logger.info(f"Set OMP_NUM_THREADS to {config.DOCLING_THREADS} for optimized Docling performance")
+
+# Configure optimized Docling converter for performance
+pipeline_options = PdfPipelineOptions()
+if hasattr(config, 'DOCLING_FAST_MODE') and config.DOCLING_FAST_MODE:
+    pipeline_options.table_structure_options.mode = TableFormerMode.FAST
+    logger.info("Docling configured with FAST table processing mode for better performance")
+
+if hasattr(config, 'DOCLING_MAX_PAGES') and config.DOCLING_MAX_PAGES:
+    pipeline_options.page_boundary = (0, config.DOCLING_MAX_PAGES)
+    logger.info(f"Docling configured with page limit: {config.DOCLING_MAX_PAGES}")
 
 doc_converter = DocumentConverter(
     format_options={
-        InputFormat.PDF: PdfFormatOption(backend=DoclingParseV4DocumentBackend)
+        InputFormat.PDF: PdfFormatOption(
+            backend=DoclingParseV4DocumentBackend,
+            pipeline_options=pipeline_options
+        )
     }
 )
+
+def get_url_hash(url: str) -> str:
+    """
+    Calculate SHA-256 hash of a URL for unique identification and change detection.
+    
+    This function creates a deterministic hash of a URL that can be used for
+    tracking changes and avoiding duplicate processing. The hash remains
+    consistent across sessions for the same URL.
+    
+    Args:
+        url (str): The URL to hash
+        
+    Returns:
+        str: SHA-256 hash of the URL as a hexadecimal string
+        
+    Examples:
+        >>> get_url_hash("https://docs.cpuc.ca.gov/example.pdf")
+        'a1b2c3d4e5f6...'
+    """
+    return hashlib.sha256(url.encode('utf-8')).hexdigest()
+
+def validate_pdf_url(url: str, timeout: int = 30) -> bool:
+    """
+    Validate that a URL is accessible and points to a PDF document.
+    
+    This function performs a HEAD request to check URL accessibility and
+    verifies that the content type indicates a PDF document. It's used
+    to validate URLs before attempting to process them with Docling.
+    
+    Args:
+        url (str): The URL to validate
+        timeout (int): Request timeout in seconds (default: 30)
+        
+    Returns:
+        bool: True if URL is accessible and points to a PDF, False otherwise
+        
+    Examples:
+        >>> validate_pdf_url("https://docs.cpuc.ca.gov/example.pdf")
+        True
+        >>> validate_pdf_url("https://invalid-url.com/not-found.pdf")
+        False
+    """
+    try:
+        response = requests.head(url, timeout=timeout, allow_redirects=True)
+        response.raise_for_status()
+        
+        # Check content type
+        content_type = response.headers.get('content-type', '').lower()
+        return 'application/pdf' in content_type or url.lower().endswith('.pdf')
+        
+    except Exception as e:
+        logger.warning(f"URL validation failed for {url}: {e}")
+        return False
+
+def extract_filename_from_url(url: str) -> str:
+    """
+    Extract a meaningful filename from a URL.
+    
+    This function attempts to extract a filename from the URL path.
+    If no meaningful filename can be extracted, it generates one
+    based on the URL hash.
+    
+    Args:
+        url (str): The URL to extract filename from
+        
+    Returns:
+        str: Extracted or generated filename
+        
+    Examples:
+        >>> extract_filename_from_url("https://docs.cpuc.ca.gov/document.pdf")
+        'document.pdf'
+        >>> extract_filename_from_url("https://docs.cpuc.ca.gov/SearchRes.aspx?DocID=123")
+        'document_a1b2c3d4.pdf'
+    """
+    parsed = urlparse(url)
+    
+    # Try to get filename from path
+    if parsed.path and parsed.path.endswith('.pdf'):
+        return parsed.path.split('/')[-1]
+    
+    # Generate filename from URL hash
+    url_hash = get_url_hash(url)[:8]
+    return f"document_{url_hash}.pdf"
 
 
 def extract_date_from_content(content: str) -> Optional[datetime]:
@@ -257,6 +364,137 @@ def extract_and_chunk_with_docling(pdf_path: Path) -> List[Document]:
         return []
 
     logger.info(f"Extracted {len(langchain_documents)} chunks from {pdf_path.name}")
+    return langchain_documents
+
+def extract_and_chunk_with_docling_url(pdf_url: str, document_title: str = None) -> List[Document]:
+    """
+    Enhanced document processing using Docling with URL-based PDF processing.
+    
+    This function processes a PDF directly from a URL using Docling's URL processing
+    capabilities. It extracts structured content including text, tables, and metadata
+    without requiring local file storage. The function maintains all the document
+    analysis features of the file-based version while working entirely with URLs.
+    
+    Args:
+        pdf_url (str): URL of the PDF document to process
+        document_title (str, optional): Document title for metadata (extracted from URL if None)
+        
+    Returns:
+        List[Document]: A list of LangChain Document objects containing:
+                       - page_content: The extracted text or table content
+                       - metadata: Enhanced metadata including source URL, page, document type,
+                                 date, proceeding number, and supersedes priority
+                                 
+    Processing Steps:
+        1. Validate URL accessibility
+        2. Convert PDF using Docling's URL processing
+        3. Extract document-level metadata from first few pages
+        4. Process all content items (text, tables, etc.)
+        5. Enhance each chunk with comprehensive metadata including URL references
+        
+    Metadata Fields:
+        - source_url: Original PDF URL
+        - source: Document filename (extracted from URL or title)
+        - page: Page number in document
+        - content_type: Type of content (text, table, etc.)
+        - document_date: Extracted date from document
+        - proceeding_number: CPUC proceeding identifier
+        - document_type: Classified document type (decision, ruling, etc.)
+        - supersedes_priority: Priority score for superseding logic
+        - url_hash: SHA-256 hash of the URL for tracking
+        
+    Examples:
+        >>> docs = extract_and_chunk_with_docling_url("https://docs.cpuc.ca.gov/decision.pdf")
+        >>> len(docs)
+        25
+        >>> docs[0].metadata['source_url']
+        'https://docs.cpuc.ca.gov/decision.pdf'
+        >>> docs[0].metadata['document_type']
+        'decision'
+    """
+    logger.info(f"Processing PDF from URL: {pdf_url}")
+    
+    # Validate URL first
+    if not validate_pdf_url(pdf_url):
+        logger.error(f"URL validation failed for: {pdf_url}")
+        return []
+    
+    langchain_documents = []
+    
+    try:
+        # Use Docling's URL processing capability
+        conv_results = doc_converter.convert_all([pdf_url], raises_on_error=False)
+        conv_res = next(iter(conv_results), None)
+
+        if not conv_res or conv_res.status == ConversionStatus.FAILURE:
+            logger.error(f"Docling failed to convert document from URL: {pdf_url}")
+            return []
+
+        docling_doc = conv_res.document
+        
+        # Extract filename from URL or use provided title
+        if document_title:
+            source_name = f"{document_title}.pdf"
+        else:
+            source_name = extract_filename_from_url(pdf_url)
+
+        # Extract document-level metadata from first few pages
+        first_page_content = ""
+        page_count = 0
+
+        for item, level in docling_doc.iterate_items(with_groups=False):
+            if isinstance(item, DocItem) and hasattr(item, 'text') and item.text:
+                page_num = item.prov[0].page_no + 1 if item.prov else 1
+                if page_num <= 3:  # First 3 pages
+                    first_page_content += item.text + " "
+                    page_count = max(page_count, page_num)
+                if page_count >= 3:
+                    break
+
+        # Extract document-level information
+        doc_date = extract_date_from_content(first_page_content)
+        proceeding_number = extract_proceeding_number(first_page_content)
+        doc_type = identify_document_type(first_page_content, source_name)
+        url_hash = get_url_hash(pdf_url)
+
+        logger.info(f"Document metadata - Date: {doc_date}, Proceeding: {proceeding_number}, Type: {doc_type}")
+
+        # Process all content items
+        for item, level in docling_doc.iterate_items(with_groups=False):
+            if not isinstance(item, DocItem):
+                continue
+
+            content = ""
+            if isinstance(item, TableItem):
+                content = item.export_to_markdown(doc=docling_doc)
+            elif hasattr(item, 'text'):
+                content = item.text
+
+            if content and content.strip():
+                page_num = item.prov[0].page_no + 1 if item.prov else 0
+
+                metadata = {
+                    "source_url": pdf_url,
+                    "source": source_name,
+                    "page": page_num,
+                    "content_type": item.label.value,
+                    "chunk_id": f"{source_name}_{item.get_ref().cref.replace('#/', '').replace('/', '_')}",
+                    "url_hash": url_hash,
+                    "last_checked": datetime.now().isoformat(),
+
+                    "document_date": doc_date.isoformat() if doc_date else None,
+                    "proceeding_number": proceeding_number,
+                    "document_type": doc_type,
+                    "supersedes_priority": _calculate_supersedes_priority(doc_type, doc_date),
+                }
+
+                langchain_documents.append(Document(page_content=content, metadata=metadata))
+
+    except Exception as e:
+        logger.error(f"Error processing URL {pdf_url}: {e}", exc_info=True)
+        return []
+
+    logger.info(f"Extracted {len(langchain_documents)} chunks from URL: {pdf_url}")
     return langchain_documents
 
 def get_file_hash(file_path: Path) -> str:

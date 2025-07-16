@@ -31,6 +31,33 @@ PDF_SERVER_PORT = 8001
 OPENAI_MODEL_NAME = "gpt-4.1-2025-04-14"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+# --- URL PROCESSING SETTINGS ---
+# Enable URL-based processing (True) or file-based processing (False)
+USE_URL_PROCESSING = True
+
+# URL processing timeouts and retry settings
+URL_VALIDATION_TIMEOUT = 30  # seconds
+URL_PROCESSING_TIMEOUT = 300  # seconds for Docling processing
+URL_RETRY_COUNT = 3
+URL_RETRY_DELAY = 5  # seconds between retries
+
+# CPUC specific URL settings
+CPUC_BASE_URL = "https://docs.cpuc.ca.gov"
+CPUC_SEARCH_BASE = "https://docs.cpuc.ca.gov/SearchRes.aspx"
+
+# --- PERFORMANCE OPTIMIZATION SETTINGS ---
+# Parallel processing settings
+URL_PARALLEL_WORKERS = 3  # Number of parallel workers for URL processing
+VECTOR_STORE_BATCH_SIZE = 256  # Batch size for vector store operations (increased from 64)
+
+# Docling performance settings
+DOCLING_FAST_MODE = True  # Enable fast table processing mode
+DOCLING_MAX_PAGES = None  # Limit max pages per document (None = no limit)
+DOCLING_THREADS = 4  # Number of threads for Docling processing
+
+# Embedding optimization settings
+EMBEDDING_BATCH_SIZE = 32  # Batch size for embedding generation
+
 # --- RAG/CHUNKING SETTINGS ---
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 100
@@ -49,19 +76,49 @@ QUESTION:
 {question}
 
 INSTRUCTIONS:
-1.  **Synthesize, Don't Just List:** Do not just list facts. Synthesize information from multiple sources to form a complete, coherent answer.
-2.  **Prioritize Numerical Data:** Pay extremely close attention to any numerical data, dollar amounts ($), percentages (%), or values in tables. Explicitly cite these numbers in your answer. If the question involves costs or rates, extract the exact figures.
-3.  **Perform Inference:** Based on the text, make logical inferences. For example, if one document gives a start date and another gives a duration, infer the end date. Clearly state when you are making an inference (e.g., "Based on [Source A] and [Source B], it can be inferred that...").
-4.  **Cite Sources Rigorously:** For every piece of information, you MUST cite the source, like this: `[Source: document_name.pdf, Page: 12]`.
-5.  **Answer Fully:** If the context does not contain the answer, state "The provided context does not contain sufficient information to answer this question."
+1.  **Structure Your Response:** Organize your answer with clear sections using HTML formatting:
+   - **Executive Summary:** Start with a brief 1-2 sentence overview
+   - **Key Findings:** Present the main regulatory information with bullet points
+   - **Detailed Analysis:** Provide comprehensive analysis with numbered points
+   - **Regulatory Impact:** Explain implications and requirements
+   - **Important Dates/Deadlines:** Highlight time-sensitive information if applicable
+
+2.  **Use HTML Formatting:** Format your response with proper HTML tags:
+   - Use `<h4>` tags for section headings
+   - Use `<ul>` and `<li>` for bullet points
+   - Use `<ol>` and `<li>` for numbered lists
+   - Use `<strong>` for emphasis on key terms
+   - Use `<em>` for regulatory requirements
+   - Use `<br>` for line breaks where needed
+
+3.  **Prioritize Numerical Data:** Pay extremely close attention to any numerical data, dollar amounts ($), percentages (%), or values in tables. Present these in formatted lists or tables when applicable.
+
+4.  **Perform Inference:** Based on the text, make logical inferences. Clearly state when you are making an inference using <em>Based on [Source A] and [Source B], it can be inferred that...</em>
+
+5.  **Cite Sources Rigorously:** For every piece of information, you MUST cite the source using this exact format: `[CITE:filename.pdf,page_12]` where filename.pdf is the document name and page_12 is the page number.
+
+6.  **Answer Fully:** If the context does not contain the answer, state in a formatted box: "<div style='background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 10px; margin: 10px 0;'><strong>Note:</strong> The provided context does not contain sufficient information to answer this question.</div>"
 
 Response:"""
 
 ### ENHANCEMENT: New prompt for the layperson's summary (Part 2)
-LAYMAN_PROMPT_TEMPLATE = """You are an expert communicator. Your task is to rephrase the following complex regulatory text into a simple, clear, 1-2 paragraph explanation that a non-expert can easily understand.
-Focus on explaining the key outcomes, requirements, or deadlines in plain English. Convert complex numbers or rates into understandable impacts (e.g., "This means an average customer's bill will increase by about $5 per month.").
+LAYMAN_PROMPT_TEMPLATE = """You are an expert communicator. Your task is to rephrase the following complex regulatory text into a simple, clear, well-formatted explanation that a non-expert can easily understand.
+
+**FORMATTING REQUIREMENTS:**
+- Use HTML formatting with proper tags
+- Start with a <strong>brief summary sentence</strong>
+- Use <ul> and <li> tags for key points
+- Use <strong> tags for important terms
+- Use <em> tags for deadlines and requirements
+- Convert complex numbers or rates into understandable impacts (e.g., "This means an average customer's bill will increase by about $5 per month")
+
+**CONTENT REQUIREMENTS:**
+- Focus on practical implications and real-world impacts
+- Explain what this means for ordinary consumers or businesses
+- Highlight any important deadlines or action items
+- Use everyday language and avoid regulatory jargon
 
 COMPLEX TEXT:
 {technical_answer}
 
-SIMPLIFIED EXPLANATION (in layman's terms):"""
+SIMPLIFIED EXPLANATION (in layman's terms with HTML formatting):"""
