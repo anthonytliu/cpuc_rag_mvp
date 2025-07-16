@@ -850,7 +850,7 @@ class CPUCRAGSystem:
             
             # Additional check: if we have many PDFs on disk but no chunks AND no hashes, validation should fail
             # Only fail if BOTH conditions are true: no chunks AND no hash tracking
-            pdf_count = len(list(self.pdf_dir.glob("*.pdf")))
+            pdf_count = len(list(self.base_dir.glob("*.pdf")))
             if pdf_count > 0 and total_count == 0 and len(self.doc_hashes) == 0:
                 logger.warning(f"Found {pdf_count} PDFs on disk but vector store and hash file are both empty")
                 return False
