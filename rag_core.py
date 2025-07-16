@@ -184,6 +184,47 @@ class CPUCRAGSystem:
 
         ### FIX: New method to process citation placeholders and create HTML links.
 
+    def _get_cpuc_url_from_filename(self, filename: str) -> str:
+        """
+        Maps a local PDF filename to its original CPUC URL or proceeding page.
+        
+        Since conference numbers in filenames don't directly map to DocIDs,
+        this function provides useful CPUC links that help users find the documents.
+        
+        Args:
+            filename (str): Local PDF filename
+            
+        Returns:
+            str: CPUC URL or None if mapping fails
+        """
+        import re
+        
+        # Pattern 1: Files with Conference numbers - link to proceeding since we can't map directly
+        conf_match = re.search(r'Conf#\s*(\d+)', filename)
+        if conf_match:
+            # Link to the main R.22-07-005 proceeding page where users can find all documents
+            return "https://apps.cpuc.ca.gov/apex/f?p=401:56:::NO:RP,57,RIR:P5_PROCEEDING_SELECT:R2207005"
+        
+        # Pattern 2: Numeric PDF files (like 498072273.PDF) - try as DocID
+        numeric_match = re.match(r'^(\d+)\.PDF?$', filename, re.IGNORECASE)
+        if numeric_match:
+            doc_id = numeric_match.group(1)
+            return f"https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID={doc_id}"
+        
+        # Pattern 3: For R.22-07-005 main proceeding document
+        if any(keyword in filename.lower() for keyword in ['r.22-07-005', 'r22-07-005', 'oir']):
+            return "https://apps.cpuc.ca.gov/apex/f?p=401:56:::NO:RP,57,RIR:P5_PROCEEDING_SELECT:R2207005"
+        
+        # Pattern 4: Try to extract key terms for general CPUC search
+        # Extract company/entity names for search
+        for entity in ['PG&E', 'Pacific Gas', 'SCE', 'Southern California Edison', 'SDG&E', 'San Diego Gas']:
+            if entity.lower() in filename.lower():
+                search_term = entity.replace(' ', '+')
+                return f"https://docs.cpuc.ca.gov/SearchRes.aspx?searchfor={search_term}&category=proceeding&proceeding=R2207005"
+        
+        # Fallback: Return None to use localhost
+        return None
+
     def _add_inline_citations(self, text: str, source_documents: List[Document] = None) -> str:
         """
         Finds [CITE:...] placeholders and replaces them with HTML links to source URLs.
@@ -191,21 +232,27 @@ class CPUCRAGSystem:
         This function processes the LLM output to convert citation placeholders
         into clickable links that open the source documents at the specified page.
         For URL-based processing, it links directly to the source URLs.
+        For local PDFs, it maps filenames to CPUC URLs when possible.
         """
         def replace_match(match):
             filename = match.group("filename").strip()
             page = match.group("page").strip()
             
-            # Try to find the source URL from document metadata
+            # Try to find the source URL from document metadata first
             source_url = None
             if source_documents:
                 for doc in source_documents:
-                    if doc.metadata.get('source', '').replace('.pdf', '') in filename or filename in doc.metadata.get('source', ''):
+                    doc_source = doc.metadata.get('source', '')
+                    if doc_source.replace('.pdf', '') in filename or filename in doc_source:
                         source_url = doc.metadata.get('source_url')
                         if source_url:
                             break
             
-            # Use source URL if available, otherwise fall back to localhost
+            # If no source_url in metadata, try to map filename to CPUC URL
+            if not source_url:
+                source_url = self._get_cpuc_url_from_filename(filename)
+            
+            # Use mapped CPUC URL if available, otherwise fall back to localhost
             if source_url:
                 # For CPUC documents, construct direct PDF URL with page fragment
                 url = f"{source_url}#page={page}"
