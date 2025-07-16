@@ -238,27 +238,38 @@ class CPUCRAGSystem:
             filename = match.group("filename").strip()
             page = match.group("page").strip()
             
-            # Try to find the source URL from document metadata first
+            # Priority 1: Try to find the source URL from document metadata (direct linkage)
             source_url = None
             if source_documents:
                 for doc in source_documents:
                     doc_source = doc.metadata.get('source', '')
-                    if doc_source.replace('.pdf', '') in filename or filename in doc_source:
+                    # Match by filename (with or without extensions)
+                    filename_clean = filename.replace('.pdf', '').replace('.PDF', '')
+                    doc_source_clean = doc_source.replace('.pdf', '').replace('.PDF', '')
+                    
+                    if (doc_source_clean == filename_clean or 
+                        filename_clean in doc_source_clean or 
+                        doc_source_clean in filename_clean):
                         source_url = doc.metadata.get('source_url')
                         if source_url:
+                            logger.debug(f"Found source_url in metadata for {filename}: {source_url}")
                             break
             
-            # If no source_url in metadata, try to map filename to CPUC URL
+            # Priority 2: If no source_url in metadata, try filename mapping (fallback)
             if not source_url:
                 source_url = self._get_cpuc_url_from_filename(filename)
+                if source_url:
+                    logger.debug(f"Found source_url via filename mapping for {filename}: {source_url}")
             
-            # Use mapped CPUC URL if available, otherwise fall back to localhost
+            # Create final URL with page fragment
             if source_url:
-                # For CPUC documents, construct direct PDF URL with page fragment
+                # For CPUC documents, add page fragment for direct navigation
                 url = f"{source_url}#page={page}"
+                logger.debug(f"Generated citation URL: {url}")
             else:
-                # Fallback to localhost (for backward compatibility)
+                # Priority 3: Fallback to localhost (for backward compatibility)
                 url = f"http://localhost:{config.PDF_SERVER_PORT}/{filename}#page={page}"
+                logger.debug(f"Using localhost fallback for {filename}")
             
             return f'<a href="{url}" target="_blank" title="Source: {filename}, Page: {page}" style="display: inline-block; text-decoration: none; font-size: 0.75em; font-weight: bold; color: #fff; background-color: #0d6efd; border-radius: 4px; padding: 2px 6px; margin-left: 3px; vertical-align: super;">[{page}]</a>'
 

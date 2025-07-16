@@ -259,6 +259,71 @@ def _calculate_supersedes_priority(doc_type: str, doc_date: Optional[datetime]) 
 
     return base_score
 
+def get_source_url_from_filename(filename: str) -> Optional[str]:
+    """
+    Maps a local PDF filename to its original CPUC URL using download history.
+    
+    This function provides the crucial link between local PDF files and their
+    original CPUC URLs, enabling direct citation linking without guesswork.
+    
+    Args:
+        filename (str): Local PDF filename (with or without extension)
+        
+    Returns:
+        Optional[str]: Original CPUC URL if found, None otherwise
+        
+    Examples:
+        >>> get_source_url_from_filename("Comments filed by Microgrid Resources Coalition on 01_04_2023 Conf# 188758.pdf")
+        'https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=500762062'
+        
+        >>> get_source_url_from_filename("nonexistent.pdf")
+        None
+    """
+    try:
+        # Load download history
+        import json
+        from pathlib import Path
+        
+        history_file = Path(__file__).parent / "cpuc_csvs" / "r2207005_download_history.json"
+        if not history_file.exists():
+            logger.warning(f"Download history file not found: {history_file}")
+            return None
+            
+        with open(history_file, 'r') as f:
+            download_history = json.load(f)
+        
+        # Normalize filename for comparison (remove extensions and extra spaces)
+        filename_clean = filename.replace('.pdf', '').replace('.PDF', '').strip()
+        
+        # Search through download history
+        for record in download_history.values():
+            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            if recorded_filename == filename_clean:
+                url = record.get('url')
+                if url:
+                    logger.debug(f"Found source URL for {filename}: {url}")
+                    return url
+        
+        # If exact match fails, try partial matching for common filename variations
+        for record in download_history.values():
+            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            # Try both directions of partial matching
+            if (filename_clean in recorded_filename or 
+                recorded_filename in filename_clean or
+                # Handle special cases like numbered files
+                (filename_clean.replace('_', ' ') == recorded_filename.replace('_', ' '))):
+                url = record.get('url')
+                if url:
+                    logger.debug(f"Found source URL via partial match for {filename}: {url}")
+                    return url
+        
+        logger.debug(f"No source URL found for filename: {filename}")
+        return None
+        
+    except Exception as e:
+        logger.warning(f"Failed to lookup source URL for {filename}: {e}")
+        return None
+
 def extract_and_chunk_with_docling(pdf_path: Path) -> List[Document]:
     """
     Enhanced document processing that extracts content, dates, and proceeding info.
@@ -327,8 +392,11 @@ def extract_and_chunk_with_docling(pdf_path: Path) -> List[Document]:
         doc_date = extract_date_from_content(first_page_content)
         proceeding_number = extract_proceeding_number(first_page_content)
         doc_type = identify_document_type(first_page_content, pdf_path.name)
+        
+        # Get source URL from download history for direct citation linking
+        source_url = get_source_url_from_filename(pdf_path.name)
 
-        logger.info(f"Document metadata - Date: {doc_date}, Proceeding: {proceeding_number}, Type: {doc_type}")
+        logger.info(f"Document metadata - Date: {doc_date}, Proceeding: {proceeding_number}, Type: {doc_type}, Source URL: {source_url is not None}")
 
         for item, level in docling_doc.iterate_items(with_groups=False):
             if not isinstance(item, DocItem):
@@ -345,6 +413,7 @@ def extract_and_chunk_with_docling(pdf_path: Path) -> List[Document]:
 
                 metadata = {
                     "source": pdf_path.name,
+                    "source_url": source_url,  # Direct URL linkage for perfect citations
                     "page": page_num,
                     "content_type": item.label.value,
                     "chunk_id": f"{pdf_path.name}_{item.get_ref().cref.replace('#/', '').replace('/', '_')}",
