@@ -80,8 +80,20 @@ def initialize_rag_system():
 
 
 def main():
+    # Import authentication system
+    from streamlit_auth import streamlit_auth
+    
+    # Check authentication first
+    if not streamlit_auth.is_authenticated():
+        streamlit_auth.render_login_page()
+        return
+    
+    # User is authenticated - render main app
     st.title("⚖️ CPUC Regulatory Document Analysis System")
-
+    
+    # Render user dashboard
+    streamlit_auth.render_user_dashboard()
+    
     # Initialize system and log stats to console (no sidebar)
     rag_system = initialize_rag_system()
     if rag_system:
@@ -99,7 +111,7 @@ def main():
         print(f"📂 Base Directory:        {stats.get('base_directory', 'N/A')}")
         print("="*60)
         
-        # Show warning if system needs attention
+        # Show warning if the system needs attention
         if stats.get('total_chunks', 0) == 0 and stats.get('total_documents_on_disk', 0) > 0:
             print("⚠️  WARNING: Vector store appears empty but PDFs exist")
             print("   Run: rag_system.build_vector_store() to rebuild")
@@ -111,7 +123,7 @@ def main():
         st.error("System failed to initialize. Check console logs for details.")
 
     if not rag_system:
-        st.error("System is not available. Please check the sidebar and console logs for errors.")
+        st.error("System is not available. Please check console logs for errors.")
         return
 
     st.header("🔍 Ask a Question")
@@ -123,6 +135,13 @@ def main():
         submitted = st.form_submit_button("Analyze")
 
     if submitted and query_text:
+        # Check query permission
+        can_query, message = streamlit_auth.check_query_permission()
+        
+        if not can_query:
+            st.error(f"⚠️ {message}")
+            return
+        
         st.markdown("---")
         final_result = None
 
@@ -138,18 +157,8 @@ def main():
             answer = final_result.get("answer", "No answer could be generated.")
             sources = final_result.get("sources", [])
             confidence = final_result.get("confidence_indicators", {})
+            st.markdown(answer, unsafe_allow_html=True)
 
-            # Add yellow highlighting for critical information
-            highlighted_answer = answer.replace(
-                'Technical Analysis from Regulatory Documents',
-                '<span style="background-color: yellow; padding: 2px 4px; border-radius: 3px;">📋 Technical Analysis from Regulatory Documents</span>'
-            ).replace(
-                'Simplified Explanation',
-                '<span style="background-color: yellow; padding: 2px 4px; border-radius: 3px;">💡 Simplified Explanation</span>'
-            )
-            
-            st.markdown(highlighted_answer, unsafe_allow_html=True)
-            
             # Enhanced Confidence Analysis
             st.subheader("🎯 Confidence Analysis")
             
@@ -163,82 +172,22 @@ def main():
                 confidence.get('has_citations', '❌ No') == '✅ Yes'
             ]
             confidence_score = int((sum(score_factors) / len(score_factors)) * 100)
-            
-            # Determine confidence level and color
-            if confidence_score >= 80:
-                confidence_color = "🟢 High"
-                score_color = "#4CAF50"
-            elif confidence_score >= 60:
-                confidence_color = "🟡 Medium"
-                score_color = "#FF9800"
-            else:
-                confidence_color = "🔴 Low"
-                score_color = "#F44336"
+
+            # Log the query
+            streamlit_auth.log_query(
+                query_text, 
+                confidence_score, 
+                confidence.get('num_sources', 0)
+            )
             
             # Display confidence metrics
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 st.metric("Confidence Score", f"{confidence_score}/100")
             with col2:
                 st.metric("Sources Found", confidence.get('num_sources', 0))
             with col3:
                 st.metric("Cited in Answer", confidence.get('has_citations', 'N/A'))
-            with col4:
-                st.markdown(f"**Overall:** <span style='color: {score_color}; font-weight: bold;'>{confidence_color}</span>", unsafe_allow_html=True)
-            
-            # Written analysis of the confidence score
-            st.subheader("📝 Confidence Analysis")
-            
-            analysis = f"""
-            **Score: {confidence_score}/100** - {confidence_color.split(' ')[1]} Confidence
-            
-            **Analysis:**
-            """
-            
-            if confidence_score >= 80:
-                analysis += f"""
-                ✅ **Excellent reliability** - This answer is backed by {confidence.get('num_sources', 0)} sources with strong alignment to your question.
-                The response includes proper citations and demonstrates high consistency across regulatory documents.
-                """
-            elif confidence_score >= 60:
-                analysis += f"""
-                ⚠️ **Good reliability** - This answer draws from {confidence.get('num_sources', 0)} sources but may have some limitations.
-                While generally trustworthy, consider reviewing the source documents for complete context.
-                """
-            else:
-                analysis += f"""
-                🔴 **Limited reliability** - This answer is based on {confidence.get('num_sources', 0)} sources with potentially weak alignment.
-                Use this information cautiously and verify with additional sources or direct document review.
-                """
-            
-            # Add specific factors
-            factors = []
-            if confidence.get('num_sources', 0) >= 5:
-                factors.append("✅ Multiple sources (5+)")
-            elif confidence.get('num_sources', 0) >= 3:
-                factors.append("✅ Adequate sources (3+)")
-            else:
-                factors.append("❌ Few sources")
-                
-            if confidence.get('has_citations', '❌ No') == '✅ Yes':
-                factors.append("✅ Proper citations included")
-            else:
-                factors.append("❌ No citations found")
-                
-            if confidence.get('question_alignment', 0) > 0.5:
-                factors.append("✅ High question alignment")
-            elif confidence.get('question_alignment', 0) > 0.3:
-                factors.append("⚠️ Moderate question alignment")
-            else:
-                factors.append("❌ Low question alignment")
-            
-            analysis += f"""
-            
-            **Key Factors:**
-            {chr(10).join(f"• {factor}" for factor in factors)}
-            """
-            
-            st.markdown(analysis)
             
             # Sources section (collapsed by default)
             with st.expander("📚 Retrieved Sources", expanded=False):
