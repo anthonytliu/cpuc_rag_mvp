@@ -10,8 +10,8 @@ load_dotenv()
 
 PROJECT_ROOT = Path(__file__).parent.resolve()
 
-# Directory containing the PDF documents.
-BASE_PDF_DIR = PROJECT_ROOT / "cpuc_pdfs" / "R2207005"
+# Directory containing the PDF documents (DEPRECATED - moved to URL-based processing)
+# BASE_PDF_DIR = PROJECT_ROOT / "cpuc_pdfs" / "R2207005"
 
 # Directory to store the Chroma vector database
 DB_DIR = PROJECT_ROOT / "local_chroma_db"
@@ -44,6 +44,20 @@ URL_RETRY_DELAY = 5  # seconds between retries
 # CPUC specific URL settings
 CPUC_BASE_URL = "https://docs.cpuc.ca.gov"
 CPUC_SEARCH_BASE = "https://docs.cpuc.ca.gov/SearchRes.aspx"
+
+# --- PDF SCHEDULER SETTINGS ---
+# Automated PDF checking and downloading
+PDF_CHECK_INTERVAL_HOURS = int(os.getenv("PDF_CHECK_INTERVAL_HOURS", "3"))  # Default: 3 hours
+PDF_SCHEDULER_ENABLED = os.getenv("PDF_SCHEDULER_ENABLED", "true").lower() == "true"
+PDF_SCHEDULER_HEADLESS = os.getenv("PDF_SCHEDULER_HEADLESS", "true").lower() == "true"
+PDF_SCHEDULER_MAX_RETRIES = int(os.getenv("PDF_SCHEDULER_MAX_RETRIES", "3"))
+
+# Proceeding numbers to monitor
+MONITORED_PROCEEDINGS = os.getenv("MONITORED_PROCEEDINGS", "R2207005").split(",")
+
+# Auto-update settings
+AUTO_UPDATE_RAG_SYSTEM = os.getenv("AUTO_UPDATE_RAG_SYSTEM", "true").lower() == "true"
+AUTO_UPDATE_DELAY_MINUTES = int(os.getenv("AUTO_UPDATE_DELAY_MINUTES", "5"))  # Wait 5 minutes after download before updating RAG
 
 # --- PERFORMANCE OPTIMIZATION SETTINGS ---
 # Parallel processing settings

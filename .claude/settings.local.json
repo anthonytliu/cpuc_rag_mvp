@@ -5,7 +5,11 @@
       "WebFetch(domain:docling-project.github.io)",
       "Bash(ls:*)",
       "Bash(git add:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "WebFetch(domain:docs.cpuc.ca.gov)",
+      "Bash(pip install:*)",
+      "Bash(cp:*)",
+      "Bash(streamlit run:*)"
     ],
     "deny": []
   }

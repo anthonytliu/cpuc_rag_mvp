@@ -76,7 +76,7 @@ class StreamlitAuthManager:
         """Handle OAuth callback from URL parameters"""
         # Get URL parameters
         try:
-            query_params = st.experimental_get_query_params()
+            query_params = st.query_params
             
             # Microsoft callback
             if 'code' in query_params and 'state' not in query_params:
@@ -86,7 +86,7 @@ class StreamlitAuthManager:
                 
                 if user_profile:
                     self.login_user(user_profile, 'microsoft')
-                    st.experimental_set_query_params()  # Clear URL parameters
+                    st.query_params.clear()  # Clear URL parameters
                     st.rerun()
                 else:
                     st.error("Microsoft authentication failed. Please try again.")
@@ -99,7 +99,7 @@ class StreamlitAuthManager:
                 
                 if user_profile:
                     self.login_user(user_profile, 'google')
-                    st.experimental_set_query_params()  # Clear URL parameters
+                    st.query_params.clear()  # Clear URL parameters
                     st.rerun()
                 else:
                     st.error("Google authentication failed. Please try again.")

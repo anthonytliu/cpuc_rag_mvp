@@ -36,7 +36,8 @@ class CPUCRAGSystem:
     def __init__(self):
         # --- Base Configuration ---
         self.num_chunks = None
-        self.base_dir = config.BASE_PDF_DIR
+        # Base directory no longer needed - using URL-based processing
+        # self.base_dir = config.BASE_PDF_DIR  # DEPRECATED
         self.db_dir = config.DB_DIR
         self.chunk_size = config.CHUNK_SIZE
         self.chunk_overlap = config.CHUNK_OVERLAP
@@ -59,13 +60,11 @@ class CPUCRAGSystem:
 
         # --- Initial Setup ---
         self.db_dir.mkdir(exist_ok=True)
-        if not self.base_dir.exists():
-            raise FileNotFoundError(f"Base PDF directory does not exist: {self.base_dir}")
         
         # Load existing vector store if it exists
         self._load_existing_vector_store()
         
-        logger.info(f"CPUCRAGSystem initialized. PDF source: {self.base_dir.absolute()}")
+        logger.info(f"CPUCRAGSystem initialized. Processing mode: URL-based")
         if self.vectordb:
             try:
                 chunk_count = self.vectordb._collection.count()
@@ -78,35 +77,43 @@ class CPUCRAGSystem:
             except Exception as e:
                 logger.warning(f"Vector store loaded but chunk count failed: {e}")
         else:
-            logger.info("No existing vector store found. Use build_vector_store() to create one.")
+            logger.info("No existing vector store found or parity check failed.")
+            
+            # Auto-rebuild vector store if we have download history but no working vector store
+            download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+            if download_history_path.exists():
+                logger.info("Found download history - auto-building vector store from URLs...")
+                try:
+                    with open(download_history_path, 'r') as f:
+                        download_history = json.load(f)
+                    
+                    # Convert download history to URL format
+                    pdf_urls = []
+                    for hash_key, entry in download_history.items():
+                        if isinstance(entry, dict) and entry.get('url') and entry.get('filename'):
+                            pdf_urls.append({
+                                'url': entry['url'],
+                                'filename': entry['filename']
+                            })
+                    
+                    if pdf_urls:
+                        logger.info(f"Auto-building vector store with {len(pdf_urls)} URLs from download history")
+                        self.build_vector_store_from_urls(pdf_urls, force_rebuild=True)
+                    else:
+                        logger.warning("Download history exists but contains no valid URLs")
+                        
+                except Exception as e:
+                    logger.error(f"Failed to auto-build vector store from download history: {e}")
+            else:
+                logger.info("No download history found. Use build_vector_store_from_urls() to create vector store.")
 
     def has_new_pdfs(self) -> bool:
         """
-        Check if there are new PDFs that haven't been processed yet.
-        Returns True if new PDFs are found, False otherwise.
-        
-        This method is designed to be called by external systems (like PDF scrapers)
-        to determine if a vector store rebuild is needed.
+        DEPRECATED: This method is no longer used since we moved to URL-based processing.
+        Returns False always since we no longer check local PDFs.
         """
-        try:
-            current_pdf_paths = {p for p in self.base_dir.rglob("*.pdf")}
-            if not current_pdf_paths:
-                logger.info("No PDFs found on disk")
-                return False
-                
-            # Check for files that need processing
-            files_to_process = [p for p in current_pdf_paths if self._needs_update(p)]
-            
-            if files_to_process:
-                logger.info(f"Found {len(files_to_process)} new/updated PDFs that need processing")
-                return True
-            else:
-                logger.info("All PDFs are up to date in vector store")
-                return False
-                
-        except Exception as e:
-            logger.error(f"Error checking for new PDFs: {e}")
-            return False
+        logger.warning("has_new_pdfs() is deprecated - use URL-based processing instead")
+        return False
 
     def sync_if_needed(self) -> bool:
         """
@@ -580,147 +587,42 @@ class CPUCRAGSystem:
 
     def build_vector_store(self, force_rebuild: bool = False):
         """
-        Builds or incrementally updates the vector store in parallel.
-        Processes and saves progress one file at a time.
+        DEPRECATED: This method was for file-based processing. 
+        Use build_vector_store_from_urls() for URL-based processing instead.
+        
+        This method now redirects to URL-based processing if a download history exists.
         """
-        # ... (force_rebuild and DB loading logic is unchanged)
-        if force_rebuild and self.db_dir.exists():
-            logger.warning("Force rebuild requested. Deleting existing vector store.")
-            shutil.rmtree(self.db_dir)
-            self.vectordb = None
-            self.doc_hashes = {}
-            if self.doc_hashes_file.exists():
-                self.doc_hashes_file.unlink()
-        if self.vectordb is None:
-            if self.db_dir.exists() and any(self.db_dir.iterdir()):
-                logger.info("Loading existing vector store...")
-                try:
-                    self.vectordb = Chroma(persist_directory=str(self.db_dir), embedding_function=self.embedding_model)
-                    
-                    # Perform health check on loaded database
-                    if self._validate_vector_store():
-                        logger.info("Vector store loaded successfully and passed health checks.")
-                    else:
-                        logger.warning("Vector store loaded but failed health checks. Rebuilding...")
-                        self._rebuild_corrupted_store()
-                        
-                except Exception as e:
-                    logger.error(f"Failed to load existing DB, it might be corrupt. Rebuilding. Error: {e}")
-                    self._rebuild_corrupted_store()
-                    
-            if self.vectordb is None:
-                logger.info("Initializing new vector store.")
-                self.vectordb = Chroma(embedding_function=self.embedding_model, persist_directory=str(self.db_dir))
-
-        # --- Sync Files ---
-        current_pdf_paths = {p for p in self.base_dir.rglob("*.pdf")}
+        logger.warning("build_vector_store() is deprecated. Use build_vector_store_from_urls() instead.")
         
-        # Convert stored paths (normalized) back to actual paths for comparison
-        stored_pdf_paths = set()
-        for normalized_path in self.doc_hashes.keys():
+        # Check if we have a download history to work with
+        download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+        if download_history_path.exists():
+            logger.info("Found download history, redirecting to URL-based processing...")
             try:
-                # Try to resolve relative path to actual path
-                actual_path = self.project_root / normalized_path
-                if actual_path.exists():
-                    stored_pdf_paths.add(actual_path)
-            except Exception:
-                # If normalization fails, skip this entry
-                continue
-        
-        files_to_process = [p for p in current_pdf_paths if self._needs_update(p)]
-        files_to_delete = stored_pdf_paths - current_pdf_paths
-
-        # Log detailed statistics
-        logger.info(f"=== Vector Store Sync Statistics ===")
-        logger.info(f"Current PDFs found: {len(current_pdf_paths)}")
-        logger.info(f"Previously processed: {len(stored_pdf_paths)}")
-        logger.info(f"Files to process: {len(files_to_process)}")
-        logger.info(f"Files to delete: {len(files_to_delete)}")
-        
-        if files_to_process:
-            logger.info(f"Files to process:")
-            for file_path in files_to_process:
-                logger.info(f"  - {file_path.name}")
-        
-        if files_to_delete:
-            logger.info(f"Files to delete:")
-            for file_path in files_to_delete:
-                logger.info(f"  - {file_path.name}")
-
-        # --- Process Deletions ---
-        if files_to_delete:
-            self._delete_files_from_db(files_to_delete)
-
-        # --- Process New/Modified Files ---
-        if not files_to_process:
-            logger.info("✅ No new or modified files to process. Vector store is up to date.")
-            self.setup_qa_pipeline()
-            return
-        else:
-            logger.info(f"🔄 Processing {len(files_to_process)} new/modified files to process.")
-            start_time = datetime.now()
-            all_new_chunks = []
-            max_workers = min(10, multiprocessing.cpu_count())
-            with ProcessPoolExecutor(max_workers=max_workers) as executor:
-                futures = {executor.submit(data_processing.extract_and_chunk_with_docling, pdf_path): pdf_path for
-                           pdf_path in files_to_process}
-
-                progress_bar = tqdm(as_completed(futures), total=len(files_to_process), desc="Processing PDFs")
-                processed_count = 0
-                save_interval = 10  # Save every 10 PDFs processed
+                with open(download_history_path, 'r') as f:
+                    download_history = json.load(f)
                 
-                for future in progress_bar:
-                    pdf_path = futures[future]
-                    progress_bar.set_description(f"Processing {pdf_path.name}")
-                    try:
-                        doc_chunks = future.result()
-                        if doc_chunks:
-                            # Immediately save chunks to vector store
-                            db_batch_size = 64
-                            chunks_saved = 0
-                            for i in range(0, len(doc_chunks), db_batch_size):
-                                batch = doc_chunks[i:i + db_batch_size]
-                                try:
-                                    self.vectordb.add_documents(documents=batch)
-                                    chunks_saved += len(batch)
-                                except Exception as db_exc:
-                                    logger.error(f"Failed to save batch for {pdf_path.name}: {db_exc}")
-                            
-                            if chunks_saved > 0:
-                                # Only save hash if chunks were successfully saved
-                                normalized_path = self._normalize_file_path(pdf_path)
-                                self.doc_hashes[normalized_path] = data_processing.get_file_hash(pdf_path)
-                                all_new_chunks.extend(doc_chunks)
-                                processed_count += 1
-                                
-                                # Progressive hash saving every 10 files
-                                if processed_count % save_interval == 0:
-                                    try:
-                                        self._save_doc_hashes()
-                                        logger.info(f"Progressive save: {processed_count} PDFs processed, hashes saved")
-                                    except Exception as save_exc:
-                                        logger.error(f"Failed to save hashes progressively: {save_exc}")
-                    except Exception as exc:
-                        logger.error(f'{pdf_path.name} generated an exception during processing: {exc}', exc_info=True)
-
-            logger.info(f"Progressive processing complete. Total chunks processed: {len(all_new_chunks)}")
-
-        # --- Persist all changes and save hashes ---
-        logger.info("Persisting all database changes and saving file hashes...")
-        self.vectordb.persist()
-        self._save_doc_hashes()  # Save all hashes at the end of a successful sync.
+                # Convert download history to URL format
+                pdf_urls = []
+                for hash_key, entry in download_history.items():
+                    if isinstance(entry, dict) and entry.get('url') and entry.get('filename'):
+                        pdf_urls.append({
+                            'url': entry['url'],
+                            'filename': entry['filename']
+                        })
+                
+                if pdf_urls:
+                    logger.info(f"Redirecting to URL-based processing with {len(pdf_urls)} URLs")
+                    self.build_vector_store_from_urls(pdf_urls, force_rebuild)
+                    return
+                else:
+                    logger.error("Download history exists but contains no valid URLs")
+                    
+            except Exception as e:
+                logger.error(f"Failed to process download history: {e}")
         
-        # Log final statistics
-        end_time = datetime.now()
-        processing_time = end_time - start_time
-        logger.info(f"=== Processing Complete ===")
-        logger.info(f"Processing time: {processing_time}")
-        logger.info(f"Files processed: {len(files_to_process)}")
-        logger.info(f"Total chunks added: {len(all_new_chunks) if all_new_chunks else 0}")
-        logger.info(f"✅ Database sync complete.")
-        self.setup_qa_pipeline()
-
-        ### FIX: A more robust way to handle deletions that avoids complex `where` filters.
+        logger.error("No local PDFs or download history found. Please use build_vector_store_from_urls() with URL list.")
+        return
 
     def _delete_files_from_db(self, files_to_delete: set[Path]):
         """Finds and deletes all chunks associated with a set of file paths."""
@@ -848,12 +750,10 @@ class CPUCRAGSystem:
                 logger.warning("Hash file indicates processed documents but vector store is empty")
                 return False
             
-            # Additional check: if we have many PDFs on disk but no chunks AND no hashes, validation should fail
-            # Only fail if BOTH conditions are true: no chunks AND no hash tracking
-            pdf_count = len(list(self.base_dir.glob("*.pdf")))
-            if pdf_count > 0 and total_count == 0 and len(self.doc_hashes) == 0:
-                logger.warning(f"Found {pdf_count} PDFs on disk but vector store and hash file are both empty")
-                return False
+            # Additional check: Skip local PDF check since we moved to URL-based processing
+            # if total_count == 0 and len(self.doc_hashes) == 0:
+            #     logger.warning("Vector store and hash file are both empty - may need to rebuild from URLs")
+            #     return False
                 
             # Check if we can perform a simple query
             if total_count > 0:
@@ -936,17 +836,40 @@ class CPUCRAGSystem:
 
     def _load_existing_vector_store(self):
         """
-        Load existing vector store during initialization if it exists and is valid.
+        Load existing vector store during initialization with proper condition checking.
         
-        This method checks for an existing ChromaDB and loads it if found,
-        preventing the need to reprocess all documents on every startup.
+        This method implements the proper vector store loading logic:
+        1. Check if local_chroma_db folder exists
+        2. Check parity between download_history.json and document_hashes.json
+        3. Load if parity exists, otherwise mark for rebuild
         """
+        # Step 1: Check if local_chroma_db folder exists
         if not self.db_dir.exists() or not any(self.db_dir.iterdir()):
             logger.info("No existing vector store found. Will create new one when needed.")
             return
             
-        logger.info("Found existing vector store directory. Attempting to load...")
+        logger.info("Found existing vector store directory. Checking data parity...")
         
+        # Step 2: Check parity between download_history and document_hashes
+        parity_check = self._check_vector_store_parity()
+        
+        if not parity_check['has_parity']:
+            logger.warning(f"Vector store parity check failed: {parity_check['reason']}")
+            logger.info(f"Missing files: {len(parity_check['missing_files'])}")
+            logger.info(f"Extra files: {len(parity_check['extra_files'])}")
+            
+            if parity_check['missing_files']:
+                logger.info("Sample missing files:")
+                for i, missing_file in enumerate(parity_check['missing_files'][:5]):  # Show first 5
+                    logger.info(f"  - {missing_file}")
+                if len(parity_check['missing_files']) > 5:
+                    logger.info(f"  ... and {len(parity_check['missing_files']) - 5} more")
+            
+            # Don't load the vector store - it needs to be rebuilt
+            self.vectordb = None
+            return
+        
+        # Step 3: Load vector store if parity exists
         try:
             # Try to load the existing vector store
             self.vectordb = Chroma(
@@ -965,6 +888,120 @@ class CPUCRAGSystem:
             logger.error(f"Failed to load existing vector store: {e}")
             logger.info("Will create new vector store when needed.")
             self.vectordb = None
+
+    def _check_vector_store_parity(self) -> Dict:
+        """
+        Check parity between download_history.json and document_hashes.json.
+        
+        Returns:
+            Dict with keys:
+                - has_parity: bool indicating if parity exists
+                - reason: string explanation if parity fails
+                - missing_files: list of files in download_history but not in document_hashes
+                - extra_files: list of files in document_hashes but not in download_history
+        """
+        try:
+            # Load download history
+            download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+            if not download_history_path.exists():
+                return {
+                    'has_parity': False,
+                    'reason': 'download_history.json not found',
+                    'missing_files': [],
+                    'extra_files': []
+                }
+            
+            with open(download_history_path, 'r') as f:
+                download_history = json.load(f)
+            
+            # Extract filenames from download history (only successfully downloaded files)
+            download_history_files = set()
+            for record in download_history.values():
+                if record.get('status') == 'downloaded':
+                    filename = record.get('filename', '')
+                    if filename:
+                        download_history_files.add(filename)
+            
+            # Extract filenames from document hashes (normalize paths)
+            document_hashes_files = set()
+            for path_str in self.doc_hashes.keys():
+                # Extract filename from path
+                path_obj = Path(path_str)
+                filename = path_obj.name
+                document_hashes_files.add(filename)
+            
+            # Check for mismatches
+            missing_files = download_history_files - document_hashes_files
+            extra_files = document_hashes_files - download_history_files
+            
+            has_parity = len(missing_files) == 0 and len(extra_files) == 0
+            
+            if has_parity:
+                reason = "Perfect parity between download_history and document_hashes"
+            else:
+                reason = f"Parity mismatch: {len(missing_files)} missing, {len(extra_files)} extra"
+            
+            return {
+                'has_parity': has_parity,
+                'reason': reason,
+                'missing_files': list(missing_files),
+                'extra_files': list(extra_files)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error checking vector store parity: {e}")
+            return {
+                'has_parity': False,
+                'reason': f'Error checking parity: {str(e)}',
+                'missing_files': [],
+                'extra_files': []
+            }
+
+    def _get_missing_pdfs_from_download_history(self) -> List[Path]:
+        """
+        Get list of PDFs that are in download_history but missing from document_hashes.
+        
+        Returns:
+            List[Path]: List of PDF paths that need to be processed
+        """
+        try:
+            # Load download history
+            download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+            if not download_history_path.exists():
+                logger.warning("Download history file not found")
+                return []
+            
+            with open(download_history_path, 'r') as f:
+                download_history = json.load(f)
+            
+            # Extract filenames from download history (only successfully downloaded files)
+            download_history_files = set()
+            for record in download_history.values():
+                if record.get('status') == 'downloaded':
+                    filename = record.get('filename', '')
+                    if filename:
+                        download_history_files.add(filename)
+            
+            # Extract filenames from document hashes (normalize paths)
+            document_hashes_files = set()
+            for path_str in self.doc_hashes.keys():
+                # Extract filename from path
+                path_obj = Path(path_str)
+                filename = path_obj.name
+                document_hashes_files.add(filename)
+            
+            # Find missing files
+            missing_files = download_history_files - document_hashes_files
+            
+            # Convert missing filenames to actual paths if they exist
+            missing_paths = []
+            # DEPRECATED: No longer checking local PDFs since we moved to URL-based processing
+            logger.warning("_get_missing_pdfs_from_download_history is deprecated - use URL-based processing")
+            return []
+            
+        except Exception as e:
+            logger.error(f"Error getting missing PDFs from download history: {e}")
+            return []
 
     def _process_sources(self, documents: List[Document]) -> List[Dict]:
         return [{
@@ -1025,21 +1062,13 @@ class CPUCRAGSystem:
             "vector_store_loaded": self.vectordb is not None
         }
         
-        # Add file-based stats for backward compatibility
-        if hasattr(self, 'base_dir') and self.base_dir and self.base_dir.exists():
-            current_pdf_files = list(self.base_dir.rglob("*.pdf"))
-            stats.update({
-                "total_documents_on_disk": len(current_pdf_files),
-                "base_directory": str(self.base_dir),
-                "base_directory_exists": True,
-                "files_not_processed": len(current_pdf_files) - len(self.doc_hashes)
-            })
-        else:
-            stats.update({
-                "total_documents_on_disk": 0,
+        # URL-based processing stats (local PDFs removed)
+        stats.update({
+                "total_documents_on_disk": 0,  # No longer applicable
+                "total_documents_hashed": len(self.doc_hashes),  # URLs processed
                 "base_directory": "N/A (URL-based processing)",
                 "base_directory_exists": False,
-                "files_not_processed": 0
+                "files_not_hashed": 0  # No longer applicable
             })
         
         # Vector store statistics

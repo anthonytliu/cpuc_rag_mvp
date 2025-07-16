@@ -48,8 +48,8 @@ MICROSOFT_REDIRECT_URI=http://localhost:8501/auth/microsoft/callback
 
 ### 3. Environment Variables
 ```bash
-GOOGLE_CLIENT_ID=your_client_id_here
-GOOGLE_CLIENT_SECRET=your_client_secret_here
+GOOGLE_CLIENT_ID=y306697471831-ddgo2hl992tcmo857fn5n6fd2tldqsnh.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
 GOOGLE_REDIRECT_URI=http://localhost:8501/auth/google/callback
 ```
 

@@ -324,6 +324,91 @@ def get_source_url_from_filename(filename: str) -> Optional[str]:
         logger.warning(f"Failed to lookup source URL for {filename}: {e}")
         return None
 
+def get_publication_date_from_filename(filename: str) -> Optional[datetime]:
+    """
+    Extract publication date from download history based on filename.
+    
+    This function looks up the publication date for a given PDF filename
+    using the download history records, which often contain metadata
+    about when documents were actually published or filed.
+    
+    Args:
+        filename (str): Local PDF filename (with or without extension)
+        
+    Returns:
+        Optional[datetime]: Publication date if found, None otherwise
+        
+    Examples:
+        >>> get_publication_date_from_filename("D2504045 Order.pdf")
+        datetime.datetime(2025, 4, 15, 0, 0)
+        
+        >>> get_publication_date_from_filename("nonexistent.pdf")
+        None
+    """
+    try:
+        # Load download history
+        import json
+        from pathlib import Path
+        
+        history_file = Path(__file__).parent / "cpuc_csvs" / "r2207005_download_history.json"
+        if not history_file.exists():
+            logger.warning(f"Download history file not found: {history_file}")
+            return None
+            
+        with open(history_file, 'r') as f:
+            download_history = json.load(f)
+        
+        # Normalize filename for comparison
+        filename_clean = filename.replace('.pdf', '').replace('.PDF', '').strip()
+        
+        # Search through download history
+        for record in download_history.values():
+            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            if recorded_filename == filename_clean:
+                # Check for publication date in the record
+                pub_date = record.get('publication_date') or record.get('filing_date')
+                if pub_date:
+                    try:
+                        return datetime.fromisoformat(pub_date)
+                    except ValueError:
+                        logger.warning(f"Invalid date format in download history for {filename}: {pub_date}")
+                
+                # If no explicit publication date, try to extract from download date
+                download_date = record.get('download_date')
+                if download_date:
+                    try:
+                        return datetime.fromisoformat(download_date)
+                    except ValueError:
+                        logger.warning(f"Invalid download date format for {filename}: {download_date}")
+        
+        # If exact match fails, try partial matching
+        for record in download_history.values():
+            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            if (filename_clean in recorded_filename or 
+                recorded_filename in filename_clean or
+                (filename_clean.replace('_', ' ') == recorded_filename.replace('_', ' '))):
+                
+                pub_date = record.get('publication_date') or record.get('filing_date')
+                if pub_date:
+                    try:
+                        return datetime.fromisoformat(pub_date)
+                    except ValueError:
+                        continue
+                
+                download_date = record.get('download_date')
+                if download_date:
+                    try:
+                        return datetime.fromisoformat(download_date)
+                    except ValueError:
+                        continue
+        
+        logger.debug(f"No publication date found for filename: {filename}")
+        return None
+        
+    except Exception as e:
+        logger.warning(f"Failed to lookup publication date for {filename}: {e}")
+        return None
+
 def extract_and_chunk_with_docling(pdf_path: Path) -> List[Document]:
     """
     Enhanced document processing that extracts content, dates, and proceeding info.
@@ -395,6 +480,17 @@ def extract_and_chunk_with_docling(pdf_path: Path) -> List[Document]:
         
         # Get source URL from download history for direct citation linking
         source_url = get_source_url_from_filename(pdf_path.name)
+        
+        # Get publication date from download history (preferred over content extraction)
+        publication_date = get_publication_date_from_filename(pdf_path.name)
+        if publication_date and not doc_date:
+            doc_date = publication_date
+            logger.info(f"Using publication date from download history: {publication_date}")
+        elif publication_date and doc_date:
+            # Use publication date if it's different from content date
+            if abs((publication_date - doc_date).days) > 1:
+                logger.info(f"Publication date ({publication_date}) differs from content date ({doc_date}), using publication date")
+                doc_date = publication_date
 
         logger.info(f"Document metadata - Date: {doc_date}, Proceeding: {proceeding_number}, Type: {doc_type}, Source URL: {source_url is not None}")
 
@@ -421,6 +517,7 @@ def extract_and_chunk_with_docling(pdf_path: Path) -> List[Document]:
                     "last_modified": datetime.fromtimestamp(pdf_path.stat().st_mtime).isoformat(),
 
                     "document_date": doc_date.isoformat() if doc_date else None,
+                    "publication_date": publication_date.isoformat() if publication_date else None,
                     "proceeding_number": proceeding_number,
                     "document_type": doc_type,
                     "supersedes_priority": _calculate_supersedes_priority(doc_type, doc_date),
@@ -525,6 +622,17 @@ def extract_and_chunk_with_docling_url(pdf_url: str, document_title: str = None)
         proceeding_number = extract_proceeding_number(first_page_content)
         doc_type = identify_document_type(first_page_content, source_name)
         url_hash = get_url_hash(pdf_url)
+        
+        # Try to get publication date from download history using the source name
+        publication_date = get_publication_date_from_filename(source_name)
+        if publication_date and not doc_date:
+            doc_date = publication_date
+            logger.info(f"Using publication date from download history: {publication_date}")
+        elif publication_date and doc_date:
+            # Use publication date if it's different from content date
+            if abs((publication_date - doc_date).days) > 1:
+                logger.info(f"Publication date ({publication_date}) differs from content date ({doc_date}), using publication date")
+                doc_date = publication_date
 
         logger.info(f"Document metadata - Date: {doc_date}, Proceeding: {proceeding_number}, Type: {doc_type}")
 
@@ -552,6 +660,7 @@ def extract_and_chunk_with_docling_url(pdf_url: str, document_title: str = None)
                     "last_checked": datetime.now().isoformat(),
 
                     "document_date": doc_date.isoformat() if doc_date else None,
+                    "publication_date": publication_date.isoformat() if publication_date else None,
                     "proceeding_number": proceeding_number,
                     "document_type": doc_type,
                     "supersedes_priority": _calculate_supersedes_priority(doc_type, doc_date),
