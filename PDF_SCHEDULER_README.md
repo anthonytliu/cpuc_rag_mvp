@@ -107,7 +107,7 @@ python test_scheduler.py
 
 ### Status Files
 - `pdf_scheduler_status.json`: Scheduler status and statistics
-- `cpuc_csvs/r2207005_download_history.json`: Download history tracking
+- `cpuc_csvs/r2207005_scraped_pdf_history.json`: Scraped PDF history tracking
 
 ### Test Files
 - `test_scheduler.py`: Comprehensive scheduler testing

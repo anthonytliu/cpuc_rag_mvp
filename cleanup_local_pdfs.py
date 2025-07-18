@@ -32,7 +32,9 @@ class PDFCleanupManager:
         """Initialize cleanup manager"""
         self.project_root = project_root or Path(__file__).parent
         self.cpuc_pdfs_dir = self.project_root / "cpuc_pdfs"
-        self.download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+        from config import get_proceeding_file_paths, DEFAULT_PROCEEDING
+        proceeding_paths = get_proceeding_file_paths(DEFAULT_PROCEEDING)
+        self.scraped_pdf_history_path = proceeding_paths['scraped_pdf_history']
         self.backup_dir = self.project_root / "pdf_cleanup_backup"
         
         # Statistics

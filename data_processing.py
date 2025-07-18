@@ -259,7 +259,7 @@ def _calculate_supersedes_priority(doc_type: str, doc_date: Optional[datetime]) 
 
     return base_score
 
-def get_source_url_from_filename(filename: str) -> Optional[str]:
+def get_source_url_from_filename(filename: str, proceeding: str = None) -> Optional[str]:
     """
     Maps a local PDF filename to its original CPUC URL using download history.
     
@@ -268,6 +268,7 @@ def get_source_url_from_filename(filename: str) -> Optional[str]:
     
     Args:
         filename (str): Local PDF filename (with or without extension)
+        proceeding (str, optional): Proceeding ID (e.g., 'R2207005'). Uses default from config if not provided.
         
     Returns:
         Optional[str]: Original CPUC URL if found, None otherwise
@@ -284,19 +285,26 @@ def get_source_url_from_filename(filename: str) -> Optional[str]:
         import json
         from pathlib import Path
         
-        history_file = Path(__file__).parent / "cpuc_csvs" / "r2207005_download_history.json"
+        if proceeding is None:
+            from config import DEFAULT_PROCEEDING
+            proceeding = DEFAULT_PROCEEDING
+        
+        from config import get_proceeding_file_paths
+        proceeding_paths = get_proceeding_file_paths(proceeding)
+        
+        history_file = proceeding_paths['scraped_pdf_history']
         if not history_file.exists():
-            logger.warning(f"Download history file not found: {history_file}")
+            logger.warning(f"Scraped PDF history file not found: {history_file}")
             return None
             
         with open(history_file, 'r') as f:
-            download_history = json.load(f)
+            scraped_pdf_history = json.load(f)
         
         # Normalize filename for comparison (remove extensions and extra spaces)
         filename_clean = filename.replace('.pdf', '').replace('.PDF', '').strip()
         
         # Search through download history
-        for record in download_history.values():
+        for record in scraped_pdf_history.values():
             recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
             if recorded_filename == filename_clean:
                 url = record.get('url')
@@ -305,7 +313,7 @@ def get_source_url_from_filename(filename: str) -> Optional[str]:
                     return url
         
         # If exact match fails, try partial matching for common filename variations
-        for record in download_history.values():
+        for record in scraped_pdf_history.values():
             recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
             # Try both directions of partial matching
             if (filename_clean in recorded_filename or 
@@ -324,7 +332,7 @@ def get_source_url_from_filename(filename: str) -> Optional[str]:
         logger.warning(f"Failed to lookup source URL for {filename}: {e}")
         return None
 
-def get_publication_date_from_filename(filename: str) -> Optional[datetime]:
+def get_publication_date_from_filename(filename: str, proceeding: str = None) -> Optional[datetime]:
     """
     Extract publication date from download history based on filename.
     
@@ -334,6 +342,7 @@ def get_publication_date_from_filename(filename: str) -> Optional[datetime]:
     
     Args:
         filename (str): Local PDF filename (with or without extension)
+        proceeding (str, optional): Proceeding ID (e.g., 'R2207005'). Uses default from config if not provided.
         
     Returns:
         Optional[datetime]: Publication date if found, None otherwise
@@ -350,19 +359,26 @@ def get_publication_date_from_filename(filename: str) -> Optional[datetime]:
         import json
         from pathlib import Path
         
-        history_file = Path(__file__).parent / "cpuc_csvs" / "r2207005_download_history.json"
+        if proceeding is None:
+            from config import DEFAULT_PROCEEDING
+            proceeding = DEFAULT_PROCEEDING
+        
+        from config import get_proceeding_file_paths
+        proceeding_paths = get_proceeding_file_paths(proceeding)
+        
+        history_file = proceeding_paths['scraped_pdf_history']
         if not history_file.exists():
-            logger.warning(f"Download history file not found: {history_file}")
+            logger.warning(f"Scraped PDF history file not found: {history_file}")
             return None
             
         with open(history_file, 'r') as f:
-            download_history = json.load(f)
+            scraped_pdf_history = json.load(f)
         
         # Normalize filename for comparison
         filename_clean = filename.replace('.pdf', '').replace('.PDF', '').strip()
         
         # Search through download history
-        for record in download_history.values():
+        for record in scraped_pdf_history.values():
             recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
             if recorded_filename == filename_clean:
                 # Check for publication date in the record
@@ -382,7 +398,7 @@ def get_publication_date_from_filename(filename: str) -> Optional[datetime]:
                         logger.warning(f"Invalid download date format for {filename}: {download_date}")
         
         # If exact match fails, try partial matching
-        for record in download_history.values():
+        for record in scraped_pdf_history.values():
             recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
             if (filename_clean in recorded_filename or 
                 recorded_filename in filename_clean or

@@ -38,6 +38,52 @@ USE_URL_PROCESSING = True
 # URL processing timeouts and retry settings
 URL_VALIDATION_TIMEOUT = 30  # seconds
 URL_PROCESSING_TIMEOUT = 300  # seconds for Docling processing
+
+# --- MULTI-PROCEEDING SYSTEM SETTINGS ---
+# Available proceedings that can be selected in the UI
+AVAILABLE_PROCEEDINGS = {
+    "R2207005": {
+        "display_name": "R.22-07-005 - Demand Flexibility Rulemaking",
+        "full_name": "R.22-07-005",
+        "short_name": "R2207005",
+        "description": "Demand Flexibility Rulemaking",
+        "active": True
+    },
+    "R2108025": {
+        "display_name": "R.21-08-025 - Integrated Resource Planning",
+        "full_name": "R.21-08-025", 
+        "short_name": "R2108025",
+        "description": "Integrated Resource Planning",
+        "active": False
+    },
+    "R2011003": {
+        "display_name": "R.20-11-003 - Microgrids",
+        "full_name": "R.20-11-003",
+        "short_name": "R2011003", 
+        "description": "Microgrids Development",
+        "active": False
+    }
+}
+
+# Default proceeding to load on startup (first one in AVAILABLE_PROCEEDINGS)
+def get_first_proceeding() -> str:
+    """Get the first proceeding from AVAILABLE_PROCEEDINGS."""
+    return next(iter(AVAILABLE_PROCEEDINGS.keys()))
+
+DEFAULT_PROCEEDING = os.getenv("DEFAULT_PROCEEDING", get_first_proceeding())
+
+# --- DOCUMENT SCRAPER SETTINGS ---
+# List of proceedings to scrape (can be overridden in environment)
+SCRAPER_PROCEEDINGS = os.getenv("SCRAPER_PROCEEDINGS", "R2207005").split(",")
+
+# Maximum number of worker threads for scraping
+SCRAPER_MAX_WORKERS = int(os.getenv("SCRAPER_MAX_WORKERS", "8"))
+
+# Run scraper check on application startup
+RUN_SCRAPER_ON_STARTUP = os.getenv("RUN_SCRAPER_ON_STARTUP", "false").lower() == "true"
+
+# Maximum Google search results to process per query
+SCRAPER_MAX_GOOGLE_RESULTS = int(os.getenv("SCRAPER_MAX_GOOGLE_RESULTS", "50"))
 URL_RETRY_COUNT = 3
 URL_RETRY_DELAY = 5  # seconds between retries
 
@@ -45,9 +91,20 @@ URL_RETRY_DELAY = 5  # seconds between retries
 CPUC_BASE_URL = "https://docs.cpuc.ca.gov"
 CPUC_SEARCH_BASE = "https://docs.cpuc.ca.gov/SearchRes.aspx"
 
+# --- GOOGLE SEARCH API SETTINGS ---
+# Google Custom Search API credentials (more reliable than screen scraping)
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")  # Get from Google Cloud Console
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")    # Custom Search Engine ID
+GOOGLE_SEARCH_FALLBACK_ENABLED = os.getenv("GOOGLE_SEARCH_FALLBACK_ENABLED", "true").lower() == "true"
+
+# Rate limiting for Google searches
+GOOGLE_SEARCH_DELAY_SECONDS = float(os.getenv("GOOGLE_SEARCH_DELAY_SECONDS", "2.0"))
+GOOGLE_SEARCH_MAX_RETRIES = int(os.getenv("GOOGLE_SEARCH_MAX_RETRIES", "3"))
+GOOGLE_SEARCH_RETRY_DELAY = int(os.getenv("GOOGLE_SEARCH_RETRY_DELAY", "30"))
+
 # --- PDF SCHEDULER SETTINGS ---
 # Automated PDF checking and downloading
-PDF_CHECK_INTERVAL_HOURS = int(os.getenv("PDF_CHECK_INTERVAL_HOURS", "3"))  # Default: 3 hours
+PDF_CHECK_INTERVAL_HOURS = int(os.getenv("PDF_CHECK_INTERVAL_HOURS", "12"))  # Default: 12 hours
 PDF_SCHEDULER_ENABLED = os.getenv("PDF_SCHEDULER_ENABLED", "true").lower() == "true"
 PDF_SCHEDULER_HEADLESS = os.getenv("PDF_SCHEDULER_HEADLESS", "true").lower() == "true"
 PDF_SCHEDULER_MAX_RETRIES = int(os.getenv("PDF_SCHEDULER_MAX_RETRIES", "3"))
@@ -136,3 +193,52 @@ COMPLEX TEXT:
 {technical_answer}
 
 SIMPLIFIED EXPLANATION (in layman's terms with HTML formatting):"""
+
+# --- PROCEEDING UTILITY FUNCTIONS ---
+def get_proceeding_info(proceeding_id: str) -> dict:
+    """Get information about a specific proceeding."""
+    return AVAILABLE_PROCEEDINGS.get(proceeding_id, {})
+
+def get_active_proceedings() -> dict:
+    """Get all active proceedings."""
+    return {k: v for k, v in AVAILABLE_PROCEEDINGS.items() if v.get('active', False)}
+
+def get_proceeding_display_name(proceeding_id: str) -> str:
+    """Get display name for a proceeding."""
+    return AVAILABLE_PROCEEDINGS.get(proceeding_id, {}).get('display_name', proceeding_id)
+
+def get_proceeding_short_name(proceeding_id: str) -> str:
+    """Get short name for a proceeding."""
+    return AVAILABLE_PROCEEDINGS.get(proceeding_id, {}).get('short_name', proceeding_id)
+
+def get_proceeding_full_name(proceeding_id: str) -> str:
+    """Get full name for a proceeding."""
+    return AVAILABLE_PROCEEDINGS.get(proceeding_id, {}).get('full_name', proceeding_id)
+
+def format_proceeding_for_search(proceeding_id: str) -> str:
+    """Format proceeding ID for search queries (R2207005 -> R.22-07-005)."""
+    if len(proceeding_id) == 8 and proceeding_id.startswith('R'):
+        return f"R.{proceeding_id[1:3]}-{proceeding_id[3:5]}-{proceeding_id[5:]}"
+    return proceeding_id
+
+def get_proceeding_file_paths(proceeding_id: str, base_dir: Path = None) -> dict:
+    """Get standardized file paths for a proceeding."""
+    if base_dir is None:
+        base_dir = PROJECT_ROOT
+    
+    proceeding_lower = proceeding_id.lower()
+    
+    return {
+        'scraped_pdf_history': base_dir / "cpuc_csvs" / f"{proceeding_lower}_scraped_pdf_history.json",
+        'result_csv': base_dir / "cpuc_csvs" / f"{proceeding_lower}_resultCSV.csv",
+        'pdf_dir': base_dir / "cpuc_pdfs" / proceeding_id,
+        'vector_db': base_dir / "local_chroma_db" / proceeding_id,
+        'document_hashes': base_dir / "local_chroma_db" / proceeding_id / "document_hashes.json"
+    }
+
+def get_proceeding_urls(proceeding_id: str) -> dict:
+    """Get standardized URLs for a proceeding."""
+    return {
+        'cpuc_apex': f"https://apps.cpuc.ca.gov/apex/f?p=401:56:::NO:RP,57,RIR:P5_PROCEEDING_SELECT:{proceeding_id}",
+        'cpuc_search': f"https://docs.cpuc.ca.gov/SearchRes.aspx?category=proceeding&proceeding={proceeding_id}"
+    }

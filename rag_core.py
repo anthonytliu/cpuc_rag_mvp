@@ -33,12 +33,21 @@ logger = logging.getLogger(__name__)
 
 
 class CPUCRAGSystem:
-    def __init__(self):
+    def __init__(self, current_proceeding: str = None):
+        # --- Proceeding Configuration ---
+        if current_proceeding is None:
+            current_proceeding = config.DEFAULT_PROCEEDING
+        
+        self.current_proceeding = current_proceeding
+        
+        # Get proceeding-specific paths
+        self.proceeding_paths = config.get_proceeding_file_paths(current_proceeding, config.PROJECT_ROOT)
+        
         # --- Base Configuration ---
         self.num_chunks = None
         # Base directory no longer needed - using URL-based processing
         # self.base_dir = config.BASE_PDF_DIR  # DEPRECATED
-        self.db_dir = config.DB_DIR
+        self.db_dir = self.proceeding_paths['vector_db']
         self.chunk_size = config.CHUNK_SIZE
         self.chunk_overlap = config.CHUNK_OVERLAP
         self.project_root = config.PROJECT_ROOT
@@ -55,7 +64,7 @@ class CPUCRAGSystem:
         self.conversation_memory = ConversationMemory()
         self.vectordb: Optional[Chroma] = None
         self.retriever = None
-        self.doc_hashes_file = self.db_dir / "document_hashes.json"
+        self.doc_hashes_file = self.proceeding_paths['document_hashes']
         self.doc_hashes = self._load_doc_hashes()
 
         # --- Initial Setup ---
@@ -77,15 +86,19 @@ class CPUCRAGSystem:
             except Exception as e:
                 logger.warning(f"Vector store loaded but chunk count failed: {e}")
         else:
-            logger.info("No existing vector store found or parity check failed.")
+            logger.info("No working vector store found - checking for data to process...")
             
-            # Auto-rebuild vector store if we have download history but no working vector store
-            download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+            # Check if we have processed documents already
+            existing_doc_count = len(self.doc_hashes)
+            
+            # Auto-process from scraped PDF history if we have it but no working vector store
+            # Try both old and new naming conventions for backward compatibility
+            download_history_path = self.proceeding_paths['scraped_pdf_history']
             if download_history_path.exists():
-                logger.info("Found download history - auto-building vector store from URLs...")
+                logger.info("Found download history - checking what needs processing...")
                 try:
                     with open(download_history_path, 'r') as f:
-                        download_history = json.load(f)
+                        scraped_pdf_history = json.load(f)
                     
                     # Convert download history to URL format
                     pdf_urls = []
@@ -97,15 +110,22 @@ class CPUCRAGSystem:
                             })
                     
                     if pdf_urls:
-                        logger.info(f"Auto-building vector store with {len(pdf_urls)} URLs from download history")
-                        self.build_vector_store_from_urls(pdf_urls, force_rebuild=True)
+                        logger.info(f"Found {len(pdf_urls)} URLs in download history")
+                        logger.info(f"Already processed: {existing_doc_count} documents")
+                        logger.info("Starting incremental processing (only new documents will be processed)")
+                        self.build_vector_store_from_urls(pdf_urls, force_rebuild=False)
                     else:
                         logger.warning("Download history exists but contains no valid URLs")
                         
                 except Exception as e:
-                    logger.error(f"Failed to auto-build vector store from download history: {e}")
+                    logger.error(f"Failed to process download history: {e}")
             else:
-                logger.info("No download history found. Use build_vector_store_from_urls() to create vector store.")
+                if existing_doc_count > 0:
+                    logger.info(f"Found {existing_doc_count} processed documents but no download history")
+                    logger.info("Vector store will be built when new URLs are provided")
+                else:
+                    logger.info("No download history or processed documents found")
+                    logger.info("Use build_vector_store_from_urls() to create vector store")
 
     def has_new_pdfs(self) -> bool:
         """
@@ -209,8 +229,9 @@ class CPUCRAGSystem:
         # Pattern 1: Files with Conference numbers - link to proceeding since we can't map directly
         conf_match = re.search(r'Conf#\s*(\d+)', filename)
         if conf_match:
-            # Link to the main R.22-07-005 proceeding page where users can find all documents
-            return "https://apps.cpuc.ca.gov/apex/f?p=401:56:::NO:RP,57,RIR:P5_PROCEEDING_SELECT:R2207005"
+            # Link to the main proceeding page where users can find all documents
+            proceeding_urls = config.get_proceeding_urls(self.current_proceeding)
+            return proceeding_urls['cpuc_apex']
         
         # Pattern 2: Numeric PDF files (like 498072273.PDF) - try as DocID
         numeric_match = re.match(r'^(\d+)\.PDF?$', filename, re.IGNORECASE)
@@ -218,16 +239,19 @@ class CPUCRAGSystem:
             doc_id = numeric_match.group(1)
             return f"https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID={doc_id}"
         
-        # Pattern 3: For R.22-07-005 main proceeding document
-        if any(keyword in filename.lower() for keyword in ['r.22-07-005', 'r22-07-005', 'oir']):
-            return "https://apps.cpuc.ca.gov/apex/f?p=401:56:::NO:RP,57,RIR:P5_PROCEEDING_SELECT:R2207005"
+        # Pattern 3: For main proceeding document
+        proceeding_formatted = config.format_proceeding_for_search(self.current_proceeding).lower()
+        if any(keyword in filename.lower() for keyword in [proceeding_formatted, self.current_proceeding.lower(), 'oir']):
+            proceeding_urls = config.get_proceeding_urls(self.current_proceeding)
+            return proceeding_urls['cpuc_apex']
         
         # Pattern 4: Try to extract key terms for general CPUC search
         # Extract company/entity names for search
         for entity in ['PG&E', 'Pacific Gas', 'SCE', 'Southern California Edison', 'SDG&E', 'San Diego Gas']:
             if entity.lower() in filename.lower():
                 search_term = entity.replace(' ', '+')
-                return f"https://docs.cpuc.ca.gov/SearchRes.aspx?searchfor={search_term}&category=proceeding&proceeding=R2207005"
+                proceeding_urls = config.get_proceeding_urls(self.current_proceeding)
+                return f"{proceeding_urls['cpuc_search']}&searchfor={search_term}"
         
         # Fallback: Return None to use localhost
         return None
@@ -370,14 +394,31 @@ class CPUCRAGSystem:
         """
         logger.info(f"Building vector store from {len(pdf_urls)} PDF URLs")
         
-        # Handle force rebuild
+        # Handle force rebuild with safety guards
         if force_rebuild and self.db_dir.exists():
-            logger.warning("Force rebuild requested. Deleting existing vector store.")
-            shutil.rmtree(self.db_dir)
-            self.vectordb = None
-            self.doc_hashes = {}
-            if self.doc_hashes_file.exists():
-                self.doc_hashes_file.unlink()
+            logger.warning("🚨 FORCE REBUILD REQUESTED - This will delete all existing data!")
+            logger.warning("🚨 This should only be used for data corruption or major schema changes")
+            
+            # Check if there's existing data
+            try:
+                if self.doc_hashes_file.exists():
+                    existing_count = len(self.doc_hashes)
+                    logger.warning(f"🚨 About to delete {existing_count} processed documents")
+                    
+                # Log the action for audit trail
+                logger.warning(f"🚨 DELETING VECTOR STORE at {self.db_dir}")
+                
+                shutil.rmtree(self.db_dir)
+                self.vectordb = None
+                self.doc_hashes = {}
+                if self.doc_hashes_file.exists():
+                    self.doc_hashes_file.unlink()
+                    
+                logger.warning("🚨 Vector store deleted. Rebuilding from scratch.")
+                    
+            except Exception as e:
+                logger.error(f"Failed to delete vector store during force rebuild: {e}")
+                return
                 
         # Initialize vector store if needed
         if self.vectordb is None:
@@ -416,6 +457,13 @@ class CPUCRAGSystem:
         logger.info(f"New URLs to process: {len(urls_to_process)}")
         logger.info(f"URLs to delete: {len(deleted_url_hashes)}")
         
+        # Debug: Show a few examples of hash comparison
+        if len(current_url_hashes) > 0:
+            sample_current = list(current_url_hashes.keys())[:3]
+            sample_stored = list(stored_url_hashes)[:3]
+            logger.debug(f"Sample current hashes: {sample_current}")
+            logger.debug(f"Sample stored hashes: {sample_stored}")
+        
         if urls_to_process:
             logger.info(f"URLs to process:")
             for url_data in urls_to_process:
@@ -446,7 +494,7 @@ class CPUCRAGSystem:
                     for url_data in urls_to_process
                 }
                 
-                # Process completed tasks with progress bar
+                # Process completed tasks with progress bar and incremental writes
                 with tqdm(total=len(urls_to_process), desc="Processing URLs") as pbar:
                     for future in as_completed(future_to_url):
                         url_data = future_to_url[future]
@@ -456,15 +504,20 @@ class CPUCRAGSystem:
                         try:
                             result = future.result()
                             if result and result['chunks']:
-                                all_new_chunks.extend(result['chunks'])
+                                # Use incremental write for immediate persistence
                                 url_hash = data_processing.get_url_hash(pdf_url)
-                                self.doc_hashes[url_hash] = {
-                                    'url': pdf_url,
-                                    'title': title,
-                                    'last_processed': datetime.now().isoformat(),
-                                    'chunk_count': len(result['chunks'])
-                                }
-                                logger.info(f"✅ Processed {len(result['chunks'])} chunks from {title or pdf_url}")
+                                success = self.add_document_incrementally(
+                                    chunks=result['chunks'],
+                                    url_hash=url_hash,
+                                    url_data=url_data,
+                                    immediate_persist=True
+                                )
+                                
+                                if success:
+                                    all_new_chunks.extend(result['chunks'])
+                                    logger.info(f"✅ Processed and persisted {len(result['chunks'])} chunks from {title or pdf_url}")
+                                else:
+                                    logger.error(f"❌ Failed to persist chunks from {title or pdf_url}")
                             else:
                                 logger.warning(f"⚠️ No chunks extracted from {pdf_url}")
                                 
@@ -473,25 +526,28 @@ class CPUCRAGSystem:
                         
                         pbar.update(1)
 
-            # Add new chunks to the database in batches
+            # Final validation and cleanup
             if all_new_chunks:
-                logger.info(f"Adding {len(all_new_chunks)} new chunks to the vector store...")
+                logger.info(f"Successfully processed {len(all_new_chunks)} new chunks with incremental writes")
                 
-                db_batch_size = config.VECTOR_STORE_BATCH_SIZE
-                logger.info(f"Using optimized batch size: {db_batch_size}")
-                for i in tqdm(range(0, len(all_new_chunks), db_batch_size), desc="Writing to VectorDB"):
-                    batch = all_new_chunks[i:i + db_batch_size]
-                    try:
-                        self.vectordb.add_documents(documents=batch)
-                    except Exception as db_exc:
-                        logger.error(f"Failed to add a batch of {len(batch)} chunks to DB: {db_exc}")
+                # Final persistence (redundant but ensures everything is saved)
+                try:
+                    if self.vectordb:
+                        self.vectordb.persist()
+                        logger.info("Final persistence completed successfully")
+                except Exception as persist_exc:
+                    logger.error(f"Final persistence failed: {persist_exc}")
+                    
+                # Final hash save (redundant but ensures everything is saved)
+                try:
+                    self._save_doc_hashes()
+                    logger.info("Final hash save completed successfully")
+                except Exception as hash_exc:
+                    logger.error(f"Final hash save failed: {hash_exc}")
+            else:
+                logger.info("No new chunks were processed")
 
-                logger.info("Finished adding new chunks.")
-
-        # Persist all changes and save hashes
-        logger.info("Persisting all database changes and saving URL hashes...")
-        self.vectordb.persist()
-        self._save_doc_hashes()
+        # Note: Individual persistence already handled by incremental writes
         
         # Log final statistics with performance metrics
         end_time = datetime.now()
@@ -517,6 +573,204 @@ class CPUCRAGSystem:
         logger.info(f"Parallel workers used: {max_workers}")
         logger.info(f"✅ URL-based database sync complete.")
         self.setup_qa_pipeline()
+
+    def recover_partial_build(self, pdf_urls: List[Dict[str, str]]) -> List[Dict[str, str]]:
+        """
+        Recover from a partial build by identifying which URLs still need processing.
+        
+        This method compares the requested URLs with what's already in the vector store
+        and returns only the URLs that still need to be processed.
+        
+        Args:
+            pdf_urls: List of URL dictionaries to check
+            
+        Returns:
+            List of URL dictionaries that still need processing
+        """
+        if not pdf_urls:
+            return []
+            
+        logger.info("Checking for partial build recovery...")
+        
+        # Get current URL hashes
+        current_url_hashes = {data_processing.get_url_hash(url_data['url']): url_data for url_data in pdf_urls}
+        stored_url_hashes = set(self.doc_hashes.keys())
+        
+        # Find URLs that haven't been processed
+        missing_url_hashes = set(current_url_hashes.keys()) - stored_url_hashes
+        urls_to_process = [current_url_hashes[hash_val] for hash_val in missing_url_hashes]
+        
+        if urls_to_process:
+            logger.info(f"Found {len(urls_to_process)} URLs that need processing for recovery")
+            logger.info(f"Already processed: {len(stored_url_hashes)} URLs")
+        else:
+            logger.info("No URLs need processing - vector store is complete")
+            
+        return urls_to_process
+
+    def create_checkpoint(self, checkpoint_name: str = None) -> str:
+        """
+        Create a checkpoint of the current vector store state.
+        
+        Args:
+            checkpoint_name: Optional name for the checkpoint
+            
+        Returns:
+            str: Path to the checkpoint directory
+        """
+        if checkpoint_name is None:
+            checkpoint_name = f"checkpoint_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            
+        checkpoint_dir = self.db_dir.parent / f"checkpoints" / checkpoint_name
+        
+        try:
+            checkpoint_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Copy vector store files
+            if self.db_dir.exists():
+                shutil.copytree(self.db_dir, checkpoint_dir / "vector_store", dirs_exist_ok=True)
+                
+            # Copy document hashes
+            if self.doc_hashes_file.exists():
+                shutil.copy2(self.doc_hashes_file, checkpoint_dir / "document_hashes.json")
+                
+            logger.info(f"Created checkpoint: {checkpoint_dir}")
+            return str(checkpoint_dir)
+            
+        except Exception as e:
+            logger.error(f"Failed to create checkpoint: {e}")
+            return None
+
+    def restore_from_checkpoint(self, checkpoint_path: str) -> bool:
+        """
+        Restore vector store from a checkpoint.
+        
+        Args:
+            checkpoint_path: Path to the checkpoint directory
+            
+        Returns:
+            bool: True if restoration was successful
+        """
+        checkpoint_dir = Path(checkpoint_path)
+        
+        if not checkpoint_dir.exists():
+            logger.error(f"Checkpoint not found: {checkpoint_path}")
+            return False
+            
+        try:
+            # Stop current vector store
+            self.vectordb = None
+            
+            # Restore vector store files
+            vector_store_checkpoint = checkpoint_dir / "vector_store"
+            if vector_store_checkpoint.exists():
+                if self.db_dir.exists():
+                    shutil.rmtree(self.db_dir)
+                shutil.copytree(vector_store_checkpoint, self.db_dir)
+                
+            # Restore document hashes
+            hash_checkpoint = checkpoint_dir / "document_hashes.json"
+            if hash_checkpoint.exists():
+                shutil.copy2(hash_checkpoint, self.doc_hashes_file)
+                self.doc_hashes = self._load_doc_hashes()
+                
+            # Reload vector store
+            self._load_existing_vector_store()
+            
+            logger.info(f"Successfully restored from checkpoint: {checkpoint_path}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to restore from checkpoint: {e}")
+            return False
+
+    def add_document_incrementally(self, chunks: List[Document], url_hash: str, url_data: Dict[str, str], 
+                                  immediate_persist: bool = True) -> bool:
+        """
+        Add documents incrementally to the vector store with immediate persistence.
+        
+        This method writes documents to the DB immediately and handles failures gracefully,
+        ensuring that progress is not lost during large batch operations.
+        
+        Args:
+            chunks: List of Document objects to add
+            url_hash: Hash of the URL being processed
+            url_data: Dictionary containing URL metadata
+            immediate_persist: Whether to persist immediately after adding
+            
+        Returns:
+            bool: True if successful, False if failed
+        """
+        if not chunks:
+            logger.warning("No chunks provided for incremental addition")
+            return False
+            
+        # Ensure vector store is initialized
+        if self.vectordb is None:
+            logger.info("Initializing new vector store for incremental addition.")
+            try:
+                self.vectordb = Chroma(
+                    embedding_function=self.embedding_model, 
+                    persist_directory=str(self.db_dir)
+                )
+            except Exception as e:
+                logger.error(f"Failed to initialize vector store: {e}")
+                return False
+        
+        try:
+            # Add documents to vector store
+            logger.info(f"Adding {len(chunks)} chunks incrementally...")
+            
+            # Process in smaller batches to avoid memory issues
+            batch_size = min(config.VECTOR_STORE_BATCH_SIZE, len(chunks))
+            success_count = 0
+            
+            for i in range(0, len(chunks), batch_size):
+                batch = chunks[i:i + batch_size]
+                try:
+                    self.vectordb.add_documents(documents=batch)
+                    success_count += len(batch)
+                    logger.debug(f"Successfully added batch {i//batch_size + 1}/{(len(chunks)-1)//batch_size + 1}")
+                except Exception as batch_exc:
+                    logger.error(f"Failed to add batch {i//batch_size + 1}: {batch_exc}")
+                    # Continue with remaining batches
+                    continue
+            
+            # Persist immediately if requested
+            if immediate_persist:
+                try:
+                    self.vectordb.persist()
+                    logger.info("Vector store persisted successfully")
+                except Exception as persist_exc:
+                    logger.error(f"Failed to persist vector store: {persist_exc}")
+                    return False
+            
+            # Update document hashes only after successful DB operations
+            if success_count > 0:
+                self.doc_hashes[url_hash] = {
+                    'url': url_data['url'],
+                    'title': url_data.get('title', ''),
+                    'last_processed': datetime.now().isoformat(),
+                    'chunk_count': success_count
+                }
+                
+                # Save hashes immediately
+                try:
+                    self._save_doc_hashes()
+                    logger.info(f"Document hashes updated for {url_data.get('title', url_data['url'])}")
+                except Exception as hash_exc:
+                    logger.error(f"Failed to save document hashes: {hash_exc}")
+                    # Don't fail the entire operation for this
+                
+                logger.info(f"✅ Successfully added {success_count}/{len(chunks)} chunks incrementally")
+                return True
+            else:
+                logger.error("No chunks were successfully added")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Incremental document addition failed: {e}")
+            return False
 
     def _process_single_url(self, url_data: Dict[str, str]) -> Dict:
         """
@@ -594,13 +848,16 @@ class CPUCRAGSystem:
         """
         logger.warning("build_vector_store() is deprecated. Use build_vector_store_from_urls() instead.")
         
-        # Check if we have a download history to work with
-        download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+        # Check if we have a scraped PDF history to work with
+        # Try both old and new naming conventions for backward compatibility
+        download_history_path = self.proceeding_paths['scraped_pdf_history']
+        if not download_history_path.exists():
+            download_history_path = self.proceeding_paths['download_history']
         if download_history_path.exists():
             logger.info("Found download history, redirecting to URL-based processing...")
             try:
                 with open(download_history_path, 'r') as f:
-                    download_history = json.load(f)
+                    scraped_pdf_history = json.load(f)
                 
                 # Convert download history to URL format
                 pdf_urls = []
@@ -772,23 +1029,37 @@ class CPUCRAGSystem:
         """
         Rebuild the vector store when corruption is detected.
         
-        Cleans up corrupted files and resets the system state.
+        This method attempts to preserve as much data as possible before rebuilding.
         """
-        logger.info("Rebuilding corrupted vector store...")
+        logger.warning("🚨 CORRUPTION DETECTED - Attempting recovery...")
+        
+        # Try to backup document hashes before cleanup
+        backup_created = False
+        if self.doc_hashes_file.exists() and self.doc_hashes:
+            try:
+                backup_path = self.doc_hashes_file.parent / f"document_hashes_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                shutil.copy2(self.doc_hashes_file, backup_path)
+                logger.info(f"✅ Created backup of document hashes at {backup_path}")
+                backup_created = True
+            except Exception as e:
+                logger.error(f"Failed to backup document hashes: {e}")
         
         # Clean up corrupted database
         if self.db_dir.exists():
+            logger.warning(f"🚨 Removing corrupted vector store at {self.db_dir}")
             shutil.rmtree(self.db_dir)
         
-        # Reset state
+        # Reset state but preserve doc_hashes if backup was created
         self.vectordb = None
-        self.doc_hashes = {}
-        
-        # Remove corrupted hash file
-        if self.doc_hashes_file.exists():
-            self.doc_hashes_file.unlink()
+        if not backup_created:
+            logger.warning("🚨 No backup created - resetting document hashes")
+            self.doc_hashes = {}
+            if self.doc_hashes_file.exists():
+                self.doc_hashes_file.unlink()
+        else:
+            logger.info("✅ Preserving document hashes for recovery")
             
-        logger.info("Corrupted vector store cleaned up. Will rebuild from scratch.")
+        logger.warning("🚨 Corrupted vector store cleaned up. Recovery will use existing document hashes if available.")
 
     def _normalize_file_path(self, file_path: Path) -> str:
         """
@@ -839,18 +1110,26 @@ class CPUCRAGSystem:
         Load existing vector store during initialization with proper condition checking.
         
         This method implements the proper vector store loading logic:
-        1. Check if local_chroma_db folder exists
-        2. Check parity between download_history.json and document_hashes.json
+        1. Check if local_chroma_db folder exists and create if needed
+        2. Check parity between scraped_pdf_history.json and document_hashes.json
         3. Load if parity exists, otherwise mark for rebuild
         """
-        # Step 1: Check if local_chroma_db folder exists
-        if not self.db_dir.exists() or not any(self.db_dir.iterdir()):
+        # Step 1: Ensure DB directory exists
+        try:
+            self.db_dir.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Vector store directory ensured: {self.db_dir}")
+        except Exception as e:
+            logger.error(f"Failed to create vector store directory: {e}")
+            return
+
+        # Check if directory is empty (no existing store)
+        if not any(self.db_dir.iterdir()):
             logger.info("No existing vector store found. Will create new one when needed.")
             return
             
         logger.info("Found existing vector store directory. Checking data parity...")
         
-        # Step 2: Check parity between download_history and document_hashes
+        # Step 2: Check parity between scraped_pdf_history and document_hashes
         parity_check = self._check_vector_store_parity()
         
         if not parity_check['has_parity']:
@@ -891,36 +1170,37 @@ class CPUCRAGSystem:
 
     def _check_vector_store_parity(self) -> Dict:
         """
-        Check parity between download_history.json and document_hashes.json.
+        Check parity between scraped_pdf_history.json and document_hashes.json.
         
         Returns:
             Dict with keys:
                 - has_parity: bool indicating if parity exists
                 - reason: string explanation if parity fails
-                - missing_files: list of files in download_history but not in document_hashes
-                - extra_files: list of files in document_hashes but not in download_history
+                - missing_files: list of files in scraped_pdf_history but not in document_hashes
+                - extra_files: list of files in document_hashes but not in scraped_pdf_history
         """
         try:
-            # Load download history
-            download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+            # Load scraped PDF history
+            # Try both old and new naming conventions for backward compatibility
+            download_history_path = self.proceeding_paths['scraped_pdf_history']
             if not download_history_path.exists():
                 return {
                     'has_parity': False,
-                    'reason': 'download_history.json not found',
+                    'reason': 'scraped_pdf_history.json not found',
                     'missing_files': [],
                     'extra_files': []
                 }
             
             with open(download_history_path, 'r') as f:
-                download_history = json.load(f)
+                scraped_pdf_history = json.load(f)
             
             # Extract filenames from download history (only successfully downloaded files)
-            download_history_files = set()
-            for record in download_history.values():
+            scraped_pdf_history_files = set()
+            for record in scraped_pdf_history.values():
                 if record.get('status') == 'downloaded':
                     filename = record.get('filename', '')
                     if filename:
-                        download_history_files.add(filename)
+                        scraped_pdf_history_files.add(filename)
             
             # Extract filenames from document hashes (normalize paths)
             document_hashes_files = set()
@@ -931,13 +1211,13 @@ class CPUCRAGSystem:
                 document_hashes_files.add(filename)
             
             # Check for mismatches
-            missing_files = download_history_files - document_hashes_files
-            extra_files = document_hashes_files - download_history_files
+            missing_files = scraped_pdf_history_files - document_hashes_files
+            extra_files = document_hashes_files - scraped_pdf_history_files
             
             has_parity = len(missing_files) == 0 and len(extra_files) == 0
             
             if has_parity:
-                reason = "Perfect parity between download_history and document_hashes"
+                reason = "Perfect parity between scraped_pdf_history and document_hashes"
             else:
                 reason = f"Parity mismatch: {len(missing_files)} missing, {len(extra_files)} extra"
             
@@ -957,30 +1237,31 @@ class CPUCRAGSystem:
                 'extra_files': []
             }
 
-    def _get_missing_pdfs_from_download_history(self) -> List[Path]:
+    def _get_missing_pdfs_from_scraped_pdf_history(self) -> List[Path]:
         """
-        Get list of PDFs that are in download_history but missing from document_hashes.
+        Get list of PDFs that are in scraped_pdf_history but missing from document_hashes.
         
         Returns:
             List[Path]: List of PDF paths that need to be processed
         """
         try:
-            # Load download history
-            download_history_path = self.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+            # Load scraped PDF history
+            # Try both old and new naming conventions for backward compatibility
+            download_history_path = self.proceeding_paths['scraped_pdf_history']
             if not download_history_path.exists():
                 logger.warning("Download history file not found")
                 return []
             
             with open(download_history_path, 'r') as f:
-                download_history = json.load(f)
+                scraped_pdf_history = json.load(f)
             
             # Extract filenames from download history (only successfully downloaded files)
-            download_history_files = set()
-            for record in download_history.values():
+            scraped_pdf_history_files = set()
+            for record in scraped_pdf_history.values():
                 if record.get('status') == 'downloaded':
                     filename = record.get('filename', '')
                     if filename:
-                        download_history_files.add(filename)
+                        scraped_pdf_history_files.add(filename)
             
             # Extract filenames from document hashes (normalize paths)
             document_hashes_files = set()
@@ -996,7 +1277,7 @@ class CPUCRAGSystem:
             # Convert missing filenames to actual paths if they exist
             missing_paths = []
             # DEPRECATED: No longer checking local PDFs since we moved to URL-based processing
-            logger.warning("_get_missing_pdfs_from_download_history is deprecated - use URL-based processing")
+            logger.warning("_get_missing_pdfs_from_scraped_pdf_history is deprecated - use URL-based processing")
             return []
             
         except Exception as e:

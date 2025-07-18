@@ -3,7 +3,7 @@
 PDF Scheduler for CPUC RAG System
 
 This module provides background job scheduling for automated PDF checking,
-downloading, and model updates. It runs every 3 hours to check for new
+downloading, and model updates. It runs every hour to check for new
 documents and automatically updates the RAG system.
 
 Author: Claude Code
@@ -19,8 +19,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Callable
 import schedule
 
+import config
 # Import existing modules
-from pdf_scraper_core import CPUCPDFScraper, check_for_new_pdfs, download_new_pdfs
+from cpuc_scraper import CPUCUnifiedScraper, get_new_pdfs_for_proceeding
 
 logger = logging.getLogger(__name__)
 
@@ -28,13 +29,13 @@ logger = logging.getLogger(__name__)
 class PDFScheduler:
     """Background scheduler for automated PDF checking and downloading"""
     
-    def __init__(self, rag_system=None, check_interval_hours: int = 3):
+    def __init__(self, rag_system=None, check_interval_hours: int = 1):
         """
         Initialize the PDF scheduler
         
         Args:
             rag_system: The RAG system instance to update
-            check_interval_hours: How often to check for new PDFs (default: 3 hours)
+            check_interval_hours: How often to check for new PDFs (default: 1 hour)
         """
         self.rag_system = rag_system
         self.check_interval_hours = check_interval_hours
@@ -61,6 +62,21 @@ class PDFScheduler:
         self.on_new_pdfs_downloaded: Optional[Callable] = None
         self.on_check_complete: Optional[Callable] = None
         self.on_error: Optional[Callable] = None
+        self.on_rag_updated: Optional[Callable] = None
+        
+        # Initialize unified document scraper for enhanced discovery
+        try:
+            # Import config here to avoid circular imports
+            import config
+            
+            self.document_scraper = CPUCUnifiedScraper(
+                headless=True,
+                max_workers=min(4, config.SCRAPER_MAX_WORKERS)  # Use fewer workers for scheduled tasks
+            )
+            logger.info("Unified document scraper initialized for scheduler")
+        except Exception as e:
+            logger.warning(f"Could not initialize unified document scraper: {e}")
+            self.document_scraper = None
         
         logger.info(f"PDF Scheduler initialized with {check_interval_hours}-hour interval")
     
@@ -198,34 +214,50 @@ class PDFScheduler:
             self._handle_error(e)
     
     def _perform_pdf_check(self) -> int:
-        """Perform the actual PDF checking and downloading"""
-        total_downloads = 0
+        """Perform the actual PDF checking and downloading using scraper"""
+        total_new_documents = 0
         
         try:
-            # Use the new scraper core
-            scraper = CPUCPDFScraper(headless=True)
-            
-            # Check each proceeding
-            for proceeding in ["R2207005"]:  # Can be expanded to other proceedings
-                logger.info(f"Checking proceeding {proceeding}...")
+            # Run Google search discovery with proceeding priority
+            if self.document_scraper:
+                logger.info("🔍 Running document discovery...")
                 
-                # Check for new PDFs
-                new_urls, metadata = scraper.check_for_new_pdfs(proceeding)
+                # Get proceedings in priority order (default first)
+                primary_proceeding = config.DEFAULT_PROCEEDING
+                prioritized_proceedings = [primary_proceeding]
                 
-                if new_urls:
-                    logger.info(f"Found {len(new_urls)} new/updated PDFs for {proceeding}")
-                    
-                    # Download new PDFs
-                    downloaded_count = scraper.download_pdfs(proceeding, new_urls)
-                    total_downloads += downloaded_count
-                else:
-                    logger.info(f"No new PDFs found for {proceeding}")
+                # Add other proceedings after primary
+                for proc in self.document_scraper.proceedings:
+                    if proc != primary_proceeding and proc not in prioritized_proceedings:
+                        prioritized_proceedings.append(proc)
+                
+                logger.info(f"Scheduler proceeding priority order: {prioritized_proceedings}")
+                
+                for proceeding in prioritized_proceedings:
+                    try:
+                        priority_label = "PRIMARY" if proceeding == primary_proceeding else "secondary"
+                        logger.info(f"🔍 Checking {proceeding} ({priority_label})")
+                        
+                        # Use unified scraper to get new PDFs
+                        new_pdfs = get_new_pdfs_for_proceeding(proceeding, headless=True)
+                        
+                        if new_pdfs:
+                            logger.info(f"Enhanced search found {len(new_pdfs)} new documents for {proceeding} ({priority_label})")
+                            
+                            # Count as new documents found
+                            total_new_documents += len(new_pdfs)
+                        else:
+                            logger.info(f"No new documents found for {proceeding} ({priority_label})")
+                            
+                    except Exception as e:
+                        logger.warning(f"Enhanced discovery failed for {proceeding}: {e}")
+
         
         except Exception as e:
             logger.error(f"Error during PDF check: {e}")
             raise
         
-        return total_downloads
+        return total_new_documents
     
     
     def _update_rag_system(self):
@@ -234,8 +266,11 @@ class PDFScheduler:
             if self.rag_system:
                 logger.info("🔄 Updating RAG system with new PDFs...")
                 
-                # For URL-based processing, check if we have new URLs from download history
-                download_history_path = self.rag_system.project_root / "cpuc_csvs" / "r2207005_download_history.json"
+                # For URL-based processing, check if we have new URLs from scraped PDF history
+                # Use proceeding-specific scraped PDF history
+                from config import get_proceeding_file_paths, DEFAULT_PROCEEDING
+                proceeding_paths = get_proceeding_file_paths(DEFAULT_PROCEEDING)
+                download_history_path = proceeding_paths['scraped_pdf_history']
                 if download_history_path.exists():
                     logger.info("Checking for new URLs in download history...")
                     
@@ -339,6 +374,6 @@ class PDFScheduler:
         logger.info("Manual PDF check scheduled")
 
 
-def create_pdf_scheduler(rag_system=None, check_interval_hours: int = 3) -> PDFScheduler:
+def create_pdf_scheduler(rag_system=None, check_interval_hours: int = 1) -> PDFScheduler:
     """Factory function to create PDF scheduler"""
     return PDFScheduler(rag_system=rag_system, check_interval_hours=check_interval_hours)

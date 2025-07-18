@@ -1,8 +1,20 @@
 {
-  "last_check": "2025-07-16T13:45:50.494765",
+  "last_check": "2025-07-17T15:17:39.032569",
   "last_download_count": 0,
   "is_running": true,
-  "next_check": "2025-07-16T16:45:50.494765",
-  "total_downloads": 0,
-  "errors": []
+  "next_check": "2025-07-18T03:17:39.032569",
+  "total_downloads": 21,
+  "errors": [
+    {
+      "timestamp": "2025-07-17T11:47:59.213636",
+      "error": "name 'config' is not defined",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/anthony.liu/Downloads/CPUC_REG_RAG/pdf_scheduler.py\", line 185, in _check_for_new_pdfs\n    new_downloads = self._perform_pdf_check()\n  File \"/Users/anthony.liu/Downloads/CPUC_REG_RAG/pdf_scheduler.py\", line 225, in _perform_pdf_check\n    primary_proceeding = config.DEFAULT_PROCEEDING\n                         ^^^^^^\nNameError: name 'config' is not defined\n"
+    },
+    {
+      "timestamp": "2025-07-17T13:47:54.462109",
+      "error": "name 'config' is not defined",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/anthony.liu/Downloads/CPUC_REG_RAG/pdf_scheduler.py\", line 185, in _check_for_new_pdfs\n    new_downloads = self._perform_pdf_check()\n  File \"/Users/anthony.liu/Downloads/CPUC_REG_RAG/pdf_scheduler.py\", line 225, in _perform_pdf_check\n    primary_proceeding = config.DEFAULT_PROCEEDING\n                         ^^^^^^\nNameError: name 'config' is not defined\n"
+    }
+  ],
+  "rag_update_status": "no_new_urls"
 }
