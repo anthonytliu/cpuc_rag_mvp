@@ -70,8 +70,11 @@ def get_first_proceeding() -> str:
 DEFAULT_PROCEEDING = os.getenv("DEFAULT_PROCEEDING", get_first_proceeding())
 
 # --- DOCUMENT SCRAPER SETTINGS ---
-# List of proceedings to scrape (can be overridden in environment)
-SCRAPER_PROCEEDINGS = os.getenv("SCRAPER_PROCEEDINGS", "R2207005").split(",")
+# List of proceedings to scrape (single source of truth)
+SCRAPER_PROCEEDINGS = [
+    "R2207005",  # Demand Flexibility Rulemaking
+    "R1807006"   # Additional proceeding
+]
 
 # Maximum number of worker threads for scraping
 SCRAPER_MAX_WORKERS = int(os.getenv("SCRAPER_MAX_WORKERS", "8"))

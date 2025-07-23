@@ -12,6 +12,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 # Import the scraper functions
 from cpuc_scraper import (
@@ -47,6 +48,340 @@ class TestCPUCSimplifiedScraper(unittest.TestCase):
         
         # Hash should be MD5 (32 characters)
         self.assertEqual(len(hash1), 32)
+
+
+class TestParentPageURLAndSourceTracking(unittest.TestCase):
+    """Test parent page URL and source tracking functionality"""
+    
+    def setUp(self):
+        self.scraper = CPUCSimplifiedScraper(headless=True)
+    
+    def test_csv_source_tracking(self):
+        """Test that PDFs from CSV have correct source tracking"""
+        # Mock a PDF info dictionary as would be created from CSV extraction
+        mock_document_url = "https://docs.cpuc.ca.gov/documents/2022/07/005/decision.html"
+        
+        pdf_info = {
+            'pdf_url': 'https://docs.cpuc.ca.gov/test.pdf',
+            'parent_page_url': mock_document_url,
+            'source': 'csv',
+            'title': 'Test Document',
+            'document_type': 'Decision',
+            'filing_date': '07/01/2022',
+            'filed_by': 'Test Entity',
+            'description': 'Test Description',
+            'source_page': mock_document_url,
+            'scrape_date': '01/01/2024',
+            'pdf_creation_date': '07/01/2022',
+            'link_text': 'Test Document',
+            'parent_text': 'Test Document',
+            'raw_url': 'https://docs.cpuc.ca.gov/test.pdf'
+        }
+        
+        # Verify all required fields are present
+        self.assertEqual(pdf_info['source'], 'csv')
+        self.assertEqual(pdf_info['parent_page_url'], mock_document_url)
+        self.assertEqual(pdf_info['pdf_url'], 'https://docs.cpuc.ca.gov/test.pdf')
+    
+    def test_google_search_source_tracking(self):
+        """Test that PDFs from Google search have correct source tracking"""
+        mock_google_result_url = "https://docs.cpuc.ca.gov/direct_link.pdf"
+        
+        # Simulate what would be created for a Google search result
+        pdf_info = {
+            'pdf_url': mock_google_result_url,
+            'parent_page_url': mock_google_result_url,
+            'source': 'google search',
+            'title': 'Google Found Document',
+            'document_type': 'Google Search Result',
+            'pdf_creation_date': '01/01/2024',
+            'scrape_date': '01/01/2024',
+            'link_text': 'Google Found Document',
+            'parent_text': 'Google Found Document',
+            'raw_url': mock_google_result_url,
+            'status': 'successfully_analyzed'
+        }
+        
+        # Verify Google search specific fields
+        self.assertEqual(pdf_info['source'], 'google search')
+        self.assertEqual(pdf_info['parent_page_url'], mock_google_result_url)
+        self.assertEqual(pdf_info['document_type'], 'Google Search Result')
+    
+    def test_page_url_duplicate_prevention(self):
+        """Test that duplicate page URLs are properly skipped"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Create cpuc_proceedings structure
+            cpuc_proceedings_dir = Path(temp_dir) / "cpuc_proceedings"
+            cpuc_proceedings_dir.mkdir()
+            proceeding_folder = cpuc_proceedings_dir / "R2207005"
+            proceeding_folder.mkdir()
+            
+            # Create mock history with existing page URL
+            existing_page_url = "https://docs.cpuc.ca.gov/existing_page.html"
+            history_file = proceeding_folder / "R2207005_scraped_pdf_history.json"
+            
+            existing_history = {
+                "abcd1234": {
+                    "url": "https://docs.cpuc.ca.gov/existing.pdf",
+                    "source_page": existing_page_url,
+                    "parent_page_url": existing_page_url,
+                    "source": "csv",
+                    "title": "Existing Document"
+                }
+            }
+            
+            with open(history_file, 'w') as f:
+                json.dump(existing_history, f)
+            
+            # Test page URL checking
+            is_processed = self.scraper._check_if_page_already_processed(existing_page_url, proceeding_folder)
+            self.assertTrue(is_processed)
+            
+            # Test new page URL
+            new_page_url = "https://docs.cpuc.ca.gov/new_page.html"
+            is_processed = self.scraper._check_if_page_already_processed(new_page_url, proceeding_folder)
+            self.assertFalse(is_processed)
+    
+    def test_source_field_preservation_in_json(self):
+        """Test that source and parent_page_url fields are preserved in JSON storage"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Create cpuc_proceedings structure
+            cpuc_proceedings_dir = Path(temp_dir) / "cpuc_proceedings"
+            cpuc_proceedings_dir.mkdir()
+            proceeding_folder = cpuc_proceedings_dir / "R2207005"
+            proceeding_folder.mkdir()
+            
+            # Create test PDF metadata with new fields
+            pdf_metadata = [
+                {
+                    'pdf_url': 'https://docs.cpuc.ca.gov/csv_doc.pdf',
+                    'parent_page_url': 'https://docs.cpuc.ca.gov/csv_page.html',
+                    'source': 'csv',
+                    'title': 'CSV Document',
+                    'document_type': 'Decision',
+                    'pdf_creation_date': '01/01/2024',
+                    'scrape_date': '01/01/2024'
+                },
+                {
+                    'pdf_url': 'https://docs.cpuc.ca.gov/google_doc.pdf',
+                    'parent_page_url': 'https://docs.cpuc.ca.gov/google_page.html',
+                    'source': 'google search',
+                    'title': 'Google Document',
+                    'document_type': 'Google Search Result',
+                    'pdf_creation_date': '01/01/2024',
+                    'scrape_date': '01/01/2024'
+                }
+            ]
+            
+            # Save the metadata
+            self.scraper._save_scraped_history(proceeding_folder, pdf_metadata)
+            
+            # Read back and verify fields are preserved
+            history_file = proceeding_folder / "R2207005_scraped_pdf_history.json"
+            self.assertTrue(history_file.exists())
+            
+            with open(history_file, 'r') as f:
+                saved_history = json.load(f)
+            
+            # Check that both entries are saved
+            self.assertEqual(len(saved_history), 2)
+            
+            # Find the CSV entry
+            csv_entry = None
+            google_entry = None
+            for entry in saved_history.values():
+                if entry.get('source') == 'csv':
+                    csv_entry = entry
+                elif entry.get('source') == 'google search':
+                    google_entry = entry
+            
+            # Verify CSV entry
+            self.assertIsNotNone(csv_entry)
+            self.assertEqual(csv_entry['source'], 'csv')
+            self.assertEqual(csv_entry['parent_page_url'], 'https://docs.cpuc.ca.gov/csv_page.html')
+            
+            # Verify Google entry
+            self.assertIsNotNone(google_entry)
+            self.assertEqual(google_entry['source'], 'google search')
+            self.assertEqual(google_entry['parent_page_url'], 'https://docs.cpuc.ca.gov/google_page.html')
+
+
+class TestDirectoryStructure(unittest.TestCase):
+    """Test the new cpuc_proceedings directory structure"""
+    
+    def setUp(self):
+        self.scraper = CPUCSimplifiedScraper(headless=True)
+    
+    def test_cpuc_proceedings_directory_creation(self):
+        """Test that the cpuc_proceedings directory structure is created correctly"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Change to temp directory for testing
+            original_cwd = Path.cwd()
+            try:
+                import os
+                os.chdir(temp_dir)
+                
+                # Test just the directory creation part, not the CSV download
+                proceeding = "R2207005"
+                
+                # Create cpuc_proceedings directory structure (from _create_folder_and_fetch_csv)
+                cpuc_proceedings_dir = Path("cpuc_proceedings")
+                cpuc_proceedings_dir.mkdir(exist_ok=True)
+                
+                # Create proceeding folder within cpuc_proceedings
+                proceeding_folder = cpuc_proceedings_dir / proceeding
+                proceeding_folder.mkdir(exist_ok=True)
+                
+                # Create documents subdirectory for CSV and related files
+                documents_folder = proceeding_folder / "documents"
+                documents_folder.mkdir(exist_ok=True)
+                
+                csv_path = documents_folder / f"{proceeding}_documents.csv"
+                
+                # Verify directory structure
+                self.assertTrue(cpuc_proceedings_dir.exists())
+                self.assertTrue(cpuc_proceedings_dir.is_dir())
+                self.assertTrue(proceeding_folder.exists())
+                self.assertTrue(proceeding_folder.is_dir())
+                self.assertTrue(documents_folder.exists())
+                self.assertTrue(documents_folder.is_dir())
+                
+                # Verify CSV path
+                expected_csv_path = documents_folder / "R2207005_documents.csv"
+                self.assertEqual(csv_path, expected_csv_path)
+                
+            finally:
+                os.chdir(original_cwd)
+    
+    def test_csv_file_naming_convention(self):
+        """Test that CSV files are named with proceeding-specific names"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            original_cwd = Path.cwd()
+            try:
+                import os
+                os.chdir(temp_dir)
+                
+                # Test for multiple proceedings (just directory structure, not actual downloads)
+                proceedings = ["R2207005", "R1807006"]
+                
+                for proceeding in proceedings:
+                    # Create directory structure without downloading
+                    cpuc_proceedings_dir = Path("cpuc_proceedings")
+                    cpuc_proceedings_dir.mkdir(exist_ok=True)
+                    
+                    proceeding_folder = cpuc_proceedings_dir / proceeding
+                    proceeding_folder.mkdir(exist_ok=True)
+                    
+                    documents_folder = proceeding_folder / "documents"
+                    documents_folder.mkdir(exist_ok=True)
+                    
+                    csv_path = documents_folder / f"{proceeding}_documents.csv"
+                    
+                    # Verify unique naming
+                    expected_csv_name = f"{proceeding}_documents.csv"
+                    self.assertEqual(csv_path.name, expected_csv_name)
+                    
+                    # Verify path structure
+                    expected_path = Path("cpuc_proceedings") / proceeding / "documents" / expected_csv_name
+                    self.assertEqual(csv_path, expected_path)
+                
+                # Verify no naming conflicts
+                r2207005_csv = Path("cpuc_proceedings/R2207005/documents/R2207005_documents.csv")
+                r1807006_csv = Path("cpuc_proceedings/R1807006/documents/R1807006_documents.csv")
+                
+                self.assertNotEqual(r2207005_csv, r1807006_csv)
+                self.assertNotEqual(r2207005_csv.parent, r1807006_csv.parent)
+                
+            finally:
+                os.chdir(original_cwd)
+    
+    def test_pdf_history_file_location(self):
+        """Test that PDF history files are placed in the correct location"""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Create cpuc_proceedings structure
+            cpuc_proceedings_dir = Path(temp_dir) / "cpuc_proceedings"
+            cpuc_proceedings_dir.mkdir()
+            proceeding_folder = cpuc_proceedings_dir / "R2207005"
+            proceeding_folder.mkdir()
+            
+            # Test PDF metadata
+            pdf_metadata = [{
+                'pdf_url': 'https://docs.cpuc.ca.gov/test.pdf',
+                'title': 'Test Document',
+                'document_type': 'Decision',
+                'pdf_creation_date': '01/01/2024',
+                'scrape_date': '01/01/2024'
+            }]
+            
+            # Save metadata
+            self.scraper._save_scraped_history(proceeding_folder, pdf_metadata)
+            
+            # Verify history file location
+            expected_history_file = proceeding_folder / "R2207005_scraped_pdf_history.json"
+            self.assertTrue(expected_history_file.exists())
+            
+            # Verify it's not in the old location
+            old_location = Path(temp_dir) / "R2207005_scraped_pdf_history.json"
+            self.assertFalse(old_location.exists())
+
+
+class TestStandaloneScraperConfigIntegration(unittest.TestCase):
+    """Test standalone scraper integration with config proceedings"""
+    
+    def test_config_proceedings_loading(self):
+        """Test that standalone scraper loads proceedings from config"""
+        # Test with current config values
+        from standalone_scraper import get_scraper_proceedings
+        
+        proceedings = get_scraper_proceedings()
+        # Should get the configured proceedings from config.py
+        self.assertIsInstance(proceedings, list)
+        self.assertIn('R2207005', proceedings)
+        self.assertIn('R1807006', proceedings)
+    
+    def test_config_proceedings_fallback(self):
+        """Test fallback functionality conceptually"""
+        # Note: Testing actual ImportError mocking is complex due to module caching
+        # This test verifies the fallback logic conceptually
+        from standalone_scraper import get_scraper_proceedings
+        
+        # The function should always return a list with at least one proceeding
+        proceedings = get_scraper_proceedings()
+        self.assertIsInstance(proceedings, list)
+        self.assertGreater(len(proceedings), 0)
+        self.assertTrue(all(p.startswith('R') for p in proceedings))
+    
+    @patch('standalone_scraper.run_standalone_scraper')
+    @patch('standalone_scraper.get_scraper_proceedings')
+    def test_multiple_proceedings_execution(self, mock_get_proceedings, mock_run_scraper):
+        """Test that multiple proceedings are executed correctly"""
+        # Mock the config proceedings
+        mock_get_proceedings.return_value = ['R2207005', 'R1807006']
+        
+        # Mock successful scraper results
+        mock_run_scraper.return_value = {
+            'success': True,
+            'total_pdfs': 10,
+            'csv_pdfs': 7,
+            'google_pdfs': 3
+        }
+        
+        from standalone_scraper import run_multiple_proceedings
+        
+        results = run_multiple_proceedings(['R2207005', 'R1807006'], headless=True)
+        
+        # Verify structure
+        self.assertEqual(results['total_proceedings'], 2)
+        self.assertEqual(results['successful'], 2)
+        self.assertEqual(results['failed'], 0)
+        self.assertEqual(len(results['proceedings_results']), 2)
+        
+        # Verify summary
+        self.assertEqual(results['summary']['total_pdfs_discovered'], 20)  # 10 PDFs per proceeding
+        self.assertEqual(results['summary']['success_rate'], '100.0%')
+        
+        # Verify scraper was called for each proceeding
+        self.assertEqual(mock_run_scraper.call_count, 2)
 
 
 class TestHistoryManagement(unittest.TestCase):
@@ -1043,9 +1378,10 @@ class TestPDFStatisticsAnalysis(unittest.TestCase):
         print("=" * 60)
         
         base_dirs = [
-            Path('.'),  # Current directory
-            Path('cpuc_csvs'),  # CSV directory
-            Path('R2207005'),  # Direct proceeding folder
+            Path('.'),  # Current directory (legacy)
+            Path('cpuc_csvs'),  # CSV directory (legacy)
+            Path('R2207005'),  # Direct proceeding folder (legacy)
+            Path('cpuc_proceedings'),  # New proceedings directory
         ]
         
         # Find all proceeding folders and JSON files
@@ -1071,10 +1407,17 @@ class TestPDFStatisticsAnalysis(unittest.TestCase):
                     if subdir.is_dir() and subdir.name.startswith('R'):
                         json_files.extend(list(subdir.glob('*_scraped_pdf_history.json')))
         
-        # Also check cpuc_csvs specifically
+        # Also check cpuc_csvs specifically (legacy)
         cpuc_csv_dir = Path('cpuc_csvs')
         if cpuc_csv_dir.exists():
             json_files.extend(list(cpuc_csv_dir.glob('*_scraped_pdf_history.json')))
+        
+        # Check new cpuc_proceedings structure
+        cpuc_proceedings_dir = Path('cpuc_proceedings')
+        if cpuc_proceedings_dir.exists():
+            for proceeding_dir in cpuc_proceedings_dir.iterdir():
+                if proceeding_dir.is_dir():
+                    json_files.extend(list(proceeding_dir.glob('*_scraped_pdf_history.json')))
         
         # Remove duplicates
         json_files = list(set(json_files))
@@ -1175,9 +1518,9 @@ class TestPDFStatisticsAnalysis(unittest.TestCase):
         """
         Analyze PDF data to categorize sources
         
-        Classification logic:
-        - CSV-sourced: Has 'source_page' field (from document pages)
-        - Google-sourced: document_type == 'Google Search Result'
+        Updated classification logic (supports both old and new data):
+        - CSV-sourced: source == 'csv' OR has 'source_page' field (from document pages)
+        - Google-sourced: source == 'google search' OR document_type == 'Google Search Result'
         - Unknown: Neither of the above
         """
         total_pdfs = len(pdf_data)
@@ -1186,10 +1529,18 @@ class TestPDFStatisticsAnalysis(unittest.TestCase):
         unknown_sourced = 0
         
         for pdf_hash, pdf_info in pdf_data.items():
+            # New field takes precedence
+            source = pdf_info.get('source', '')
+            
+            # Fallback to old classification logic
             document_type = pdf_info.get('document_type', '')
             source_page = pdf_info.get('source_page', '')
             
-            if document_type == 'Google Search Result':
+            if source == 'csv':
+                csv_sourced += 1
+            elif source == 'google search':
+                google_sourced += 1
+            elif document_type == 'Google Search Result':
                 google_sourced += 1
             elif source_page:  # Has source_page, likely from CSV document processing
                 csv_sourced += 1

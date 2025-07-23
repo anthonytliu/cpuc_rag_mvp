@@ -22,6 +22,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
+import psutil  # For setting process priority
 
 import pandas as pd
 import requests
@@ -87,6 +90,12 @@ class CPUCSimplifiedScraper:
         # Set up download directory
         self.download_dir = Path.cwd().resolve()
         
+        # Thread-safe lock for history file updates
+        self.history_lock = threading.Lock()
+        
+        # Set process to low priority to avoid interfering with user activities
+        self._set_background_priority()
+        
         # Chrome options - configured for downloads
         self.chrome_options = Options()
         if headless:
@@ -106,10 +115,101 @@ class CPUCSimplifiedScraper:
         self.chrome_options.add_experimental_option("prefs", prefs)
     
     def _setup_driver(self):
-        """Initialize Chrome driver"""
+        """Initialize Chrome driver with background processing settings"""
         if self.driver is None:
-            self.driver = webdriver.Chrome(options=self.chrome_options)
-            logger.info("Chrome driver initialized")
+            # Use background WebDriver settings for all operations to prevent desktop interference
+            self.driver = self._create_background_webdriver()
+            logger.info("Chrome driver initialized in background mode")
+    
+    def _create_background_webdriver(self):
+        """
+        Create a WebDriver instance optimized for background processing
+        Ensures minimal interference with user's computer activities
+        """
+        # Create enhanced options for background processing
+        background_options = Options()
+        
+        # Essential background settings
+        background_options.add_argument("--headless")  # Run in background
+        background_options.add_argument("--no-sandbox")
+        background_options.add_argument("--disable-dev-shm-usage")
+        background_options.add_argument("--disable-gpu")
+        
+        # Minimize resource usage and interference - ensure NO visible windows
+        background_options.add_argument("--disable-web-security")
+        background_options.add_argument("--disable-features=VizDisplayCompositor")
+        background_options.add_argument("--disable-extensions")
+        background_options.add_argument("--disable-plugins")
+        background_options.add_argument("--disable-images")  # Don't load images for faster processing
+        background_options.add_argument("--disable-background-timer-throttling")
+        background_options.add_argument("--disable-renderer-backgrounding")
+        background_options.add_argument("--disable-backgrounding-occluded-windows")
+        background_options.add_argument("--disable-client-side-phishing-detection")
+        background_options.add_argument("--disable-default-apps")
+        background_options.add_argument("--disable-hang-monitor")
+        background_options.add_argument("--disable-prompt-on-repost")
+        background_options.add_argument("--disable-sync")
+        background_options.add_argument("--disable-translate")
+        background_options.add_argument("--disable-web-resources")
+        background_options.add_argument("--hide-scrollbars")
+        background_options.add_argument("--metrics-recording-only")
+        background_options.add_argument("--mute-audio")
+        background_options.add_argument("--no-first-run")
+        background_options.add_argument("--safebrowsing-disable-auto-update")
+        background_options.add_argument("--disable-background-networking")
+        
+        # Additional options to ensure complete background operation
+        background_options.add_argument("--disable-infobars")
+        background_options.add_argument("--disable-notifications")
+        background_options.add_argument("--disable-popup-blocking")
+        background_options.add_argument("--no-default-browser-check")
+        background_options.add_argument("--disable-blink-features=AutomationControlled")
+        background_options.add_argument("--remote-debugging-port=0")  # Disable remote debugging
+        background_options.add_argument("--silent")  # Run silently
+        
+        # Set low priority process
+        background_options.add_argument("--process-per-tab")
+        background_options.add_argument("--max_old_space_size=512")  # Limit memory usage
+        
+        # Configure for minimal window interference
+        background_options.add_argument("--window-position=-2000,-2000")  # Position off-screen
+        background_options.add_argument("--window-size=800,600")  # Small window size
+        
+        # Configure download preferences (copy from main options)
+        prefs = {
+            "download.default_directory": str(self.download_dir),
+            "download.prompt_for_download": False,
+            "download.directory_upgrade": True,
+            "safebrowsing.enabled": False,  # Disable for background processing
+            "plugins.always_open_pdf_externally": True,
+            "profile.default_content_setting_values": {
+                "notifications": 2,  # Block notifications
+                "media_stream": 2,   # Block media access
+            }
+        }
+        background_options.add_experimental_option("prefs", prefs)
+        
+        # Create and return the background WebDriver
+        return webdriver.Chrome(options=background_options)
+    
+    def _set_background_priority(self):
+        """
+        Set the current process to low priority to minimize interference with user activities
+        """
+        try:
+            # Get current process
+            current_process = psutil.Process()
+            
+            # Set to low priority (different methods for different OS)
+            if os.name == 'nt':  # Windows
+                current_process.nice(psutil.BELOW_NORMAL_PRIORITY_CLASS)
+            else:  # Unix-like (macOS, Linux)
+                current_process.nice(10)  # Lower priority (higher nice value)
+                
+            logger.info("🔽 Set process to background priority to minimize user interference")
+            
+        except Exception as e:
+            logger.warning(f"⚠️ Could not set background priority: {e}")
     
     def _cleanup_driver(self):
         """Clean up Chrome driver"""
@@ -137,9 +237,12 @@ class CPUCSimplifiedScraper:
             progress.update(1, 0, 0)
             proceeding_folder, csv_path = self._create_folder_and_fetch_csv(proceeding)
             
+            # Initialize PDF history file early for incremental updates
+            self._initialize_pdf_history_file(proceeding_folder)
+            
             # Step 2: Analyze CSV and scrape PDF metadata
             progress.update(2, 0, 0)
-            pdf_metadata = self._analyze_csv_and_scrape_pdfs(proceeding, csv_path, progress)
+            pdf_metadata = self._analyze_csv_and_scrape_pdfs(proceeding, csv_path, progress, proceeding_folder)
             
             # Step 3: Google search for additional PDFs
             progress.update(3, len(pdf_metadata), len(pdf_metadata))
@@ -179,19 +282,91 @@ class CPUCSimplifiedScraper:
         """
         logger.info(f"Step 1: Creating folder and fetching CSV for {proceeding}")
         
-        # Create proceeding folder
-        proceeding_folder = Path(proceeding)
+        # Create cpuc_proceedings directory structure
+        cpuc_proceedings_dir = Path("cpuc_proceedings")
+        cpuc_proceedings_dir.mkdir(exist_ok=True)
+        
+        # Create proceeding folder within cpuc_proceedings
+        proceeding_folder = cpuc_proceedings_dir / proceeding
         proceeding_folder.mkdir(exist_ok=True)
         logger.info(f"Created/verified proceeding folder: {proceeding_folder}")
         
+        # Create documents subdirectory for CSV and related files
+        documents_folder = proceeding_folder / "documents"
+        documents_folder.mkdir(exist_ok=True)
+        logger.info(f"Created/verified documents folder: {documents_folder}")
+        
         # Fetch CSV from CPUC website
         csv_url = self._get_csv_download_url(proceeding)
-        csv_path = proceeding_folder / f"{proceeding}.csv"
+        csv_path = documents_folder / f"{proceeding}_documents.csv"
         
-        self._download_csv(csv_url, csv_path)
+        self._download_csv(csv_url, csv_path, proceeding)
         logger.info(f"Downloaded CSV to: {csv_path}")
         
         return proceeding_folder, csv_path
+    
+    def _initialize_pdf_history_file(self, proceeding_folder: Path):
+        """
+        Initialize PDF history JSON file early for incremental updates
+        Creates empty file if it doesn't exist, preserves existing data if it does
+        """
+        history_file = proceeding_folder / f"{proceeding_folder.name}_scraped_pdf_history.json"
+        
+        if not history_file.exists():
+            # Create empty JSON file
+            with open(history_file, 'w') as f:
+                json.dump({}, f, indent=2)
+            logger.info(f"📝 Initialized PDF history file: {history_file}")
+        else:
+            logger.info(f"📄 Using existing PDF history file: {history_file}")
+    
+    def _save_single_pdf_to_history(self, proceeding_folder: Path, pdf_info: Dict):
+        """
+        Save a single PDF to the history file incrementally (thread-safe)
+        This allows real-time updates as each PDF is processed
+        """
+        with self.history_lock:
+            history_file = proceeding_folder / f"{proceeding_folder.name}_scraped_pdf_history.json"
+            
+            # Load existing history
+            existing_history = self._load_existing_history_safe(history_file)
+            
+            # Add new PDF entry
+            url_hash = self._create_url_hash(pdf_info['pdf_url'])
+            
+            # Create entry with required fields only
+            entry = {
+                'url': pdf_info['pdf_url'],
+                'title': pdf_info['title'],
+                'document_type': pdf_info['document_type'],
+                'pdf_creation_date': pdf_info['pdf_creation_date'],
+                'scrape_date': pdf_info['scrape_date'],
+                'status': 'discovered',
+                'source': pdf_info.get('source', 'csv'),  # Required: 'csv' or 'google search'
+                'parent_url': pdf_info.get('parent_page_url', ''),  # URL of parent page
+                'metadata': pdf_info.get('pdf_metadata', {})
+            }
+            
+            # Preserve specific additional fields (excluding link_text, parent_text, raw_url)
+            additional_fields = ['filing_date', 'filed_by', 'description', 'search_query']
+            
+            for field in additional_fields:
+                if field in pdf_info:
+                    entry[field] = pdf_info[field]
+            
+            # Update history
+            existing_history[url_hash] = entry
+            
+            # Save immediately (create backup first)
+            self._create_backup_before_write(history_file)
+            
+            try:
+                with open(history_file, 'w') as f:
+                    json.dump(existing_history, f, indent=2)
+                logger.info(f"💾 Incrementally saved PDF to history: {pdf_info.get('title', 'Unknown')} -> {pdf_info['pdf_url']}")
+            except Exception as e:
+                logger.error(f"❌ Failed to save PDF to history: {e}")
+                self._restore_from_backup_if_needed(history_file)
     
     def _get_csv_download_url(self, proceeding: str) -> str:
         """Get the base CPUC search URL for the proceeding navigation"""
@@ -200,7 +375,7 @@ class CPUCSimplifiedScraper:
         logger.info(f"Starting CPUC navigation at: {search_url}")
         return search_url
     
-    def _download_csv(self, url: str, csv_path: Path):
+    def _download_csv(self, url: str, csv_path: Path, proceeding: str):
         """
         Download CSV file from CPUC website following exact navigation sequence:
         1. Go to https://apps.cpuc.ca.gov/apex/f?p=401:1
@@ -212,9 +387,6 @@ class CPUCSimplifiedScraper:
         7. Save as [proceeding].csv
         """
         self._setup_driver()
-        
-        # Extract proceeding number from the CSV path
-        proceeding = csv_path.stem  # e.g., 'R2207005' from 'R2207005.csv'
         
         try:
             logger.info(f"🔍 Step 1: Navigating to CPUC main search page")
@@ -323,7 +495,7 @@ class CPUCSimplifiedScraper:
                 Path.cwd()
             ]
             
-            # Look for recently downloaded CSV files
+            # Look for recently downloaded CSV files (including default "documents.csv")
             csv_files = []
             for location in download_locations:
                 if location.exists():
@@ -331,6 +503,7 @@ class CPUCSimplifiedScraper:
                     pattern_files = list(location.glob("*.csv"))
                     pattern_files.extend(location.glob("Documents*.csv"))
                     pattern_files.extend(location.glob("documents*.csv"))
+                    pattern_files.extend(location.glob("export*.csv"))  # Sometimes CPUC exports as export.csv
                     csv_files.extend(pattern_files)
             
             if csv_files:
@@ -339,15 +512,22 @@ class CPUCSimplifiedScraper:
                 latest_csv = csv_files[0]
                 
                 logger.info(f"Found downloaded CSV: {latest_csv}")
+                logger.info(f"Renaming to proceeding-specific name: {csv_path.name}")
                 
-                # Copy to the target location and rename
+                # Copy to the target location with proceeding-specific name
                 shutil.copy2(latest_csv, csv_path)
                 logger.info(f"Renamed and moved CSV to: {csv_path}")
                 
-                # SAFETY: Non-destructive approach - preserve original download
-                # Instead of deleting, we just log successful copy
-                logger.info(f"✅ Successfully copied CSV (original preserved at: {latest_csv})")
-                # Note: Original download is intentionally preserved for data safety
+                # Delete the original download to prevent file bloat
+                try:
+                    latest_csv.unlink()
+                    logger.info(f"🗑️ Deleted original download to prevent file bloat: {latest_csv}")
+                except Exception as delete_error:
+                    logger.warning(f"⚠️ Could not delete original CSV (not critical): {delete_error}")
+                
+                logger.info(f"✅ Successfully copied and renamed CSV")
+                logger.info(f"   Original: {latest_csv} -> Target: {csv_path}")
+                logger.info(f"   (Original deleted to prevent bloat)")
                     
             else:
                 logger.error("No downloaded CSV file found - download failed")
@@ -426,9 +606,10 @@ class CPUCSimplifiedScraper:
                         return f"https://docs.cpuc.ca.gov{href}"
         return None
     
-    def _analyze_csv_and_scrape_pdfs(self, proceeding: str, csv_path: Path, progress: ProgressBar) -> List[Dict]:
+    def _analyze_csv_and_scrape_pdfs(self, proceeding: str, csv_path: Path, progress: ProgressBar, proceeding_folder: Path) -> List[Dict]:
         """
         Step 2: Analyze CSV and scrape PDF metadata by extracting URLs from Document Type column
+        Uses parallel processing for CSV document URL scraping
         """
         logger.info(f"Step 2: Analyzing CSV and extracting document URLs for {proceeding}")
         
@@ -438,8 +619,6 @@ class CPUCSimplifiedScraper:
         except Exception as e:
             logger.error(f"Error reading CSV: {e}")
             return []
-        
-        pdf_metadata = []
         
         # Extract URLs from the Document Type column which contains HTML links
         document_urls = []
@@ -470,133 +649,252 @@ class CPUCSimplifiedScraper:
         
         logger.info(f"Found {len(document_urls)} document URLs from CSV")
         
-        # Now visit each URL and extract PDFs from the ResultTable
-        total_urls = len(document_urls)
-        for idx, doc_info in enumerate(document_urls):
-            progress.update(2, len(pdf_metadata), len(pdf_metadata))
-            
-            # Check if this page URL has already been processed
-            if self._check_if_page_already_processed(doc_info['url'], self.download_dir / proceeding):
-                logger.info(f"⏭️ Skipping already processed page {idx + 1}/{total_urls}: {doc_info['url']}")
-                continue
-            
-            try:
-                logger.info(f"Processing document {idx + 1}/{total_urls}: {doc_info['url']}")
-                pdfs_from_page = self._extract_pdfs_from_document_page(doc_info['url'], doc_info)
-                pdf_metadata.extend(pdfs_from_page)
-                logger.info(f"Found {len(pdfs_from_page)} PDFs from document page")
-                
-            except Exception as e:
-                logger.error(f"Error processing document page {doc_info['url']}: {e}")
-                continue
+        # Filter out already processed URLs
+        unprocessed_urls = []
+        for doc_info in document_urls:
+            if not self._check_if_page_already_processed(doc_info['url'], proceeding_folder):
+                unprocessed_urls.append(doc_info)
+            else:
+                logger.info(f"⏭️ Skipping already processed page: {doc_info['url']}")
         
+        logger.info(f"Processing {len(unprocessed_urls)} unprocessed document URLs with parallel workers")
+        
+        # Process URLs in parallel using ThreadPoolExecutor with reduced concurrency for reliability
+        pdf_metadata = []
+        # Reduced from 4 to 2 workers to prevent resource contention and browser interference
+        max_workers = min(2, len(unprocessed_urls)) if unprocessed_urls else 1
+        
+        if unprocessed_urls:
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                # Submit document processing tasks with staggered delays to reduce contention
+                future_to_doc = {}
+                for i, doc_info in enumerate(unprocessed_urls):
+                    # Add small delay between worker submissions to prevent resource contention
+                    if i > 0:
+                        time.sleep(0.5)  # 500ms delay between worker starts
+                    
+                    future = executor.submit(self._process_document_url_worker, doc_info, proceeding, proceeding_folder)
+                    future_to_doc[future] = doc_info
+                
+                # Process completed tasks with improved monitoring
+                completed_count = 0
+                success_count = 0
+                failure_count = 0
+                
+                for future in as_completed(future_to_doc):
+                    doc_info = future_to_doc[future]
+                    completed_count += 1
+                    
+                    try:
+                        pdfs_from_page = future.result()
+                        pdf_metadata.extend(pdfs_from_page)
+                        
+                        # Update progress
+                        progress.update(2, len(pdf_metadata), len(pdf_metadata))
+                        
+                        if len(pdfs_from_page) > 0:
+                            success_count += 1
+                            logger.info(f"✅ SUCCESS {completed_count}/{len(unprocessed_urls)}: {doc_info['url']} -> {len(pdfs_from_page)} PDFs")
+                        else:
+                            failure_count += 1
+                            logger.warning(f"⚠️ NO PDFS {completed_count}/{len(unprocessed_urls)}: {doc_info['url']} -> No PDFs found")
+                        
+                        # Save each PDF incrementally for real-time updates
+                        for pdf_info in pdfs_from_page:
+                            self._save_single_pdf_to_history(proceeding_folder, pdf_info)
+                        
+                    except Exception as e:
+                        failure_count += 1
+                        logger.error(f"❌ FAILED {completed_count}/{len(unprocessed_urls)}: {doc_info['url']} -> {e}")
+                        continue
+                
+                # Log final statistics
+                logger.info(f"📊 Parallel processing completed: {success_count} successes, {failure_count} failures out of {len(unprocessed_urls)} total")
+                if failure_count > 0:
+                    logger.warning(f"⚠️ {failure_count} documents failed processing - may need manual review")
+        
+        logger.info(f"📊 Parallel CSV processing completed: {len(pdf_metadata)} total PDFs discovered from {len(document_urls)} document URLs")
         return pdf_metadata
     
-    def _extract_pdfs_from_document_page(self, document_url: str, doc_info: Dict) -> List[Dict]:
+    def _process_document_url_worker(self, doc_info: Dict, proceeding: str, proceeding_folder: Path) -> List[Dict]:
+        """
+        Worker method for parallel processing of individual document URLs with retry logic
+        This method is called by ThreadPoolExecutor for each document URL
+        Each worker gets its own WebDriver instance to avoid session conflicts
+        """
+        worker_driver = None
+        max_retries = 2  # Retry failed URLs up to 2 times
+        
+        for attempt in range(max_retries + 1):
+            try:
+                if attempt > 0:
+                    logger.info(f"🔄 Retry attempt {attempt} for: {doc_info['url']}")
+                    # Add delay between retries to avoid overwhelming the server
+                    time.sleep(2 * attempt)
+                else:
+                    logger.info(f"🔄 Worker processing: {doc_info['url']}")
+                
+                # Create a dedicated WebDriver instance for this worker with background settings
+                worker_driver = self._create_background_webdriver()
+                logger.info(f"🔧 Worker created background WebDriver instance")
+                
+                # Extract PDFs using the worker's dedicated driver
+                pdfs_from_page = self._extract_pdfs_from_document_page_with_driver(
+                    worker_driver, doc_info['url'], doc_info, proceeding
+                )
+                
+                logger.info(f"🔄 Worker completed: {doc_info['url']} -> {len(pdfs_from_page)} PDFs")
+                return pdfs_from_page
+                
+            except Exception as e:
+                logger.warning(f"🔄 Worker attempt {attempt + 1} failed: {doc_info['url']} -> {e}")
+                
+                # Clean up failed driver before retry
+                if worker_driver:
+                    try:
+                        worker_driver.quit()
+                        worker_driver = None
+                    except:
+                        pass
+                
+                # If this was the last attempt, log as error
+                if attempt == max_retries:
+                    logger.error(f"🔄 Worker failed after {max_retries + 1} attempts: {doc_info['url']}")
+                    return []
+                    
+            finally:
+                # Clean up the worker's WebDriver instance
+                if worker_driver:
+                    try:
+                        worker_driver.quit()
+                        logger.info(f"🧹 Worker cleaned up WebDriver instance")
+                    except Exception as cleanup_error:
+                        logger.warning(f"⚠️ Worker WebDriver cleanup warning: {cleanup_error}")
+                        
+        return []
+    
+    def _extract_pdfs_from_document_page_with_driver(self, driver, document_url: str, doc_info: Dict, proceeding: str) -> List[Dict]:
         """
         Extract PDFs from a CPUC document page by parsing the ResultTable
+        Uses provided WebDriver instance (for parallel processing)
         """
         pdfs = []
         
         try:
-            self._setup_driver()
             logger.info(f"Visiting document page: {document_url}")
             
-            self.driver.get(document_url)
+            driver.get(document_url)
             time.sleep(2)  # Wait for page to load
             
             # Look for the ResultTable
             try:
-                result_table = self.driver.find_element(By.ID, "ResultTable")
+                result_table = driver.find_element(By.ID, "ResultTable")
                 logger.info("Found ResultTable on document page")
                 
-                # Find all table rows
-                rows = result_table.find_elements(By.TAG_NAME, "tr")
-                logger.info(f"Found {len(rows)} rows in ResultTable")
+                # Find data rows (skip header rows and separator rows)
+                # Look for rows with td cells (not th) that contain actual document data
+                # Exclude rows that contain header elements or have height:1px (separator rows)
+                data_rows = result_table.find_elements(By.XPATH, ".//tbody/tr[td and count(td) >= 4 and not(contains(@style, 'height:1px'))]")
+                logger.info(f"Found {len(data_rows)} data rows in ResultTable")
                 
-                for row_idx, row in enumerate(rows):
+                # Process only the first data row that is not a Certificate of Service
+                for row_idx, row in enumerate(data_rows):
                     try:
-                        # Look for table cells
+                        # Extract all cell data at once to avoid stale element references
                         cells = row.find_elements(By.TAG_NAME, "td")
-                        if len(cells) >= 3:  # Should have at least Title, Type, Link, Date cells
+                        if len(cells) >= 4:  # Title, Type, Link, Date
                             
-                            # Extract information from cells
-                            title_cell = cells[0] if len(cells) > 0 else None
-                            type_cell = cells[1] if len(cells) > 1 else None  
-                            link_cell = cells[2] if len(cells) > 2 else None
-                            date_cell = cells[3] if len(cells) > 3 else None
+                            # Extract all text content immediately
+                            title_text = cells[0].text.strip()
+                            doc_type = cells[1].text.strip()
+                            link_cell = cells[2]  # Keep reference for link extraction
+                            filing_date = cells[3].text.strip()
                             
-                            if title_cell and link_cell:
-                                title_text = title_cell.text.strip()
+                            # Skip Certificate of Service documents
+                            if "Certificate of Service" in title_text:
+                                logger.info(f"Skipping Certificate of Service: {title_text}")
+                                continue
+                            
+                            # Extract PDF links from link cell immediately
+                            pdf_links = link_cell.find_elements(By.XPATH, ".//a[contains(@href, '.PDF') or contains(@href, '.pdf')]")
+                            
+                            # Collect all link data at once to avoid stale references
+                            link_data = []
+                            for pdf_link in pdf_links:
+                                href = pdf_link.get_attribute('href')
+                                link_text = pdf_link.text.strip()
+                                if href:
+                                    link_data.append({'href': href, 'link_text': link_text})
+                            
+                            # Process collected link data
+                            row_pdfs = []
+                            for link_info in link_data:
+                                href = link_info['href']
+                                link_text = link_info['link_text']
                                 
-                                # Skip Certificate of Service documents
-                                if "Certificate of Service" in title_text:
-                                    logger.info(f"Skipping Certificate of Service: {title_text}")
+                                # Convert relative URL to absolute if needed
+                                if href.startswith('/'):
+                                    pdf_url = f"https://docs.cpuc.ca.gov{href}"
+                                elif not href.startswith('http'):
+                                    pdf_url = f"https://docs.cpuc.ca.gov/{href}"
+                                else:
+                                    pdf_url = href
+                                
+                                # Create PDF info dictionary
+                                pdf_info = {
+                                    'pdf_url': pdf_url,
+                                    'parent_page_url': document_url,
+                                    'source': 'csv',
+                                    'title': title_text,
+                                    'document_type': doc_type,
+                                    'filing_date': filing_date if filing_date else doc_info.get('filing_date', 'Unknown'),
+                                    'filed_by': doc_info.get('filed_by', 'Unknown'),
+                                    'description': doc_info.get('description', 'Unknown'),
+                                    'scrape_date': datetime.now().strftime('%m/%d/%Y'),
+                                    'pdf_creation_date': filing_date if filing_date else doc_info.get('filing_date', 'Unknown'),
+                                    # Temporary fields for filtering only (not saved to history)
+                                    '_link_text': link_text,
+                                    '_parent_text': link_text  # Use link_text as parent_text
+                                }
+                                
+                                row_pdfs.append(pdf_info)
+                            
+                            # Apply clean PDF filtering logic
+                            filtered_pdfs = self._filter_clean_pdfs(row_pdfs)
+                            
+                            # Add filtered PDFs to results with duplicate checking
+                            added_count = 0
+                            for pdf_info in filtered_pdfs:
+                                # Check if already scraped (skip if exists)
+                                proceeding_folder = Path("cpuc_proceedings") / proceeding
+                                if self._check_if_already_scraped(pdf_info['pdf_url'], proceeding_folder):
                                     continue
                                 
-                                # Look for PDF links in the link cell
-                                pdf_links = link_cell.find_elements(By.XPATH, ".//a[contains(@href, '.PDF') or contains(@href, '.pdf')]")
+                                # Analyze the PDF with timeout protection
+                                enhanced_pdf_info = self._analyze_pdf_with_timeout(
+                                    pdf_info['pdf_url'], 
+                                    pdf_info['document_type'], 
+                                    timeout=10
+                                )
                                 
-                                # Collect all PDFs from this row first for filtering
-                                row_pdfs = []
-                                for pdf_link in pdf_links:
-                                    href = pdf_link.get_attribute('href')
-                                    if href:
-                                        # Convert relative URL to absolute if needed
-                                        if href.startswith('/'):
-                                            pdf_url = f"https://docs.cpuc.ca.gov{href}"
-                                        elif not href.startswith('http'):
-                                            pdf_url = f"https://docs.cpuc.ca.gov/{href}"
-                                        else:
-                                            pdf_url = href
-                                        
-                                        # Extract additional metadata
-                                        doc_type = type_cell.text.strip() if type_cell else "Unknown"
-                                        filing_date = date_cell.text.strip() if date_cell else doc_info.get('filing_date', 'Unknown')
-                                        
-                                        # Get the full link text for filtering
-                                        link_text = pdf_link.text.strip()
-                                        parent_text = pdf_link.find_element(By.XPATH, "..").text.strip()
-                                        
-                                        # Create PDF info dictionary
-                                        pdf_info = {
-                                            'pdf_url': pdf_url,
-                                            'title': title_text,
-                                            'document_type': doc_type,
-                                            'filing_date': filing_date,
-                                            'filed_by': doc_info.get('filed_by', 'Unknown'),
-                                            'description': doc_info.get('description', 'Unknown'),
-                                            'source_page': document_url,
-                                            'scrape_date': datetime.now().strftime('%m/%d/%Y'),
-                                            'pdf_creation_date': filing_date,
-                                            'link_text': link_text,
-                                            'parent_text': parent_text,
-                                            'raw_url': href
-                                        }
-                                        
-                                        row_pdfs.append(pdf_info)
-                                
-                                # Apply clean PDF filtering logic
-                                filtered_pdfs = self._filter_clean_pdfs(row_pdfs)
-                                
-                                # Add filtered PDFs to results with duplicate checking
-                                for pdf_info in filtered_pdfs:
-                                    # Check if already scraped (skip if exists)
-                                    if self._check_if_already_scraped(pdf_info['pdf_url'], self.download_dir / proceeding):
-                                        continue
-                                    
-                                    # Analyze the PDF with timeout protection
-                                    enhanced_pdf_info = self._analyze_pdf_with_timeout(
-                                        pdf_info['pdf_url'], 
-                                        pdf_info['document_type'], 
-                                        timeout=10
-                                    )
-                                    
-                                    if enhanced_pdf_info:  # Only add if analysis succeeded
-                                        pdfs.append(enhanced_pdf_info)
-                                        logger.info(f"✅ Added PDF: {enhanced_pdf_info['title']} -> {enhanced_pdf_info['pdf_url']}")
-                                    else:
-                                        logger.warning(f"⚠️ Skipped PDF (analysis failed): {pdf_info['pdf_url']}")
+                                if enhanced_pdf_info:  # Only add if analysis succeeded
+                                    # Copy over the CSV-specific fields
+                                    enhanced_pdf_info.update({
+                                        'parent_page_url': pdf_info['parent_page_url'],
+                                        'source': pdf_info['source'],
+                                        'filing_date': pdf_info['filing_date'],
+                                        'filed_by': pdf_info['filed_by'],
+                                        'description': pdf_info['description']
+                                    })
+                                    pdfs.append(enhanced_pdf_info)
+                                    added_count += 1
+                                    logger.info(f"✅ Added PDF from first row: {enhanced_pdf_info['title']} -> {enhanced_pdf_info['pdf_url']}")
+                                else:
+                                    logger.warning(f"⚠️ Skipped PDF (analysis failed): {pdf_info['pdf_url']}")
+                            
+                            # Process only the first valid data row (not Certificate of Service)
+                            logger.info(f"✅ Processed first data row, found {len(filtered_pdfs)} PDFs. Skipping remaining rows.")
+                            break
                             
                     except Exception as row_error:
                         logger.error(f"Error processing row {row_idx}: {row_error}")
@@ -609,6 +907,14 @@ class CPUCSimplifiedScraper:
             logger.error(f"Error extracting PDFs from document page {document_url}: {e}")
         
         return pdfs
+    
+    def _extract_pdfs_from_document_page(self, document_url: str, doc_info: Dict, proceeding: str) -> List[Dict]:
+        """
+        Extract PDFs from a CPUC document page by parsing the ResultTable
+        Uses the main scraper's WebDriver instance (for sequential processing)
+        """
+        self._setup_driver()
+        return self._extract_pdfs_from_document_page_with_driver(self.driver, document_url, doc_info, proceeding)
     
     def _filter_clean_pdfs(self, pdfs: List[Dict]) -> List[Dict]:
         """
@@ -647,17 +953,17 @@ class CPUCSimplifiedScraper:
             redline_pdfs = []
             
             for pdf in group_pdfs:
-                pdf_text = f"{pdf.get('link_text', '')} {pdf.get('parent_text', '')} {pdf.get('pdf_url', '')}".lower()
+                pdf_text = f"{pdf.get('_link_text', '')} {pdf.get('_parent_text', '')} {pdf.get('pdf_url', '')}".lower()
                 
                 if any(clean_indicator in pdf_text for clean_indicator in ['(clean)', 'clean.pdf', '-clean.pdf', '_clean.pdf']):
                     clean_pdfs.append(pdf)
-                    logger.info(f"🟢 Found CLEAN PDF: {pdf.get('link_text', 'Unknown')}")
+                    logger.info(f"🟢 Found CLEAN PDF: {pdf.get('_link_text', 'Unknown')}")
                 elif any(redline_indicator in pdf_text for redline_indicator in ['(redline)', 'redline.pdf', '-redline.pdf', '_redline.pdf']):
                     redline_pdfs.append(pdf)
-                    logger.info(f"🔴 Found REDLINE PDF: {pdf.get('link_text', 'Unknown')} (will skip if clean exists)")
+                    logger.info(f"🔴 Found REDLINE PDF: {pdf.get('_link_text', 'Unknown')} (will skip if clean exists)")
                 else:
                     original_pdfs.append(pdf)
-                    logger.info(f"⚪ Found ORIGINAL PDF: {pdf.get('link_text', 'Unknown')}")
+                    logger.info(f"⚪ Found ORIGINAL PDF: {pdf.get('_link_text', 'Unknown')}")
             
             # Priority selection logic
             if clean_pdfs:
@@ -682,7 +988,7 @@ class CPUCSimplifiedScraper:
         """
         # Try multiple sources for document name
         sources = [
-            pdf.get('link_text', ''),
+            pdf.get('_link_text', ''),
             pdf.get('title', ''),
             pdf.get('pdf_url', '').split('/')[-1]  # filename from URL
         ]
@@ -857,10 +1163,10 @@ class CPUCSimplifiedScraper:
                 'analysis_timestamp': datetime.now().isoformat(),
                 'timeout_used': timeout
             },
-            'link_text': title,  # For filtering compatibility
-            'parent_text': title,  # For filtering compatibility
-            'raw_url': pdf_url,
-            'status': 'successfully_analyzed'
+            'status': 'successfully_analyzed',
+            # Temporary fields for filtering compatibility (not saved to history)
+            '_link_text': title,
+            '_parent_text': title
         }
         
         return pdf_info
@@ -905,10 +1211,15 @@ class CPUCSimplifiedScraper:
                 # Check if URL contains cpuc.ca.gov and is a PDF
                 if 'cpuc.ca.gov' in url and url not in existing_urls:
                     if url.lower().endswith('.pdf'):
-                        # Direct PDF link - check duplicates first
-                        if not self._check_if_already_scraped(url, self.download_dir / proceeding):
+                        # Direct PDF link from Google search - parent is the search context
+                        proceeding_folder = Path("cpuc_proceedings") / proceeding
+                        if not self._check_if_already_scraped(url, proceeding_folder):
                             pdf_info = self._analyze_pdf_with_timeout(url, 'Google Search Result', timeout=10)
                             if pdf_info:
+                                # For direct PDF links, parent_url should indicate it came from Google search
+                                pdf_info['parent_page_url'] = f"Google Search: {search_query}"
+                                pdf_info['source'] = 'google search'
+                                pdf_info['search_query'] = search_query  # Additional context
                                 additional_pdfs.append(pdf_info)
                                 existing_urls.add(url)
                                 logger.info(f"✅ Added Google PDF: {url}")
@@ -950,10 +1261,14 @@ class CPUCSimplifiedScraper:
                 href = link.get_attribute('href')
                 if href and 'cpuc.ca.gov' in href and href not in existing_urls:
                     # Check if already scraped to prevent duplicates
-                    if not self._check_if_already_scraped(href, self.download_dir / proceeding):
+                    proceeding_folder = Path("cpuc_proceedings") / proceeding
+                    if not self._check_if_already_scraped(href, proceeding_folder):
                         # Use timeout-protected analysis
                         pdf_info = self._analyze_pdf_with_timeout(href, 'Webpage Link', timeout=10)
                         if pdf_info:
+                            # Add Google search source information
+                            pdf_info['parent_page_url'] = webpage_url
+                            pdf_info['source'] = 'google search'
                             pdfs.append(pdf_info)
                             existing_urls.add(href)
                             logger.info(f"✅ Added webpage PDF: {href}")
@@ -982,7 +1297,7 @@ class CPUCSimplifiedScraper:
         for idx, pdf_info in enumerate(pdf_metadata):
             url_hash = self._create_url_hash(pdf_info['pdf_url'])
             
-            # Create entry with all PDF info fields preserved
+            # Create entry with required fields only
             entry = {
                 'url': pdf_info['pdf_url'],
                 'title': pdf_info['title'],
@@ -990,12 +1305,13 @@ class CPUCSimplifiedScraper:
                 'pdf_creation_date': pdf_info['pdf_creation_date'],
                 'scrape_date': pdf_info['scrape_date'],
                 'status': 'discovered',
+                'source': pdf_info.get('source', 'csv'),  # Required: 'csv' or 'google search'
+                'parent_url': pdf_info.get('parent_page_url', ''),  # URL of parent page
                 'metadata': pdf_info.get('pdf_metadata', {})
             }
             
-            # Preserve additional fields like source_page, filing_date, filed_by, etc.
-            additional_fields = ['source_page', 'filing_date', 'filed_by', 'description', 
-                               'link_text', 'parent_text', 'raw_url', 'file_size', 'content_type']
+            # Preserve specific additional fields (excluding link_text, parent_text, raw_url)
+            additional_fields = ['filing_date', 'filed_by', 'description', 'search_query']
             
             for field in additional_fields:
                 if field in pdf_info:
