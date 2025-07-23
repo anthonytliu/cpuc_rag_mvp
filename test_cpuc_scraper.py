@@ -1031,6 +1031,190 @@ class TestStandaloneScraperIntegration(unittest.TestCase):
             print(f"   ⚠️ Could not fully verify app changes: {e}")
 
 
+class TestPDFStatisticsAnalysis(unittest.TestCase):
+    """Test to analyze PDF statistics across all proceeding folders"""
+    
+    def test_analyze_all_proceeding_pdf_statistics(self):
+        """
+        Iterate over all proceeding folders, read scraped_pdf_history.json files,
+        and output statistics about PDF sources to console
+        """
+        print(f"\n📊 CPUC PDF Statistics Analysis")
+        print("=" * 60)
+        
+        base_dirs = [
+            Path('.'),  # Current directory
+            Path('cpuc_csvs'),  # CSV directory
+            Path('R2207005'),  # Direct proceeding folder
+        ]
+        
+        # Find all proceeding folders and JSON files
+        proceeding_stats = {}
+        total_stats = {
+            'total_pdfs': 0,
+            'csv_sourced': 0,
+            'google_sourced': 0,
+            'unknown_sourced': 0,
+            'proceedings_found': 0
+        }
+        
+        # Look for JSON files in different locations
+        json_files = []
+        
+        for base_dir in base_dirs:
+            if base_dir.exists():
+                # Look for direct JSON files
+                json_files.extend(list(base_dir.glob('*_scraped_pdf_history.json')))
+                
+                # Look for proceeding subdirectories
+                for subdir in base_dir.iterdir():
+                    if subdir.is_dir() and subdir.name.startswith('R'):
+                        json_files.extend(list(subdir.glob('*_scraped_pdf_history.json')))
+        
+        # Also check cpuc_csvs specifically
+        cpuc_csv_dir = Path('cpuc_csvs')
+        if cpuc_csv_dir.exists():
+            json_files.extend(list(cpuc_csv_dir.glob('*_scraped_pdf_history.json')))
+        
+        # Remove duplicates
+        json_files = list(set(json_files))
+        
+        if not json_files:
+            print("❌ No scraped PDF history files found!")
+            print("   Searched in: current directory, cpuc_csvs/, and R* subdirectories")
+            print("   Expected files: *_scraped_pdf_history.json")
+            self.skipTest("No PDF history files found to analyze")
+            return
+        
+        print(f"📁 Found {len(json_files)} PDF history files to analyze:")
+        for json_file in json_files:
+            print(f"   • {json_file}")
+        print()
+        
+        # Analyze each JSON file
+        for json_file in json_files:
+            proceeding_name = self._extract_proceeding_name(json_file)
+            print(f"🔍 Analyzing: {proceeding_name}")
+            print(f"   File: {json_file}")
+            
+            try:
+                with open(json_file, 'r') as f:
+                    pdf_data = json.load(f)
+                
+                stats = self._analyze_pdf_sources(pdf_data)
+                proceeding_stats[proceeding_name] = stats
+                
+                # Update totals
+                total_stats['total_pdfs'] += stats['total_pdfs']
+                total_stats['csv_sourced'] += stats['csv_sourced']
+                total_stats['google_sourced'] += stats['google_sourced']
+                total_stats['unknown_sourced'] += stats['unknown_sourced']
+                total_stats['proceedings_found'] += 1
+                
+                # Print individual proceeding stats
+                print(f"   📊 Results:")
+                print(f"      Total PDFs: {stats['total_pdfs']}")
+                print(f"      CSV-sourced: {stats['csv_sourced']} ({stats['csv_percentage']:.1f}%)")
+                print(f"      Google-sourced: {stats['google_sourced']} ({stats['google_percentage']:.1f}%)")
+                if stats['unknown_sourced'] > 0:
+                    print(f"      Unknown source: {stats['unknown_sourced']} ({stats['unknown_percentage']:.1f}%)")
+                print()
+                
+            except Exception as e:
+                print(f"   ❌ Error reading {json_file}: {e}")
+                print()
+                continue
+        
+        # Print summary statistics
+        print("=" * 60)
+        print("📈 SUMMARY STATISTICS")
+        print("=" * 60)
+        print(f"Proceedings analyzed: {total_stats['proceedings_found']}")
+        print(f"Total PDFs discovered: {total_stats['total_pdfs']}")
+        print()
+        
+        if total_stats['total_pdfs'] > 0:
+            csv_pct = (total_stats['csv_sourced'] / total_stats['total_pdfs']) * 100
+            google_pct = (total_stats['google_sourced'] / total_stats['total_pdfs']) * 100
+            unknown_pct = (total_stats['unknown_sourced'] / total_stats['total_pdfs']) * 100
+            
+            print(f"📋 CSV-sourced PDFs: {total_stats['csv_sourced']} ({csv_pct:.1f}%)")
+            print(f"🔍 Google-sourced PDFs: {total_stats['google_sourced']} ({google_pct:.1f}%)")
+            if total_stats['unknown_sourced'] > 0:
+                print(f"❓ Unknown source PDFs: {total_stats['unknown_sourced']} ({unknown_pct:.1f}%)")
+            
+            print()
+            print("📊 Source Distribution:")
+            print(f"   {'CSV Sources':<20} {'='*int(csv_pct/2):<50} {csv_pct:.1f}%")
+            print(f"   {'Google Sources':<20} {'='*int(google_pct/2):<50} {google_pct:.1f}%")
+            if unknown_pct > 0:
+                print(f"   {'Unknown Sources':<20} {'='*int(unknown_pct/2):<50} {unknown_pct:.1f}%")
+        else:
+            print("❌ No PDFs found in any proceeding!")
+        
+        print("=" * 60)
+        
+        # Assertions for test validation
+        self.assertGreater(total_stats['proceedings_found'], 0, "Should find at least one proceeding")
+        self.assertGreater(total_stats['total_pdfs'], 0, "Should find at least some PDFs")
+        
+        # Log final results for test verification
+        print(f"✅ Test completed successfully!")
+        print(f"   Analyzed {total_stats['proceedings_found']} proceedings")
+        print(f"   Found {total_stats['total_pdfs']} total PDFs")
+        print(f"   CSV: {total_stats['csv_sourced']}, Google: {total_stats['google_sourced']}")
+    
+    def _extract_proceeding_name(self, json_file_path: Path) -> str:
+        """Extract proceeding name from JSON file path"""
+        filename = json_file_path.name
+        # Remove _scraped_pdf_history.json suffix
+        proceeding = filename.replace('_scraped_pdf_history.json', '')
+        return proceeding.upper()
+    
+    def _analyze_pdf_sources(self, pdf_data: dict) -> dict:
+        """
+        Analyze PDF data to categorize sources
+        
+        Classification logic:
+        - CSV-sourced: Has 'source_page' field (from document pages)
+        - Google-sourced: document_type == 'Google Search Result'
+        - Unknown: Neither of the above
+        """
+        total_pdfs = len(pdf_data)
+        csv_sourced = 0
+        google_sourced = 0
+        unknown_sourced = 0
+        
+        for pdf_hash, pdf_info in pdf_data.items():
+            document_type = pdf_info.get('document_type', '')
+            source_page = pdf_info.get('source_page', '')
+            
+            if document_type == 'Google Search Result':
+                google_sourced += 1
+            elif source_page:  # Has source_page, likely from CSV document processing
+                csv_sourced += 1
+            else:
+                unknown_sourced += 1
+                # Log unknown sources for debugging
+                url = pdf_info.get('url', 'Unknown URL')
+                print(f"      🔍 Unknown source PDF: {document_type} - {url}")
+        
+        # Calculate percentages
+        csv_percentage = (csv_sourced / total_pdfs * 100) if total_pdfs > 0 else 0
+        google_percentage = (google_sourced / total_pdfs * 100) if total_pdfs > 0 else 0
+        unknown_percentage = (unknown_sourced / total_pdfs * 100) if total_pdfs > 0 else 0
+        
+        return {
+            'total_pdfs': total_pdfs,
+            'csv_sourced': csv_sourced,
+            'google_sourced': google_sourced,
+            'unknown_sourced': unknown_sourced,
+            'csv_percentage': csv_percentage,
+            'google_percentage': google_percentage,
+            'unknown_percentage': unknown_percentage
+        }
+
+
 class TestEndToEndWorkflow(unittest.TestCase):
     """End-to-end workflow test with isolated environment"""
     
