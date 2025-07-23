@@ -10,9 +10,6 @@ load_dotenv()
 
 PROJECT_ROOT = Path(__file__).parent.resolve()
 
-# Directory containing the PDF documents (DEPRECATED - moved to URL-based processing)
-# BASE_PDF_DIR = PROJECT_ROOT / "cpuc_pdfs" / "R2207005"
-
 # Directory to store the Chroma vector database
 DB_DIR = PROJECT_ROOT / "local_chroma_db"
 
@@ -231,7 +228,6 @@ def get_proceeding_file_paths(proceeding_id: str, base_dir: Path = None) -> dict
     return {
         'scraped_pdf_history': base_dir / "cpuc_csvs" / f"{proceeding_lower}_scraped_pdf_history.json",
         'result_csv': base_dir / "cpuc_csvs" / f"{proceeding_lower}_resultCSV.csv",
-        'pdf_dir': base_dir / "cpuc_pdfs" / proceeding_id,
         'vector_db': base_dir / "local_chroma_db" / proceeding_id,
         'document_hashes': base_dir / "local_chroma_db" / proceeding_id / "document_hashes.json"
     }

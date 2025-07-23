@@ -21,7 +21,7 @@ import schedule
 
 import config
 # Import existing modules
-from cpuc_scraper import CPUCUnifiedScraper, get_new_pdfs_for_proceeding
+from cpuc_scraper import CPUCSimplifiedScraper, scrape_proceeding_pdfs
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +69,8 @@ class PDFScheduler:
             # Import config here to avoid circular imports
             import config
             
-            self.document_scraper = CPUCUnifiedScraper(
-                headless=True,
-                max_workers=min(4, config.SCRAPER_MAX_WORKERS)  # Use fewer workers for scheduled tasks
+            self.document_scraper = CPUCSimplifiedScraper(
+                headless=True
             )
             logger.info("Unified document scraper initialized for scheduler")
         except Exception as e:
@@ -238,14 +237,15 @@ class PDFScheduler:
                         priority_label = "PRIMARY" if proceeding == primary_proceeding else "secondary"
                         logger.info(f"🔍 Checking {proceeding} ({priority_label})")
                         
-                        # Use unified scraper to get new PDFs
-                        new_pdfs = get_new_pdfs_for_proceeding(proceeding, headless=True)
+                        # Use simplified scraper to get new PDFs
+                        scrape_result = scrape_proceeding_pdfs(proceeding, headless=True)
+                        new_pdfs = scrape_result.get('total_pdfs', 0)
                         
-                        if new_pdfs:
-                            logger.info(f"Enhanced search found {len(new_pdfs)} new documents for {proceeding} ({priority_label})")
+                        if new_pdfs > 0:
+                            logger.info(f"Enhanced search found {new_pdfs} documents for {proceeding} ({priority_label})")
                             
                             # Count as new documents found
-                            total_new_documents += len(new_pdfs)
+                            total_new_documents += new_pdfs
                         else:
                             logger.info(f"No new documents found for {proceeding} ({priority_label})")
                             

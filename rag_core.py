@@ -3,7 +3,6 @@
 
 import json
 import logging
-import multiprocessing
 import re
 import shutil
 from datetime import datetime
@@ -19,7 +18,7 @@ from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_community.vectorstores import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from tqdm import tqdm
 
@@ -27,7 +26,6 @@ import config
 import data_processing
 import models
 import utils
-from memory import ConversationMemory
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +44,6 @@ class CPUCRAGSystem:
         # --- Base Configuration ---
         self.num_chunks = None
         # Base directory no longer needed - using URL-based processing
-        # self.base_dir = config.BASE_PDF_DIR  # DEPRECATED
         self.db_dir = self.proceeding_paths['vector_db']
         self.chunk_size = config.CHUNK_SIZE
         self.chunk_overlap = config.CHUNK_OVERLAP
@@ -61,7 +58,6 @@ class CPUCRAGSystem:
         self.search_tool = DuckDuckGoSearchResults()
 
         # --- State and Components ---
-        self.conversation_memory = ConversationMemory()
         self.vectordb: Optional[Chroma] = None
         self.retriever = None
         self.doc_hashes_file = self.proceeding_paths['document_hashes']
@@ -127,28 +123,6 @@ class CPUCRAGSystem:
                     logger.info("No download history or processed documents found")
                     logger.info("Use build_vector_store_from_urls() to create vector store")
 
-    def has_new_pdfs(self) -> bool:
-        """
-        DEPRECATED: This method is no longer used since we moved to URL-based processing.
-        Returns False always since we no longer check local PDFs.
-        """
-        logger.warning("has_new_pdfs() is deprecated - use URL-based processing instead")
-        return False
-
-    def sync_if_needed(self) -> bool:
-        """
-        Automatically sync vector store if new PDFs are detected.
-        Returns True if sync was performed, False if no sync was needed.
-        
-        This is the preferred method for automated systems to call.
-        """
-        if self.has_new_pdfs():
-            logger.info("New PDFs detected. Starting incremental sync...")
-            self.build_vector_store()
-            return True
-        else:
-            logger.info("No new PDFs detected. Sync not needed.")
-            return False
 
     def query(self, question: str):
         """Enhanced query method with superseding logic."""
@@ -881,65 +855,6 @@ class CPUCRAGSystem:
         logger.error("No local PDFs or download history found. Please use build_vector_store_from_urls() with URL list.")
         return
 
-    def _delete_files_from_db(self, files_to_delete: set[Path]):
-        """Finds and deletes all chunks associated with a set of file paths."""
-        if not files_to_delete:
-            return
-
-        logger.info(f"Found {len(files_to_delete)} files to delete from vector store.")
-        source_names_to_delete = {p.name for p in files_to_delete}
-
-        # 1. Get ALL records from the collection.
-        # For very large databases, this can be memory intensive. An alternative is to
-        # query for each file to delete, but this is much faster for a moderate number of deletions.
-        all_data = self.vectordb.get(include=["metadatas"])
-
-        # 2. Filter in Python to find the IDs to delete.
-        ids_to_delete = [
-            record_id
-            for record_id, metadata in zip(all_data['ids'], all_data['metadatas'])
-            if metadata and metadata.get('source') in source_names_to_delete
-        ]
-
-        if ids_to_delete:
-            logger.info(f"Deleting {len(ids_to_delete)} chunks for {len(files_to_delete)} deleted files.")
-            try:
-                self.vectordb.delete(ids=ids_to_delete)
-                # Update the hash map only after successful deletion from DB.
-                for pdf_path in files_to_delete:
-                    normalized_path = self._normalize_file_path(pdf_path)
-                    if normalized_path in self.doc_hashes:
-                        del self.doc_hashes[normalized_path]
-            except Exception as e:
-                logger.error(f"Failed to delete chunks from the database: {e}")
-        else:
-            logger.warning("Found files marked for deletion, but no corresponding chunks were found in the DB.")
-
-    # The helper _needs_update is still required.
-    def _needs_update(self, file_path: Path) -> bool:
-        """
-        Checks if a file is new or has been modified since the last run.
-        
-        Uses normalized paths for consistent tracking across different environments.
-        """
-        current_hash = data_processing.get_file_hash(file_path)
-        if not current_hash:
-            logger.warning(f"Failed to calculate hash for {file_path}")
-            return False
-        
-        normalized_path = self._normalize_file_path(file_path)
-        stored_hash = self.doc_hashes.get(normalized_path)
-        
-        if stored_hash is None:
-            logger.debug(f"New file detected: {normalized_path}")
-            return True
-        
-        if current_hash != stored_hash:
-            logger.debug(f"Modified file detected: {normalized_path}")
-            return True
-        
-        logger.debug(f"File unchanged: {normalized_path}")
-        return False
 
     def setup_qa_pipeline(self):
         """
@@ -1237,52 +1152,6 @@ class CPUCRAGSystem:
                 'extra_files': []
             }
 
-    def _get_missing_pdfs_from_scraped_pdf_history(self) -> List[Path]:
-        """
-        Get list of PDFs that are in scraped_pdf_history but missing from document_hashes.
-        
-        Returns:
-            List[Path]: List of PDF paths that need to be processed
-        """
-        try:
-            # Load scraped PDF history
-            # Try both old and new naming conventions for backward compatibility
-            download_history_path = self.proceeding_paths['scraped_pdf_history']
-            if not download_history_path.exists():
-                logger.warning("Download history file not found")
-                return []
-            
-            with open(download_history_path, 'r') as f:
-                scraped_pdf_history = json.load(f)
-            
-            # Extract filenames from download history (only successfully downloaded files)
-            scraped_pdf_history_files = set()
-            for record in scraped_pdf_history.values():
-                if record.get('status') == 'downloaded':
-                    filename = record.get('filename', '')
-                    if filename:
-                        scraped_pdf_history_files.add(filename)
-            
-            # Extract filenames from document hashes (normalize paths)
-            document_hashes_files = set()
-            for path_str in self.doc_hashes.keys():
-                # Extract filename from path
-                path_obj = Path(path_str)
-                filename = path_obj.name
-                document_hashes_files.add(filename)
-            
-            # Find missing files
-            missing_files = download_history_files - document_hashes_files
-            
-            # Convert missing filenames to actual paths if they exist
-            missing_paths = []
-            # DEPRECATED: No longer checking local PDFs since we moved to URL-based processing
-            logger.warning("_get_missing_pdfs_from_scraped_pdf_history is deprecated - use URL-based processing")
-            return []
-            
-        except Exception as e:
-            logger.error(f"Error getting missing PDFs from download history: {e}")
-            return []
 
     def _process_sources(self, documents: List[Document]) -> List[Dict]:
         return [{

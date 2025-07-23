@@ -703,46 +703,6 @@ def get_file_hash(file_path: Path) -> str:
         logger.error(f"Error calculating hash for {file_path}: {e}")
         return ""
 
-def _filter_superseded_documents(documents: List[Document]) -> List[Document]:
-    """Filter out documents that have been superseded by more recent ones."""
-    if not documents:
-        return documents
-
-    proceeding_groups = {}
-    ungrouped_docs = []
-
-    for doc in documents:
-        proceeding = doc.metadata.get('proceeding_number')
-        if proceeding:
-            if proceeding not in proceeding_groups:
-                proceeding_groups[proceeding] = []
-            proceeding_groups[proceeding].append(doc)
-        else:
-            ungrouped_docs.append(doc)
-
-    filtered_docs = []
-
-    for proceeding, group_docs in proceeding_groups.items():
-        group_docs.sort(key=lambda x: (
-            x.metadata.get('supersedes_priority', 0),
-            datetime.fromisoformat(x.metadata['document_date']) if x.metadata.get('document_date') else datetime.min
-        ), reverse=True)
-
-        top_doc = group_docs[0]
-        if top_doc.metadata.get('document_type') in ['decision', 'ruling']:
-            logger.info(
-                f"Keeping most recent {top_doc.metadata.get('document_type')} for proceeding {proceeding}: {top_doc.metadata.get('source')}")
-            filtered_docs.append(top_doc)
-
-            for doc in group_docs[1:]:
-                if doc.metadata.get('document_type') in ['application', 'proposal']:
-                    filtered_docs.append(doc)
-        else:
-            filtered_docs.extend(group_docs)
-
-    filtered_docs.extend(ungrouped_docs)
-
-    return filtered_docs
 
 
 def rerank_documents_with_recency(self, question: str, documents: List[Document]) -> List[Document]:

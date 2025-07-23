@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import config
 from rag_core import CPUCRAGSystem
-from cpuc_scraper import CPUCUnifiedScraper
+from cpuc_scraper import CPUCSimplifiedScraper
 
 def test_config_system():
     """Test the configuration system"""
@@ -69,8 +69,8 @@ def test_scraper_system():
     
     try:
         # Test with specific proceeding
-        scraper = CPUCUnifiedScraper(headless=True, proceedings=['R2207005'])
-        print(f"✅ Scraper initialized with proceedings: {scraper.proceedings}")
+        scraper = CPUCSimplifiedScraper(headless=True)
+        print(f"✅ Scraper initialized successfully")
         
         # Test format function
         formatted = config.format_proceeding_for_search('R2207005')

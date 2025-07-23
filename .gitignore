@@ -1,1 +1,42 @@
 .env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Log files
+*.log
+standalone_scraper.log
+
+# Status files (runtime generated)
+pdf_scheduler_status.json
+
+# Claude settings (local only)
+.claude/settings.local.json
+
+# Temporary files
+*.tmp
+*.temp
+
+# Data directories (generated)
+R2207005/
+local_chroma_db/
+cpuc_csvs/
+
+# LaTeX files
+*.tex
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
