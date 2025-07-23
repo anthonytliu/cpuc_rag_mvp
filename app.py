@@ -9,8 +9,6 @@ import json
 from typing import List, Dict, Tuple
 
 import streamlit as st
-# import http.server
-# import socketserver
 import config
 
 sys.path.append(str(Path(__file__).parent.resolve()))
@@ -18,7 +16,7 @@ sys.path.append(str(Path(__file__).parent.resolve()))
 from rag_core import CPUCRAGSystem
 from timeline_integration import create_timeline_integration
 from pdf_scheduler import create_pdf_scheduler
-from cpuc_scraper import CPUCUnifiedScraper, get_new_pdfs_for_proceeding
+# Scraper imports removed - use standalone_scraper.py for document discovery
 from startup_manager import create_startup_manager
 import data_processing
 
@@ -51,28 +49,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-# PDF Server functionality removed - now using URL-based processing
-# class Handler(http.server.SimpleHTTPRequestHandler):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, directory=str(config.BASE_PDF_DIR), **kwargs)
-
-# @st.cache_resource
-# def start_pdf_server():
-#     """Starts the PDF server in a background thread."""
-#     if '_pdf_server_thread' in st.session_state and st.session_state._pdf_server_thread.is_alive():
-#         logger.info("PDF server is already running.")
-#         return
-
-#     def run_server():
-#         with socketserver.TCPServer(("", config.PDF_SERVER_PORT), Handler) as httpd:
-#             logger.info(f"Starting PDF server at http://localhost:{config.PDF_SERVER_PORT}")
-#             httpd.serve_forever()
-
-#     thread = threading.Thread(target=run_server, daemon=True)
-#     st.session_state._pdf_server_thread = thread
-#     thread.start()
-#     logger.info("PDF server thread started.")
 
 @st.cache_resource
 def execute_enhanced_startup_sequence() -> Dict:
@@ -160,10 +136,8 @@ def initialize_rag_system(selected_proceeding: str = None):
                         logger.info(f"✅ Loaded existing vector store with {chunk_count} chunks")
                         st.success(f"✅ RAG System Initialized with {chunk_count} existing chunks")
                         
-                        # Step 3: Check for new PDFs for current proceeding in background
-                        if not st.session_state.get('launch_hash_check_completed', False):
-                            check_for_new_pdfs_on_launch(system, selected_proceeding)
-                            st.session_state['launch_hash_check_completed'] = True
+                        # Document discovery has been moved to standalone_scraper.py
+                        logger.info("Skipping launch PDF check - use standalone_scraper.py for document discovery")
                         
                         return system
                     else:
@@ -190,31 +164,11 @@ def initialize_rag_system(selected_proceeding: str = None):
                 logger.info("No working vector store found, but scraped PDF history exists. Building from URLs...")
                 # The system will auto-build from scraped PDF history
             else:
-                # Check if auto-scraping is enabled
-                if config.RUN_SCRAPER_ON_STARTUP:
-                    st.info("🚀 No existing data found. Automatically starting document discovery...")
-                    logger.info("No vector store or scraped PDF history found. Auto-starting scraper...")
-                    
-                    # Automatically trigger scraper to discover and build initial dataset
-                    success = auto_initialize_with_scraper(system, selected_proceeding)
-                    if success:
-                        st.success("✅ Initial document discovery completed! Vector store is being built...")
-                    else:
-                        st.error("❌ Failed to initialize documents. Please check the logs or try manual scraping.")
-                else:
-                    st.warning("📋 No existing data found. Auto-scraping is disabled.")
-                    
-                    # Provide an option to enable auto-scraping for this session
-                    col1, col2 = st.columns([2, 1])
-                    with col1:
-                        st.info("💡 **To get started:** You can enable auto-scraping for this session or set `RUN_SCRAPER_ON_STARTUP=true` in your environment.")
-                    with col2:
-                        if st.button("🚀 Enable Auto-Scraping", help="Enable auto-scraping for this session only"):
-                            # Temporarily enable auto-scraping for this session
-                            config.RUN_SCRAPER_ON_STARTUP = True
-                            st.rerun()
-                    
-                    logger.info("No data found and auto-scraping disabled. Manual intervention required.")
+                # Auto-scraping has been moved to standalone process
+                st.warning("📋 No existing data found.")
+                st.info("💡 **To get started:** Run `python standalone_scraper.py` to discover documents, then restart the application.")
+                st.code("python standalone_scraper.py", language="bash")
+                logger.info("No data found. Use standalone_scraper.py to discover documents.")
             
         return system
     except Exception as e:
@@ -222,88 +176,7 @@ def initialize_rag_system(selected_proceeding: str = None):
         st.error(f"Could not initialize RAG System: {e}")
         return None
 
-def auto_initialize_with_scraper(rag_system, selected_proceeding: str) -> bool:
-    """
-    Automatically initialize the system by running the scraper to discover documents.
-    
-    Args:
-        rag_system: The RAG system instance
-        selected_proceeding: The proceeding to scrape for
-        
-    Returns:
-        bool: True if successful, False otherwise
-    """
-    try:
-        logger.info(f"🤖 Auto-initializing system for {selected_proceeding}")
-        
-        # Create status containers for progress feedback
-        progress_container = st.container()
-        with progress_container:
-            st.write("### 🔍 Automatic Document Discovery")
-            progress_bar = st.progress(0, text="Initializing scraper...")
-            status_text = st.empty()
-        
-        # Step 1: Initialize scraper
-        progress_bar.progress(10, text="Setting up document scraper...")
-        status_text.info("🔧 Initializing CPUC document scraper...")
-        
-        from cpuc_scraper import CPUCUnifiedScraper
-        scraper = CPUCUnifiedScraper(headless=True, proceedings=[selected_proceeding])
-        
-        # Add a small delay to ensure UI updates are visible
-        import time
-        time.sleep(1)
-        
-        # Step 2: Run scraper to discover documents
-        progress_bar.progress(30, text="Discovering documents from CPUC website...")
-        status_text.info("🔍 Searching CPUC website for documents...")
-        
-        # Run scraper (may take a few minutes)
-        scraper_results = scraper.scrape_proceeding_pdfs(selected_proceeding)
-        total_found = scraper_results.get('total_scraped', 0)
-        new_pdfs = scraper_results.get('new_pdfs', [])
-        
-        if total_found == 0:
-            logger.warning("No documents found during auto-initialization")
-            status_text.warning("⚠️ No documents found. The proceeding may not have public documents yet.")
-            progress_bar.progress(100, text="No documents found")
-            return False
-        
-        progress_bar.progress(60, text=f"Found {total_found} documents, processing {len(new_pdfs)} new ones...")
-        status_text.success(f"✅ Found {total_found} documents ({len(new_pdfs)} new)")
-        
-        # Step 3: Build vector store from discovered documents
-        if len(new_pdfs) > 0:
-            progress_bar.progress(80, text="Building vector database...")
-            status_text.info("🔨 Building vector database from discovered documents...")
-            
-            # Trigger vector store build (this will process URLs from scraped_pdf_history)
-            vector_build_success = rag_system.build_vector_store()
-            
-            if vector_build_success:
-                progress_bar.progress(100, text="System ready!")
-                status_text.success("🎉 Vector database built successfully!")
-                logger.info(f"✅ Auto-initialization successful: {total_found} documents discovered, vector store built")
-                return True
-            else:
-                status_text.error("❌ Failed to build vector database")
-                logger.error("Vector store building failed during auto-initialization")
-                return False
-        else:
-            progress_bar.progress(100, text="Documents already processed")
-            status_text.info("📚 All discovered documents were already in the system")
-            logger.info("Auto-initialization completed - all documents were already processed")
-            return True
-            
-    except Exception as e:
-        logger.error(f"Auto-initialization failed: {e}", exc_info=True)
-        if 'status_text' in locals():
-            status_text.error(f"❌ Auto-initialization failed: {e}")
-        return False
-    finally:
-        # Clean up scraper
-        if 'scraper' in locals():
-            scraper._cleanup_driver()
+# auto_initialize_with_scraper function removed - use standalone_scraper.py for document discovery
 
 @st.cache_resource
 def initialize_pdf_scheduler(_rag_system):
@@ -336,93 +209,10 @@ def initialize_pdf_scheduler(_rag_system):
 
 
 @st.cache_resource
-def initialize_document_scraper(selected_proceeding: str = None):
-    """Initialize the unified CPUC document scraper with caching."""
-    try:
-        if not config.PDF_SCHEDULER_ENABLED:
-            logger.info("Document scraper is disabled (PDF_SCHEDULER_ENABLED=False)")
-            return None
-            
-        # Use selected proceeding or default
-        if selected_proceeding is None:
-            selected_proceeding = st.session_state.get('selected_proceeding', config.DEFAULT_PROCEEDING)
-            
-        # Initialize unified scraper
-        scraper = CPUCUnifiedScraper(
-            headless=True,
-            max_workers=config.SCRAPER_MAX_WORKERS,
-            proceedings=[selected_proceeding]
-        )
-        
-        logger.info(f"Unified document scraper initialized successfully for {selected_proceeding}")
-        return scraper
-    except Exception as e:
-        logger.error(f"Failed to initialize document scraper: {e}", exc_info=True)
-        st.warning(f"Document scraper unavailable: {e}")
-        return None
+# initialize_document_scraper function removed - use standalone_scraper.py for document discovery
 
 
-def compare_scraper_results_with_hashes(rag_system, scraper_results, proceeding: str) -> int:
-    """
-    Compare fresh scraper results with existing hashes to find new PDFs.
-    
-    This implements the proper hash checking logic as specified:
-    - Takes fresh scraper results and compares with existing document_hashes.json
-    - Identifies truly new PDFs by URL hash comparison
-    - Returns count of new PDFs found
-    
-    Args:
-        rag_system: RAG system instance
-        scraper_results: List of tuples from scraper (url, title, type)
-        proceeding: Current proceeding being processed
-        
-    Returns:
-        int: Number of new PDFs found
-    """
-    try:
-        logger.info(f"🔍 Comparing scraper results with existing hashes for {proceeding}")
-        
-        # Get existing hashes
-        existing_hashes = set(rag_system.doc_hashes.keys())
-        
-        # Convert scraper results to URLs and calculate hashes
-        new_urls = []
-        for result in scraper_results:
-            url = result[0]  # URL is first element in tuple
-            title = result[1] if len(result) > 1 else ""
-            
-            # Only process PDF URLs
-            if url.endswith('.PDF') or url.endswith('.pdf'):
-                url_hash = data_processing.get_url_hash(url)
-                
-                # Check if this URL hash is new
-                if url_hash not in existing_hashes:
-                    new_urls.append({
-                        'url': url,
-                        'title': title,
-                        'hash': url_hash,
-                        'proceeding': proceeding
-                    })
-        
-        logger.info(f"Hash comparison results: {len(new_urls)} new PDFs found out of {len(scraper_results)} total results")
-        
-        if new_urls:
-            # Store the new URLs for background processing
-            if 'new_urls_found' not in st.session_state:
-                st.session_state['new_urls_found'] = []
-            st.session_state['new_urls_found'].extend(new_urls)
-            
-            # Log details
-            for url_data in new_urls[:5]:  # Log first 5
-                logger.info(f"  New PDF: {url_data['url']}")
-            if len(new_urls) > 5:
-                logger.info(f"  ... and {len(new_urls) - 5} more")
-        
-        return len(new_urls)
-        
-    except Exception as e:
-        logger.error(f"Hash comparison failed: {e}")
-        return 0
+# compare_scraper_results_with_hashes function removed - use standalone_scraper.py for document discovery
 
 
 class BackgroundProcessor:
@@ -591,111 +381,9 @@ def get_prioritized_proceedings():
     return prioritized
 
 
-def check_for_new_pdfs_on_launch(rag_system, selected_proceeding=None):
-    """Check for new PDFs on launch following spec requirements with proceeding priority"""
-    try:
-        logger.info("🔍 Checking for new PDFs on launch...")
-        
-        # Step 1: Get proceedings in priority order (selected proceeding first)
-        if selected_proceeding:
-            proceedings = [selected_proceeding]  # Only check the selected proceeding
-        else:
-            proceedings = get_prioritized_proceedings()
-        primary_proceeding = proceedings[0]
-        
-        scraper = initialize_document_scraper()
-        if not scraper:
-            logger.warning("No scraper available for launch hash check")
-            return
-            
-        # Step 2: Run quick scraper check for primary proceeding first
-        total_new_pdfs = 0
-        
-        for proceeding in proceedings:
-            try:
-                logger.info(f"🔍 Checking {proceeding} (priority: {'PRIMARY' if proceeding == primary_proceeding else 'secondary'})")
-                
-                # Get fresh URLs from unified scraper for this proceeding
-                fresh_results = get_new_pdfs_for_proceeding(proceeding, headless=True)
-                
-                if fresh_results:
-                    logger.info(f"Launch check found {len(fresh_results)} potential URLs for {proceeding}")
-                    
-                    # Compare with existing hashes
-                    new_pdfs_found = compare_scraper_results_with_hashes(rag_system, fresh_results, proceeding)
-                    total_new_pdfs += new_pdfs_found
-                    
-                    if new_pdfs_found > 0:
-                        # Show notification to user
-                        st.session_state['new_pdfs_found_on_launch'] = total_new_pdfs
-                        st.session_state['current_proceeding'] = proceeding
-                        
-                        # Start background processing
-                        if 'background_processor' not in st.session_state:
-                            st.session_state['background_processor'] = BackgroundProcessor(rag_system)
-                        
-                        st.session_state['background_processor'].start_processing(fresh_results, proceeding)
-                        
-                        logger.info(f"✅ Launch check completed. Found {new_pdfs_found} new PDFs for {proceeding}")
-                        
-                        # Update UI
-                        priority_label = "PRIMARY" if proceeding == primary_proceeding else "secondary"
-                        st.info(f"🔍 Found {new_pdfs_found} new documents for {proceeding} ({priority_label}). Processing in background...")
-                    else:
-                        logger.info(f"✅ Launch check completed. No new PDFs found for {proceeding}")
-                        
-                # For primary proceeding, always process even if we found some documents
-                # For secondary proceedings, only continue if we haven't found enough in primary
-                if proceeding == primary_proceeding:
-                    continue  # Always check all proceedings for full discovery
-                    
-            except Exception as e:
-                logger.error(f"Launch hash check failed for {proceeding}: {e}")
-        
-        if total_new_pdfs > 0:
-            logger.info(f"✅ Launch check completed. Found {total_new_pdfs} total new PDFs across all proceedings")
-        else:
-            logger.info("✅ Launch check completed. No new PDFs found across all proceedings")
-            
-    except Exception as e:
-        logger.error(f"Launch PDF check failed: {e}")
+# check_for_new_pdfs_on_launch function removed - use standalone_scraper.py for document discovery
 
-def run_startup_scraper_check(selected_proceeding: str = None):
-    """Run a quick scraper check on startup if enabled with proceeding priority"""
-    try:
-        if not config.RUN_SCRAPER_ON_STARTUP:
-            return
-            
-        scraper = initialize_document_scraper(selected_proceeding)
-        if not scraper:
-            return
-        
-        # Use selected proceeding or default
-        if selected_proceeding is None:
-            selected_proceeding = config.DEFAULT_PROCEEDING
-            
-        logger.info(f"Running startup document scraper check for {selected_proceeding}...")
-        with st.spinner("Running quick document discovery check..."):
-            # Use selected proceeding only
-            prioritized_proceedings = [selected_proceeding]
-            
-            for proceeding in prioritized_proceedings:
-                try:
-                    priority_label = "PRIMARY" if proceeding == prioritized_proceedings[0] else "secondary"
-                    logger.info(f"Startup check for {proceeding} ({priority_label})")
-                    
-                    # Get new PDFs using unified scraper
-                    new_pdfs = get_new_pdfs_for_proceeding(proceeding, headless=True)
-                    if new_pdfs:
-                        logger.info(f"Startup scraper found {len(new_pdfs)} new documents for {proceeding}")
-                        st.success(f"📄 Found {len(new_pdfs)} new documents for {proceeding} ({priority_label})")
-                    else:
-                        logger.info(f"No new documents found for {proceeding} during startup check")
-                except Exception as e:
-                    logger.warning(f"Startup scraper check failed for {proceeding}: {e}")
-                    
-    except Exception as e:
-        logger.error(f"Startup scraper check failed: {e}")
+# run_startup_scraper_check function removed - use standalone_scraper.py for document discovery
 
 
 def handle_background_data_refresh():
@@ -1005,33 +693,10 @@ def render_system_management_tab(rag_system, current_proceeding):
     with col1:
         st.subheader("🔄 Update System")
         
-        if st.button("🚀 Run Scraper", help="Run the scraper to find new documents"):
-            with st.spinner("Running scraper..."):
-                try:
-                    from cpuc_scraper import CPUCUnifiedScraper
-                    
-                    progress_placeholder = st.empty()
-                    
-                    def progress_callback(message, progress):
-                        if progress >= 0:
-                            st.progress(progress / 100)
-                            progress_placeholder.text(f"[{progress}%] {message}")
-                    
-                    scraper = CPUCUnifiedScraper(headless=True)
-                    results = scraper.scrape_proceeding_pdfs(current_proceeding)
-                    
-                    if results:
-                        st.success(f"✅ Scraping completed!")
-                        st.json({
-                            'csv_urls': len(results.get('csv_urls', [])),
-                            'google_urls': len(results.get('google_urls', [])),
-                            'total_scraped': results.get('total_scraped', 0)
-                        })
-                    else:
-                        st.error(f"❌ Scraping failed: No results returned")
-                        
-                except Exception as e:
-                    st.error(f"❌ Failed to run scraper: {e}")
+        st.info("📋 **Document Discovery**")
+        st.write("Use the standalone scraper to discover new documents:")
+        st.code(f"python standalone_scraper.py {current_proceeding}", language="bash")
+        st.write("Then restart the application to load the new documents.")
         
         if st.button("🔨 Process Embeddings", help="Process incremental embeddings for new documents"):
             with st.spinner("Processing embeddings..."):
@@ -1077,7 +742,7 @@ def render_system_management_tab(rag_system, current_proceeding):
                 st.rerun()
 
 
-def display_system_status(rag_system, scheduler, scraper=None):
+def display_system_status(rag_system, scheduler):
     """Display system status in the header"""
     if rag_system:
         # Get system stats and log to console

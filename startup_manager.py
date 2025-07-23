@@ -5,8 +5,10 @@ Startup Manager for CPUC RAG System
 Implements the complete startup sequence:
 1. Select first proceeding from config
 2. Initialize DB and folders
-3. Run scraper workflow
-4. Implement incremental embedding system
+3. Process embeddings from existing data
+4. Initialize RAG system
+
+Note: Document discovery/scraping has been moved to standalone_scraper.py
 
 Author: Claude Code
 """
@@ -81,24 +83,9 @@ class StartupManager:
                 startup_errors.append(error_msg)
                 raise
             
-            # Step 3: Run scraper workflow (standard scraper)
-            try:
-                self._update_progress("Running scraper workflow...", 30)
-                scraper_results = self._run_standard_scraper_workflow()
-                
-                if scraper_results.get('success', True):
-                    logger.info(f"✅ Scraper workflow completed")
-                else:
-                    warning_msg = f"Scraper failed: {scraper_results.get('error', 'Unknown error')}"
-                    logger.warning(f"⚠️ {warning_msg}")
-                    startup_warnings.append(warning_msg)
-                    
-            except Exception as e:
-                error_msg = f"Scraper workflow failed: {e}"
-                logger.error(f"❌ {error_msg}")
-                startup_errors.append(error_msg)
-                # Continue with startup even if scraper fails
-                scraper_results = {'success': False, 'error': str(e)}
+            # Step 3: Skip scraper workflow (moved to standalone process)
+            logger.info("⏭️ Skipping scraper workflow - use standalone_scraper.py for document discovery")
+            scraper_results = {'success': True, 'skipped': True, 'message': 'Scraper moved to standalone process'}
             
             # Step 4: Process embeddings (with fallbacks)
             try:
@@ -188,7 +175,6 @@ class StartupManager:
             
             # Create additional required folders
             folders_to_create = [
-                self.base_dir / "cpuc_pdfs" / self.current_proceeding,
                 self.base_dir / "cpuc_csvs"
             ]
             
@@ -202,31 +188,7 @@ class StartupManager:
             logger.error(f"Failed to initialize database and folders: {e}")
             raise
     
-    def _run_standard_scraper_workflow(self) -> Dict:
-        """Run standard scraper workflow."""
-        try:
-            from cpuc_scraper import CPUCUnifiedScraper
-            
-            self._update_progress("Initializing scraper...", 35)
-            scraper = CPUCUnifiedScraper(headless=True)
-            
-            self._update_progress("Running scraper...", 40)
-            results = scraper.scrape_proceeding_pdfs(self.current_proceeding)
-            
-            self._update_progress("Scraper completed", 65)
-            
-            # Convert to expected format
-            return {
-                'success': True,
-                'csv_results': results.get('csv_urls', []),
-                'google_results': results.get('google_urls', []),
-                'metadata_count': len(results.get('csv_urls', [])),
-                'total_scraped': results.get('total_scraped', 0)
-            }
-            
-        except Exception as e:
-            logger.error(f"Scraper failed: {e}")
-            raise
+    # _run_standard_scraper_workflow removed - use standalone_scraper.py for document discovery
     
     def _analyze_document_differences(self) -> Dict:
         """
