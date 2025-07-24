@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 import hashlib
 import json
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 import streamlit as st
 import config
@@ -18,7 +18,6 @@ from timeline_integration import create_timeline_integration
 from pdf_scheduler import create_pdf_scheduler
 # Scraper imports removed - use standalone_scraper.py for document discovery
 from startup_manager import create_startup_manager
-import data_processing
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -215,170 +214,10 @@ def initialize_pdf_scheduler(_rag_system):
 # compare_scraper_results_with_hashes function removed - use standalone_scraper.py for document discovery
 
 
-class BackgroundProcessor:
-    """
-    Background processor for real-time document processing following spec requirements.
-    
-    This class handles:
-    - Progressive document processing without blocking UI
-    - Real-time user notifications
-    - Incremental DB updates
-    - Graceful failure handling
-    """
-    
-    def __init__(self, rag_system):
-        self.rag_system = rag_system
-        self.is_processing = False
-        self.processing_thread = None
-        self.current_status = "idle"
-        self.processed_count = 0
-        self.total_count = 0
-        
-    def start_processing(self, scraper_results, proceeding: str):
-        """Start background processing of new documents"""
-        if self.is_processing:
-            logger.warning("Background processing already in progress")
-            return
-            
-        self.is_processing = True
-        self.current_status = "starting"
-        
-        # Get new URLs from session state
-        new_urls = st.session_state.get('new_urls_found', [])
-        
-        if not new_urls:
-            logger.info("No new URLs to process")
-            self.is_processing = False
-            return
-            
-        self.total_count = len(new_urls)
-        self.processed_count = 0
-        
-        # Start processing thread
-        self.processing_thread = threading.Thread(
-            target=self._process_documents_background,
-            args=(new_urls, proceeding),
-            daemon=True
-        )
-        self.processing_thread.start()
-        
-        logger.info(f"Started background processing of {self.total_count} new documents")
-        
-    def _process_documents_background(self, new_urls: List[Dict], proceeding: str):
-        """Process documents in background thread"""
-        try:
-            self.current_status = "processing"
-            
-            for i, url_data in enumerate(new_urls):
-                try:
-                    # Process single document
-                    self._process_single_document(url_data)
-                    
-                    self.processed_count += 1
-                    self.current_status = f"processed {self.processed_count}/{self.total_count}"
-                    
-                    # Update UI notification
-                    if 'background_processing_status' not in st.session_state:
-                        st.session_state['background_processing_status'] = {}
-                    
-                    st.session_state['background_processing_status'] = {
-                        'proceeding': proceeding,
-                        'processed': self.processed_count,
-                        'total': self.total_count,
-                        'current_doc': url_data.get('title', url_data['url']),
-                        'status': 'processing'
-                    }
-                    
-                    logger.info(f"Background processing: {self.processed_count}/{self.total_count} completed")
-                    
-                except Exception as e:
-                    logger.error(f"Failed to process document {url_data['url']}: {e}")
-                    continue
-                    
-            # Mark processing as complete
-            self.current_status = "completed"
-            self.is_processing = False
-            
-            # Update session state for user notification
-            st.session_state['background_processing_status'] = {
-                'proceeding': proceeding,
-                'processed': self.processed_count,
-                'total': self.total_count,
-                'status': 'completed'
-            }
-            
-            # Trigger RAG system update notification
-            if 'rag_system_updated' not in st.session_state:
-                st.session_state['rag_system_updated'] = 0
-            st.session_state['rag_system_updated'] += 1
-            
-            logger.info(f"✅ Background processing completed: {self.processed_count}/{self.total_count} documents processed")
-            
-        except Exception as e:
-            logger.error(f"Background processing failed: {e}")
-            self.current_status = "failed"
-            self.is_processing = False
-            
-    def _process_single_document(self, url_data: Dict):
-        """Process a single document incrementally"""
-        try:
-            # Extract and chunk the document
-            doc_chunks = data_processing.extract_and_chunk_with_docling_url(
-                url_data['url'], 
-                url_data.get('title', '')
-            )
-            
-            if doc_chunks:
-                # Use incremental write for immediate persistence
-                success = self.rag_system.add_document_incrementally(
-                    chunks=doc_chunks,
-                    url_hash=url_data['hash'],
-                    url_data=url_data,
-                    immediate_persist=True
-                )
-                
-                if success:
-                    logger.info(f"✅ Background processed: {url_data.get('title', url_data['url'])}")
-                else:
-                    logger.error(f"❌ Background processing failed: {url_data['url']}")
-            else:
-                logger.warning(f"No chunks extracted from {url_data['url']}")
-                
-        except Exception as e:
-            logger.error(f"Single document processing failed: {e}")
-            raise
-            
-    def get_status(self) -> Dict:
-        """Get current processing status"""
-        return {
-            'is_processing': self.is_processing,
-            'status': self.current_status,
-            'processed': self.processed_count,
-            'total': self.total_count,
-            'progress_percent': (self.processed_count / self.total_count * 100) if self.total_count > 0 else 0
-        }
+# BackgroundProcessor removed - document processing handled by standalone_data_processor.py
 
 
-def get_prioritized_proceedings():
-    """
-    Return proceedings in priority order.
-    Default proceeding is always processed first.
-    """
-    primary_proceeding = config.DEFAULT_PROCEEDING
-    
-    # Get all configured proceedings
-    all_proceedings = config.SCRAPER_PROCEEDINGS if hasattr(config, 'SCRAPER_PROCEEDINGS') else [primary_proceeding]
-    
-    # Ensure primary proceeding is first
-    prioritized = [primary_proceeding]
-    
-    # Add other proceedings after primary
-    for proc in all_proceedings:
-        if proc != primary_proceeding and proc not in prioritized:
-            prioritized.append(proc)
-    
-    logger.info(f"Proceeding priority order: {prioritized}")
-    return prioritized
+# Orphaned function get_prioritized_proceedings removed - no longer used after scraper moved to standalone
 
 
 # check_for_new_pdfs_on_launch function removed - use standalone_scraper.py for document discovery
@@ -386,77 +225,7 @@ def get_prioritized_proceedings():
 # run_startup_scraper_check function removed - use standalone_scraper.py for document discovery
 
 
-def handle_background_data_refresh():
-    """Handle background data refresh when proceeding switches"""
-    if st.session_state.get('background_data_refresh_needed', False):
-        # Mark as handled
-        st.session_state['background_data_refresh_needed'] = False
-        
-        # Show status
-        st.info("🔄 Refreshing data for new proceeding in background...")
-        
-        # This will trigger the normal initialization process
-        # which will load the appropriate vector store for the new proceeding
-        logger.info("Background data refresh triggered by proceeding switch")
-
-def show_background_notifications():
-    """Display real-time background processing notifications"""
-    
-    # Handle background data refresh
-    handle_background_data_refresh()
-    
-    # Check for new PDFs found on launch
-    if st.session_state.get('new_pdfs_found_on_launch', 0) > 0:
-        proceeding = st.session_state.get('selected_proceeding', config.DEFAULT_PROCEEDING)
-        count = st.session_state['new_pdfs_found_on_launch']
-        
-        st.info(f"🔍 **New Documents Found**: {count} new documents discovered for {proceeding}")
-        
-        # Show background processing status
-        bg_status = st.session_state.get('background_processing_status', {})
-        if bg_status.get('status') == 'processing':
-            progress = bg_status.get('processed', 0)
-            total = bg_status.get('total', count)
-            current_doc = bg_status.get('current_doc', 'Unknown')
-            
-            progress_percent = (progress / total) * 100 if total > 0 else 0
-            
-            st.progress(progress_percent / 100)
-            st.info(f"📄 **Processing in background**: {progress}/{total} documents processed")
-            st.caption(f"Currently processing: {current_doc}")
-            
-        elif bg_status.get('status') == 'completed':
-            processed = bg_status.get('processed', 0)
-            total = bg_status.get('total', count)
-            
-            st.success(f"✅ **Background Processing Complete**: {processed}/{total} documents processed and added to vector store")
-            
-            # Add "refresh for latest" button
-            if st.button("🔄 Refresh page for latest retrieval"):
-                st.cache_resource.clear()
-                st.rerun()
-                
-            # Clear notification after showing completion
-            if st.button("✅ Dismiss notification"):
-                st.session_state['new_pdfs_found_on_launch'] = 0
-                st.session_state['background_processing_status'] = {}
-                st.rerun()
-    
-    # Check for general background processing updates
-    bg_status = st.session_state.get('background_processing_status', {})
-    if bg_status and not st.session_state.get('new_pdfs_found_on_launch', 0):
-        # Show standalone background processing status
-        if bg_status.get('status') == 'processing':
-            proceeding = bg_status.get('proceeding', 'Unknown')
-            progress = bg_status.get('processed', 0)
-            total = bg_status.get('total', 0)
-            current_doc = bg_status.get('current_doc', 'Unknown')
-            
-            progress_percent = (progress / total) * 100 if total > 0 else 0
-            
-            st.info(f"🔄 **Background Processing Active** ({proceeding})")
-            st.progress(progress_percent / 100)
-            st.caption(f"Processing: {progress}/{total} documents | Current: {current_doc}")
+# Background processing functions removed - handled by standalone_data_processor.py
 
 
 def render_proceeding_selector():
@@ -621,8 +390,7 @@ def main():
             st.info("Some features may not be available in minimal mode.")
             return
     
-    # Enhanced notification system with background processing updates
-    show_background_notifications()
+    # Background processing notifications removed - handled by standalone_data_processor.py
     
     # Initialize PDF scheduler for the current proceeding
     scheduler = None
@@ -632,7 +400,7 @@ def main():
         logger.error(f"Failed to initialize PDF scheduler: {e}")
     
     # Show system status
-    render_enhanced_system_status(rag_system, scheduler, current_proceeding)
+    render_system_status(rag_system, scheduler, current_proceeding)
     
     # Create tabs for different features
     tab1, tab2, tab3 = st.tabs(["🔍 Document Analysis", "📅 Timeline", "⚙️ System Management"])
@@ -647,14 +415,11 @@ def main():
         render_system_management_tab(rag_system, current_proceeding)
 
 
-def render_enhanced_system_status(rag_system, scheduler, current_proceeding):
-    """Render enhanced system status with embedding progress."""
+def render_system_status(rag_system, scheduler, current_proceeding):
+    """Render basic system status focused on RAG functionality."""
     try:
-        from incremental_embedder import create_incremental_embedder
-        
-        # Get embedding status
-        embedder = create_incremental_embedder(current_proceeding)
-        embedding_status = embedder.get_embedding_status()
+        # Get basic system stats
+        stats = rag_system.get_system_stats() if rag_system else {}
         
         col1, col2, col3, col4 = st.columns(4)
         
@@ -662,25 +427,26 @@ def render_enhanced_system_status(rag_system, scheduler, current_proceeding):
             st.metric("📋 Proceeding", current_proceeding)
         
         with col2:
-            embedded_count = embedding_status.get('total_embedded', 0)
-            st.metric("📚 Documents Embedded", embedded_count)
+            chunk_count = stats.get('total_chunks', 0)
+            st.metric("📊 Chunks Available", chunk_count)
         
         with col3:
-            failed_count = embedding_status.get('total_failed', 0)
-            st.metric("❌ Failed Documents", failed_count)
+            doc_count = stats.get('total_documents_hashed', 0)
+            st.metric("📚 Documents", doc_count)
         
         with col4:
-            status = embedding_status.get('status', 'unknown')
-            status_color = "🟢" if status == 'ready' else "🟡" if status == 'empty' else "🔴"
-            st.metric("🔋 System Status", f"{status_color} {status.title()}")
+            vs_status = stats.get('vector_store_status', 'unknown')
+            status_color = "🟢" if vs_status == 'loaded' else "🟡" if vs_status == 'empty' else "🔴"
+            st.metric("🔋 Vector Store", f"{status_color} {vs_status.title()}")
         
-        # Show last update time
-        last_updated = embedding_status.get('last_updated')
-        if last_updated:
-            st.caption(f"Last updated: {last_updated}")
+        # Show scheduler status if available
+        if scheduler:
+            scheduler_status = scheduler.get_status()
+            if scheduler_status.get('last_check'):
+                st.caption(f"Auto-update last check: {scheduler_status['last_check'][:16].replace('T', ' ')}")
         
     except Exception as e:
-        logger.error(f"Failed to render enhanced system status: {e}")
+        logger.error(f"Failed to render system status: {e}")
         st.error("Could not load system status")
 
 
@@ -693,30 +459,12 @@ def render_system_management_tab(rag_system, current_proceeding):
     with col1:
         st.subheader("🔄 Update System")
         
-        st.info("📋 **Document Discovery**")
-        st.write("Use the standalone scraper to discover new documents:")
+        st.info("📋 **Data Processing**")
+        st.write("Document discovery and processing is handled by standalone scripts:")
         st.code(f"python standalone_scraper.py {current_proceeding}", language="bash")
-        st.write("Then restart the application to load the new documents.")
-        
-        if st.button("🔨 Process Embeddings", help="Process incremental embeddings for new documents"):
-            with st.spinner("Processing embeddings..."):
-                try:
-                    from incremental_embedder import process_incremental_embeddings
-                    
-                    def progress_callback(message, progress):
-                        st.progress(progress / 100)
-                        st.text(message)
-                    
-                    results = process_incremental_embeddings(current_proceeding, progress_callback)
-                    
-                    if results['status'] == 'completed':
-                        st.success(f"✅ Processed {results['documents_processed']} documents!")
-                        st.json(results)
-                    else:
-                        st.info(f"ℹ️ Status: {results['status']}")
-                        
-                except Exception as e:
-                    st.error(f"❌ Failed to process embeddings: {e}")
+        st.write("For document discovery")
+        st.code(f"python standalone_data_processor.py {current_proceeding}", language="bash")
+        st.write("For chunking and embedding. Then restart the application to load the processed data.")
     
     with col2:
         st.subheader("📊 System Information")
@@ -742,61 +490,7 @@ def render_system_management_tab(rag_system, current_proceeding):
                 st.rerun()
 
 
-def display_system_status(rag_system, scheduler):
-    """Display system status in the header"""
-    if rag_system:
-        # Get system stats and log to console
-        stats = rag_system.get_system_stats()
-        print("\n" + "="*60)
-        print("📊 CPUC RAG SYSTEM STATISTICS")
-        print("="*60)
-        print(f"📁 Documents on Disk:     {stats.get('total_documents_on_disk', 'N/A')}")
-        print(f"✅ Documents Processed:   {stats.get('total_documents_hashed', 'N/A')}")
-        print(f"🔢 Total Chunks in DB:    {stats.get('total_chunks', 'N/A')}")
-        print(f"⏳ Files Pending:         {stats.get('files_not_hashed', 'N/A')}")
-        print(f"🗄️  Vector Store Status:   {stats.get('vector_store_status', 'unknown')}")
-        print(f"🤖 LLM Model:             {stats.get('llm_model', 'N/A')}")
-        print(f"📂 Base Directory:        {stats.get('base_directory', 'N/A')}")
-        print("="*60)
-        
-        # Show warning if the system needs attention
-        if stats.get('total_chunks', 0) == 0 and stats.get('total_documents_on_disk', 0) > 0:
-            print("⚠️  WARNING: Vector store appears empty but PDFs exist")
-            print("   Run: rag_system.build_vector_store() to rebuild")
-        elif stats.get('vector_store_status') == 'loaded':
-            print("✅ System ready for queries")
-        print()
-        
-        # Display status info at the top of the page
-        col1, col2, col3 = st.columns([2, 2, 1])
-        
-        with col1:
-            # Display scheduler status
-            if scheduler:
-                scheduler_status = scheduler.get_status()
-                if scheduler_status.get('last_check'):
-                    last_check = scheduler_status['last_check']
-                    st.info(f"🔄 **Auto-Update**: {last_check[:16].replace('T', ' ')}")
-                else:
-                    st.info("🔄 **Auto-Update**: Pending...")
-            else:
-                st.warning("⚠️ **Auto-Update**: Disabled")
-        
-        with col2:
-            # Display real-time stats
-            chunk_count = stats.get('total_chunks', 0)
-            doc_count = stats.get('total_documents_hashed', 0)
-            st.info(f"📊 **Stats**: {doc_count} docs, {chunk_count} chunks")
-        
-        with col3:
-            # Display system health with refresh button
-            if stats.get('vector_store_status') == 'loaded':
-                st.success("✅ Ready")
-            else:
-                st.warning("⚠️ Loading")
-    else:
-        print("❌ System failed to initialize. Check logs.")
-        st.error("System failed to initialize. Check console logs for details.")
+# Orphaned function display_system_status removed - replaced by render_system_status
 
 
 

@@ -305,7 +305,8 @@ def get_source_url_from_filename(filename: str, proceeding: str = None) -> Optio
         
         # Search through download history
         for record in scraped_pdf_history.values():
-            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            # New format uses 'title' instead of 'filename'
+            recorded_filename = record.get('filename', record.get('title', '')).replace('.pdf', '').replace('.PDF', '').strip()
             if recorded_filename == filename_clean:
                 url = record.get('url')
                 if url:
@@ -314,7 +315,8 @@ def get_source_url_from_filename(filename: str, proceeding: str = None) -> Optio
         
         # If exact match fails, try partial matching for common filename variations
         for record in scraped_pdf_history.values():
-            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            # New format uses 'title' instead of 'filename'
+            recorded_filename = record.get('filename', record.get('title', '')).replace('.pdf', '').replace('.PDF', '').strip()
             # Try both directions of partial matching
             if (filename_clean in recorded_filename or 
                 recorded_filename in filename_clean or
@@ -379,42 +381,64 @@ def get_publication_date_from_filename(filename: str, proceeding: str = None) ->
         
         # Search through download history
         for record in scraped_pdf_history.values():
-            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            # New format uses 'title' instead of 'filename'
+            recorded_filename = record.get('filename', record.get('title', '')).replace('.pdf', '').replace('.PDF', '').strip()
             if recorded_filename == filename_clean:
-                # Check for publication date in the record
-                pub_date = record.get('publication_date') or record.get('filing_date')
+                # Check for publication date in the record (new format uses 'filing_date', 'pdf_creation_date')
+                pub_date = (record.get('filing_date') or 
+                           record.get('pdf_creation_date') or 
+                           record.get('publication_date'))
                 if pub_date:
                     try:
-                        return datetime.fromisoformat(pub_date)
+                        # Handle both ISO format and MM/DD/YYYY format
+                        if '/' in pub_date:
+                            return datetime.strptime(pub_date, '%m/%d/%Y')
+                        else:
+                            return datetime.fromisoformat(pub_date)
                     except ValueError:
                         logger.warning(f"Invalid date format in download history for {filename}: {pub_date}")
                 
-                # If no explicit publication date, try to extract from download date
-                download_date = record.get('download_date')
-                if download_date:
+                # If no explicit publication date, try to extract from scrape_date
+                scrape_date = record.get('scrape_date')
+                if scrape_date:
                     try:
-                        return datetime.fromisoformat(download_date)
+                        if '/' in scrape_date:
+                            return datetime.strptime(scrape_date, '%m/%d/%Y')
+                        else:
+                            return datetime.fromisoformat(scrape_date)
                     except ValueError:
-                        logger.warning(f"Invalid download date format for {filename}: {download_date}")
+                        logger.warning(f"Invalid scrape date format for {filename}: {scrape_date}")
         
         # If exact match fails, try partial matching
         for record in scraped_pdf_history.values():
-            recorded_filename = record.get('filename', '').replace('.pdf', '').replace('.PDF', '').strip()
+            # New format uses 'title' instead of 'filename'
+            recorded_filename = record.get('filename', record.get('title', '')).replace('.pdf', '').replace('.PDF', '').strip()
             if (filename_clean in recorded_filename or 
                 recorded_filename in filename_clean or
                 (filename_clean.replace('_', ' ') == recorded_filename.replace('_', ' '))):
                 
-                pub_date = record.get('publication_date') or record.get('filing_date')
+                # Check for publication date in the record (new format uses 'filing_date', 'pdf_creation_date')
+                pub_date = (record.get('filing_date') or 
+                           record.get('pdf_creation_date') or 
+                           record.get('publication_date'))
                 if pub_date:
                     try:
-                        return datetime.fromisoformat(pub_date)
+                        # Handle both ISO format and MM/DD/YYYY format
+                        if '/' in pub_date:
+                            return datetime.strptime(pub_date, '%m/%d/%Y')
+                        else:
+                            return datetime.fromisoformat(pub_date)
                     except ValueError:
                         continue
                 
-                download_date = record.get('download_date')
-                if download_date:
+                # Try scrape_date for partial matches too
+                scrape_date = record.get('scrape_date')
+                if scrape_date:
                     try:
-                        return datetime.fromisoformat(download_date)
+                        if '/' in scrape_date:
+                            return datetime.strptime(scrape_date, '%m/%d/%Y')
+                        else:
+                            return datetime.fromisoformat(scrape_date)
                     except ValueError:
                         continue
         

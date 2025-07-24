@@ -7658,5 +7658,609 @@
     "filing_date": "11/13/2018",
     "filed_by": "Consumer Federation of California Foundation",
     "description": "Comments Of The Consumer Federation Of California Foundation Re Affordability Framework OIR And Preliminary Scoping Memo"
+  },
+  "b442d939cf056e282594d52f385c72d7": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M218/K399/218399111.PDF",
+    "title": "218399111",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "07/19/2018",
+    "scrape_date": "07/23/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=218399111",
+    "metadata": {
+      "file_size": "162529",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Jul 2018 21:31:31 GMT",
+      "analysis_timestamp": "2025-07-23T14:47:08.901098",
+      "timeout_used": 10
+    },
+    "filing_date": "07/19/2018",
+    "filed_by": "CALJ/SIMON/CPUC",
+    "description": "NOTICE OF ASSIGNMENT"
+  },
+  "71fe18ebb6c149b4cdb448e2548a951a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M218/K186/218186836.PDF",
+    "title": "218186836",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "07/23/2018",
+    "scrape_date": "07/23/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=218186836",
+    "metadata": {
+      "file_size": "1019340",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 23 Jul 2018 19:58:54 GMT",
+      "analysis_timestamp": "2025-07-23T14:47:08.979155",
+      "timeout_used": 10
+    },
+    "filing_date": "07/23/2018",
+    "filed_by": "CPUC",
+    "description": "Order Instituting Rulemaking to Establish a Framework and Processes for Assessing the Affordability of Utility Service."
+  },
+  "e0ca38eabfa9c94a01b693c5ab24ebb0": {
+    "url": "https://www.cpuc.ca.gov/-/media/cpuc-website/divisions/energy-division/documents/affordability-proceeding/r1807006--staff-proposal-on-affordability-metrics-implementation.pdf",
+    "title": "r1807006  staff proposal on affordability metrics implementation",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "03/11/2025",
+    "scrape_date": "07/23/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.18-07-006 site:cpuc.ca.gov filetype:pdf",
+    "metadata": {
+      "file_size": "2352525",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 11 Mar 2025 19:42:13 GMT",
+      "analysis_timestamp": "2025-07-23T14:47:10.107826",
+      "timeout_used": 10
+    },
+    "search_query": "R.18-07-006 site:cpuc.ca.gov filetype:pdf"
+  },
+  "42e0cac9d2595e44b5500b0d2aa7c856": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M496/K416/496416431.PDF",
+    "title": "496416431",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "08/04/2022",
+    "scrape_date": "07/23/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.18-07-006 site:cpuc.ca.gov filetype:pdf",
+    "metadata": {
+      "file_size": "400177",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 04 Aug 2022 19:27:34 GMT",
+      "analysis_timestamp": "2025-07-23T14:47:15.776659",
+      "timeout_used": 10
+    },
+    "search_query": "R.18-07-006 site:cpuc.ca.gov filetype:pdf"
+  },
+  "d5597bbd8f974e8ef2a8224db587b8d0": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M451/K412/451412900.PDF",
+    "title": "451412900",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "02/14/2022",
+    "scrape_date": "07/23/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.18-07-006 site:cpuc.ca.gov filetype:pdf",
+    "metadata": {
+      "file_size": "497396",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 14 Feb 2022 19:22:13 GMT",
+      "analysis_timestamp": "2025-07-23T14:47:18.146635",
+      "timeout_used": 10
+    },
+    "search_query": "R.18-07-006 site:cpuc.ca.gov filetype:pdf"
+  },
+  "36d3859290bde762861529feb44e7fd1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M496/K407/496407569.pdf",
+    "title": "496407569",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "08/03/2022",
+    "scrape_date": "07/23/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.18-07-006 site:cpuc.ca.gov filetype:pdf",
+    "metadata": {
+      "file_size": "406687",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 03 Aug 2022 15:31:38 GMT",
+      "analysis_timestamp": "2025-07-23T14:47:19.358916",
+      "timeout_used": 10
+    },
+    "search_query": "R.18-07-006 site:cpuc.ca.gov filetype:pdf"
+  },
+  "0ffaeeff26cb53093914b46b074700f0": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M530/K371/530371178.PDF",
+    "title": "530371178",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "04/25/2024",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=530371178",
+    "metadata": {
+      "file_size": "613953",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 25 Apr 2024 17:21:44 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:38.010477",
+      "timeout_used": 10
+    },
+    "filing_date": "04/25/2024",
+    "filed_by": NaN,
+    "description": "Decision D2404034 - Granting Compensation To Center For Accessible Technology For Substantial Contribution To Decision 22-08-023."
+  },
+  "c8852a5720a7783451e93cf5b0f57cc1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M525/K921/525921127.PDF",
+    "title": "525921127",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "02/20/2024",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=525921127",
+    "metadata": {
+      "file_size": "236748",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 20 Feb 2024 18:52:11 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:38.817419",
+      "timeout_used": 10
+    },
+    "filing_date": "02/20/2024",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "CALIFORNIA COMMUNITY CHOICE ASSOCIATIONS REPLY COMMENTS ON ASSIGNED COMMISSIONERS RULING SEEKING ANNUAL FEEDBACK ON THE IMPLEMENTATION OF THE AFFORDABILITY FRAMEWORK"
+  },
+  "cccbf077ad24d29469e0337e49dab549": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M526/K554/526554029.PDF",
+    "title": "526554029",
+    "document_type": "E-Filed: Reply",
+    "pdf_creation_date": "03/05/2024",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=526554029",
+    "metadata": {
+      "file_size": "154673",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 05 Mar 2024 21:48:13 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:41.044035",
+      "timeout_used": 10
+    },
+    "filing_date": "03/05/2024",
+    "filed_by": "AT&T Mobility Wireless Operations Holdings, Inc.,AT&T Corp.,Santa Barbara Cellular Systems, Ltd.,New Cingular Wireless PCS, LLC,Pacific Bell Telephone Company",
+    "description": "Reply Comments on Assigned Commissioner's Ruling Seeking Annual Feedback on the Implementation of the Affordability Framework."
+  },
+  "064a7d5b05b9a8e0c4757936aaced8a4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M510/K287/510287348.PDF",
+    "title": "510287348",
+    "document_type": "E-Filed: Compliance Filing",
+    "pdf_creation_date": "06/02/2023",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=510287348",
+    "metadata": {
+      "file_size": "242857",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 02 Jun 2023 14:25:49 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:41.651608",
+      "timeout_used": 10
+    },
+    "filing_date": "06/02/2023",
+    "filed_by": "LIBERTY UTILITIES (APPLE VALLEY RANCHOS WATER) CORP.,LIBERTY UTILITIES (PARK WATER) CORP.",
+    "description": "Joint Compliance Report."
+  },
+  "ef67a4c0ad1dec02fe833421471eb961": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M496/K396/496396715.PDF",
+    "title": "496396715",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/01/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=496396715",
+    "metadata": {
+      "file_size": "551187",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 01 Aug 2022 21:05:46 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:44.049326",
+      "timeout_used": 10
+    },
+    "filing_date": "08/01/2022",
+    "filed_by": "Pacific Gas and Electric Company",
+    "description": "Comments on Assigned Commissioner\u2019s Ruling"
+  },
+  "637c46c409833be2d7a0a3dbbde58efe": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M492/K451/492451213.PDF",
+    "title": "492451213",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "07/08/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=492451213",
+    "metadata": {
+      "file_size": "601804",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 08 Jul 2022 23:12:00 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:45.659929",
+      "timeout_used": 10
+    },
+    "filing_date": "07/08/2022",
+    "filed_by": "Cal Advocates/N.Obiora/CPUC",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "8b72835ef5f5a0c847dc1aaf03fa862d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M486/K499/486499036.PDF",
+    "title": "486499036",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "06/17/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=486499036",
+    "metadata": {
+      "file_size": "878505",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 17 Jun 2022 17:00:23 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:47.081599",
+      "timeout_used": 10
+    },
+    "filing_date": "06/17/2022",
+    "filed_by": "ALJ/WATTS-ZAGHA/CPUC",
+    "description": "E-MAIL RULING GRANTING MOTION FOR PARTY STATUS THE CENTER FOR BIOLOGICAL DIVERSITY"
+  },
+  "637b8f781ba6b01e4045fb7235c92182": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M483/K864/483864886.PDF",
+    "title": "483864886",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "06/09/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=483864886",
+    "metadata": {
+      "file_size": "181605",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 09 Jun 2022 18:49:24 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:48.725626",
+      "timeout_used": 10
+    },
+    "filing_date": "06/09/2022",
+    "filed_by": "CMMR/HOUCK/CPUC",
+    "description": "ASSIGNED COMMISSIONER\u2019S RULING AMENDING RULING OF MAY 20, 2022 AND FURTHER UPDATING PROCEEDING SCHEDULE FOR PHASE 3 OF PROCEEDING"
+  },
+  "dc5e327a6ded751ce71cf792287c9e15": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M444/K123/444123594.PDF",
+    "title": "444123594",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/27/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=444123594",
+    "metadata": {
+      "file_size": "346670",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 27 Jan 2022 17:48:05 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:49.977950",
+      "timeout_used": 10
+    },
+    "filing_date": "01/27/2022",
+    "filed_by": "California Water Association",
+    "description": "Reply comments of California Water Association on Staff Proposal on implementation of affordability metrics.   "
+  },
+  "49c064411da40ea3d32be5b9e47e4092": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M440/K092/440092074.PDF",
+    "title": "440092074",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/11/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=440092074",
+    "metadata": {
+      "file_size": "189770",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 11 Jan 2022 17:36:33 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:51.655265",
+      "timeout_used": 10
+    },
+    "filing_date": "01/11/2022",
+    "filed_by": "Bear Valley Electric Service, Inc.,PacifiCorp,Liberty Utilities (CalPeco Electric) LLC",
+    "description": "Joint comments on Staff Proposal on implementation of affordability metrics."
+  },
+  "6a074c7791cd77ecb5a1732f98c9a478": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M347/K810/347810278.PDF",
+    "title": "347810278",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "09/28/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=347810278",
+    "metadata": {
+      "file_size": "209947",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 28 Sep 2020 18:36:39 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:53.313552",
+      "timeout_used": 10
+    },
+    "filing_date": "09/28/2020",
+    "filed_by": "The Utility Reform Network",
+    "description": "RESPONSE TO THE MOTION OF THE PUBLIC ADVOCATES OFFICE TO AMEND THE SCOPE OF THE SECOND PHASE "
+  },
+  "77a145b2a2c14abac1e91031963bf176": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M347/K193/347193114.PDF",
+    "title": "347193114",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "09/16/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=347193114",
+    "metadata": {
+      "file_size": "192614",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 16 Sep 2020 22:08:55 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:54.855600",
+      "timeout_used": 10
+    },
+    "filing_date": "09/16/2020",
+    "filed_by": "Cal Advocates/N.Obiora/CPUC",
+    "description": "MOTION OF THE PUBLIC ADVOCATES OFFICE TO AMEND THE SCOPE OF THE SECOND PHASE OF R.18-07-006"
+  },
+  "0ec6dd6b98f628bb03bc01e4e30b70d5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M341/K380/341380341.PDF",
+    "title": "341380341",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "06/29/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=341380341",
+    "metadata": {
+      "file_size": "228909",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 29 Jun 2020 22:26:35 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:56.245645",
+      "timeout_used": 10
+    },
+    "filing_date": "06/29/2020",
+    "filed_by": "San Diego Gas & Electric Company,Southern California Gas Company",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "afbc6d311bdd0507f81a846e56e11f32": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M341/K380/341380278.PDF",
+    "title": "341380278",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "06/24/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=341380278",
+    "metadata": {
+      "file_size": "479314",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 24 Jun 2020 22:41:38 GMT",
+      "analysis_timestamp": "2025-07-24T09:42:57.737468",
+      "timeout_used": 10
+    },
+    "filing_date": "06/24/2020",
+    "filed_by": "Utility Consumers' Action Network",
+    "description": "Comments on Proposed Decision"
+  },
+  "a0236c99fe0153cedc939b0275acb9b5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M337/K426/337426324.PDF",
+    "title": "337426324",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "05/15/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=337426324",
+    "metadata": {
+      "file_size": "338955",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 15 May 2020 18:54:10 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:00.163420",
+      "timeout_used": 10
+    },
+    "filing_date": "05/15/2020",
+    "filed_by": "ALJ/DOHERTY/CPUC",
+    "description": "E-mail Ruling Granting Motion of California Water Association. The motion of the California Water Association to accept late-filed reply comments on the revised staff proposal is granted. "
+  },
+  "8cddb2899a3e7d1fd988c5c96974c4af": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M326/K376/326376798.PDF",
+    "title": "326376798",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "02/05/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=326376798",
+    "metadata": {
+      "file_size": "185204",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 05 Feb 2020 23:22:43 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:00.977693",
+      "timeout_used": 10
+    },
+    "filing_date": "02/05/2020",
+    "filed_by": "City of Lancaster",
+    "description": "MOTION FOR PARTY STATUS"
+  },
+  "44ed8e6be16cd2488ee3c270a3437898": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M318/K168/318168952.PDF",
+    "title": "318168952",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "10/23/2019",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=318168952",
+    "metadata": {
+      "file_size": "9967863",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 23 Oct 2019 22:44:16 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:03.351830",
+      "timeout_used": 10
+    },
+    "filing_date": "10/23/2019",
+    "filed_by": "Cal Advocates/OBIORA/CPUC",
+    "description": "Opening Comments"
+  },
+  "64fd23196e51f537e3ae972f7bd6f8f5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M297/K204/297204087.PDF",
+    "title": "297204087",
+    "document_type": "E-Filed: Reply",
+    "pdf_creation_date": "06/06/2019",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=297204087",
+    "metadata": {
+      "file_size": "272290",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 06 Jun 2019 14:18:33 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:03.950716",
+      "timeout_used": 10
+    },
+    "filing_date": "06/06/2019",
+    "filed_by": "Pacific Gas and Electric Company",
+    "description": "Reply Comments on ALJ Ruling Adding Workshop Presentations Into the Record and Responses to Post-Workshop Questions."
+  },
+  "5abebb08987fc0de1ee6982f2eeea43f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M296/K878/296878729.PDF",
+    "title": "296878729",
+    "document_type": "E-Filed: Reply",
+    "pdf_creation_date": "06/06/2019",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=296878729",
+    "metadata": {
+      "file_size": "217350",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 06 Jun 2019 14:36:01 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:06.640119",
+      "timeout_used": 10
+    },
+    "filing_date": "06/06/2019",
+    "filed_by": "San Diego Gas & Electric Company,Southern California Gas Company",
+    "description": "Post Workshop Reply Comments on Responses to Questions Presented in ATTACHMENT J to ALJ Ruling."
+  },
+  "f83bb9f0ee10f095d56bcd516edf1ea4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M289/K993/289993741.PDF",
+    "title": "289993741",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "05/13/2019",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=289993741",
+    "metadata": {
+      "file_size": "251041",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 13 May 2019 16:45:34 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:06.995612",
+      "timeout_used": 10
+    },
+    "filing_date": "05/13/2019",
+    "filed_by": "ALJ/PARK/CPUC",
+    "description": "E-MAIL RULING GRANTING EXTENSION OF TIME TO FILE POST-WORKSHOP REPLY COMMENTS"
+  },
+  "2a5417318f9accd88cb634f51427fc33": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M254/K212/254212621.PDF",
+    "title": "254212621",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "12/27/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=254212621",
+    "metadata": {
+      "file_size": "465976",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 27 Dec 2018 21:12:19 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:09.874722",
+      "timeout_used": 10
+    },
+    "filing_date": "12/27/2018",
+    "filed_by": "Pacific Institute for Studies in Development, Environment, And Security",
+    "description": "of intent to claim intervenor compensation"
+  },
+  "2cdf9ba094b7c3a0ff6b3d44c99752b0": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M521/K476/521476836.PDF",
+    "title": "521476836",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "12/14/2023",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.18-07-006 site:cpuc.ca.gov filetype:pdf",
+    "metadata": {
+      "file_size": "482002",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 14 Dec 2023 00:36:24 GMT",
+      "analysis_timestamp": "2025-07-24T09:43:16.579374",
+      "timeout_used": 10
+    },
+    "search_query": "R.18-07-006 site:cpuc.ca.gov filetype:pdf"
+  },
+  "efbb2405cf5fc594ccf178936e8a7291": {
+    "url": "http://docs.cpuc.ca.gov/publisheddocs/published/g000/m218/k186/218186836.pdf",
+    "title": "218186836",
+    "document_type": "Source PDF",
+    "pdf_creation_date": "07/24/2025",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "https://www.cpuc.ca.gov/industries-and-topics/electrical-energy/affordability",
+    "metadata": {
+      "file_size": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "last_modified": "",
+      "analysis_timestamp": "2025-07-24T12:20:39.972500",
+      "timeout_used": 30
+    },
+    "search_query": "R.18-07-006"
+  },
+  "7356cc13b5eac317caa38c9b1e7d76e8": {
+    "url": "https://docs.cpuc.ca.gov/publisheddocs/efile/g000/m483/k864/483864886.pdf",
+    "title": "483864886",
+    "document_type": "Source PDF",
+    "pdf_creation_date": "06/09/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "https://www.cpuc.ca.gov/industries-and-topics/electrical-energy/affordability",
+    "metadata": {
+      "file_size": "181605",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 09 Jun 2022 18:49:24 GMT",
+      "analysis_timestamp": "2025-07-24T12:20:40.238822",
+      "timeout_used": 30
+    },
+    "search_query": "R.18-07-006"
+  },
+  "fac7445e8bee9be97120a87db8c65b7c": {
+    "url": "https://docs.cpuc.ca.gov/publisheddocs/published/g000/m344/k049/344049206.pdf",
+    "title": "344049206",
+    "document_type": "Source PDF",
+    "pdf_creation_date": "07/22/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "https://www.cpuc.ca.gov/industries-and-topics/electrical-energy/affordability",
+    "metadata": {
+      "file_size": "3085498",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 22 Jul 2020 19:00:09 GMT",
+      "analysis_timestamp": "2025-07-24T12:20:40.402082",
+      "timeout_used": 30
+    },
+    "search_query": "R.18-07-006"
   }
 }

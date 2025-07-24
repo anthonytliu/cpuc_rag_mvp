@@ -18,7 +18,7 @@ import logging
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Callable
+from typing import Dict, List, Optional, Callable
 import hashlib
 import time
 
@@ -87,25 +87,31 @@ class StartupManager:
             logger.info("⏭️ Skipping scraper workflow - use standalone_scraper.py for document discovery")
             scraper_results = {'success': True, 'skipped': True, 'message': 'Scraper moved to standalone process'}
             
-            # Step 4: Process embeddings (with fallbacks)
+            # Step 4: Initialize RAG system (without processing embeddings)
             try:
-                self._update_progress("Processing embeddings...", 70)
-                embedding_results = self._process_incremental_embeddings()
+                self._update_progress("Initializing RAG system...", 70)
                 
-                if embedding_results.get('status') in ['completed', 'up_to_date', 'no_data']:
-                    logger.info(f"✅ Embedding processing completed ({embedding_results.get('status')})")
-                    if embedding_results.get('standard_embedding_used'):
-                        startup_warnings.append("Used standard embedding (incremental not available)")
+                # Just initialize the RAG system - it will load existing data if available
+                if not self.rag_system:
+                    self.rag_system = CPUCRAGSystem(current_proceeding=self.current_proceeding)
+                
+                # Check RAG system status
+                stats = self.rag_system.get_system_stats()
+                chunk_count = stats.get('total_chunks', 0)
+                
+                if chunk_count > 0:
+                    logger.info(f"✅ RAG system initialized with {chunk_count} existing chunks")
+                    embedding_results = {'status': 'loaded_existing', 'chunks_loaded': chunk_count}
                 else:
-                    warning_msg = f"Embedding processing issue: {embedding_results.get('status')}"
-                    logger.warning(f"⚠️ {warning_msg}")
-                    startup_warnings.append(warning_msg)
+                    logger.info("✅ RAG system initialized (no existing chunks found)")
+                    logger.info("💡 Use standalone_data_processor.py to process documents")
+                    embedding_results = {'status': 'ready_for_data', 'chunks_loaded': 0}
                     
             except Exception as e:
-                error_msg = f"Embedding processing failed: {e}"
+                error_msg = f"RAG system initialization failed: {e}"
                 logger.error(f"❌ {error_msg}")
                 startup_errors.append(error_msg)
-                # Continue with startup even if embedding fails
+                # Continue with startup even if RAG init fails
                 embedding_results = {'status': 'error', 'error': str(e)}
             
             self._update_progress("Startup sequence completed!", 100)
@@ -190,118 +196,9 @@ class StartupManager:
     
     # _run_standard_scraper_workflow removed - use standalone_scraper.py for document discovery
     
-    def _analyze_document_differences(self) -> Dict:
-        """
-        Analyze differences between old and new scraped data.
-        
-        Returns:
-            Dictionary with difference analysis
-        """
-        try:
-            proceeding_paths = config.get_proceeding_file_paths(self.current_proceeding)
-            history_file = proceeding_paths['scraped_pdf_history']
-            
-            if not history_file.exists():
-                logger.info("No existing history file, all documents are new")
-                return {'new_documents': [], 'updated_documents': [], 'status': 'first_run'}
-            
-            # Load existing history
-            with open(history_file, 'r') as f:
-                existing_history = json.load(f)
-            
-            # For now, return basic analysis
-            # This will be enhanced when we implement the full metadata extraction
-            return {
-                'existing_count': len(existing_history),
-                'status': 'analyzed'
-            }
-            
-        except Exception as e:
-            logger.error(f"Failed to analyze document differences: {e}")
-            return {'status': 'error', 'error': str(e)}
+    # Orphaned function _analyze_document_differences removed - never called in current implementation
     
-    def _process_incremental_embeddings(self) -> Dict:
-        """
-        Step 4: Process incremental embeddings for new/updated documents.
-        
-        Returns:
-            Dictionary with embedding results
-        """
-        try:
-            # Try incremental embedder first, fallback to standard RAG build
-            try:
-                from incremental_embedder import create_incremental_embedder
-                logger.info("Using incremental embedder")
-                
-                def embedder_progress(message, progress):
-                    overall_progress = 70 + int((progress / 100) * 30)
-                    self._update_progress(message, overall_progress)
-                
-                embedder = create_incremental_embedder(self.current_proceeding, embedder_progress)
-                embedding_results = embedder.process_incremental_embeddings()
-                
-            except ImportError as ie:
-                logger.warning(f"Incremental embedder not available ({ie}), using standard RAG build")
-                embedding_results = self._run_standard_embedding()
-            
-            self._update_progress("Embedding processing completed", 100)
-            return embedding_results
-            
-        except Exception as e:
-            logger.error(f"Embedding processing failed: {e}")
-            # Return a default result to allow startup to continue
-            return {
-                'status': 'error',
-                'error': str(e),
-                'documents_processed': 0,
-                'fallback_used': True
-            }
-    
-    def _run_standard_embedding(self) -> Dict:
-        """Run standard RAG system embedding as fallback."""
-        try:
-            if not self.rag_system:
-                logger.warning("No RAG system available for embedding")
-                return {
-                    'status': 'no_rag_system',
-                    'documents_processed': 0
-                }
-            
-            self._update_progress("Checking vector store status...", 75)
-            
-            # Check if we have any data to process
-            proceeding_paths = config.get_proceeding_file_paths(self.current_proceeding)
-            history_file = proceeding_paths['scraped_pdf_history']
-            
-            if not history_file.exists():
-                logger.info("No scraped PDF history found, skipping embedding")
-                return {
-                    'status': 'no_data',
-                    'documents_processed': 0
-                }
-            
-            self._update_progress("Building vector store...", 85)
-            
-            # Try to build vector store
-            success = self.rag_system.build_vector_store()
-            
-            if success:
-                self._update_progress("Vector store built successfully", 95)
-                return {
-                    'status': 'completed',
-                    'documents_processed': 1,  # We don't have exact count in standard mode
-                    'standard_embedding_used': True
-                }
-            else:
-                logger.warning("Vector store building failed")
-                return {
-                    'status': 'build_failed',
-                    'documents_processed': 0
-                }
-                
-        except Exception as e:
-            logger.error(f"Standard embedding failed: {e}")
-            raise
+    # Embedding processing functions removed - handled by standalone_data_processor.py
     
     def _update_progress(self, message: str, progress: int):
         """Update progress with message and percentage."""
@@ -309,33 +206,7 @@ class StartupManager:
         if self.progress_callback:
             self.progress_callback(message, progress)
     
-    def get_system_status(self) -> Dict:
-        """Get current system status."""
-        try:
-            if not self.current_proceeding:
-                return {'status': 'not_initialized'}
-            
-            proceeding_paths = config.get_proceeding_file_paths(self.current_proceeding)
-            
-            status = {
-                'proceeding': self.current_proceeding,
-                'db_folder_exists': proceeding_paths['vector_db'].exists(),
-                'csv_file_exists': proceeding_paths['result_csv'].exists(),
-                'history_file_exists': proceeding_paths['scraped_pdf_history'].exists(),
-                'rag_system_ready': self.rag_system is not None
-            }
-            
-            # Add vector store status if RAG system exists
-            if self.rag_system:
-                parity_check = self.rag_system._check_vector_store_parity()
-                status['vector_store_parity'] = parity_check['has_parity']
-                status['missing_documents'] = len(parity_check.get('missing_files', []))
-            
-            return status
-            
-        except Exception as e:
-            logger.error(f"Failed to get system status: {e}")
-            return {'status': 'error', 'error': str(e)}
+    # Orphaned function get_system_status removed - never called in current implementation
 
 
 # Utility functions for startup management

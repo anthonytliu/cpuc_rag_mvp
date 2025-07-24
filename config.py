@@ -28,6 +28,10 @@ PDF_SERVER_PORT = 8001
 OPENAI_MODEL_NAME = "gpt-4.1-2025-04-14"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+# Debug and Logging Settings
+DEBUG = os.getenv("DEBUG", "false").lower() == "true"
+VERBOSE_LOGGING = DEBUG  # Show detailed processing logs when DEBUG is enabled
+
 # --- URL PROCESSING SETTINGS ---
 # Enable URL-based processing (True) or file-based processing (False)
 USE_URL_PROCESSING = True
@@ -48,7 +52,7 @@ AVAILABLE_PROCEEDINGS = {
     },
     "R2108025": {
         "display_name": "R.21-08-025 - Integrated Resource Planning",
-        "full_name": "R.21-08-025", 
+        "full_name": "R.21-08-025",
         "short_name": "R2108025",
         "description": "Integrated Resource Planning",
         "active": False
@@ -56,16 +60,18 @@ AVAILABLE_PROCEEDINGS = {
     "R2011003": {
         "display_name": "R.20-11-003 - Microgrids",
         "full_name": "R.20-11-003",
-        "short_name": "R2011003", 
+        "short_name": "R2011003",
         "description": "Microgrids Development",
         "active": False
     }
 }
 
+
 # Default proceeding to load on startup (first one in AVAILABLE_PROCEEDINGS)
 def get_first_proceeding() -> str:
     """Get the first proceeding from AVAILABLE_PROCEEDINGS."""
     return next(iter(AVAILABLE_PROCEEDINGS.keys()))
+
 
 DEFAULT_PROCEEDING = os.getenv("DEFAULT_PROCEEDING", get_first_proceeding())
 
@@ -73,7 +79,9 @@ DEFAULT_PROCEEDING = os.getenv("DEFAULT_PROCEEDING", get_first_proceeding())
 # List of proceedings to scrape (single source of truth)
 SCRAPER_PROCEEDINGS = [
     "R2207005",  # Demand Flexibility Rulemaking
-    "R1807006"   # Additional proceeding
+    "R1807006",  # Additional proceeding
+    "R1311005",  # Energy Efficiency Rulemaking
+    "A2202005"   # Energy Efficiency, Business Plan Applications
 ]
 
 # Maximum number of worker threads for scraping
@@ -94,7 +102,7 @@ CPUC_SEARCH_BASE = "https://docs.cpuc.ca.gov/SearchRes.aspx"
 # --- GOOGLE SEARCH API SETTINGS ---
 # Google Custom Search API credentials (more reliable than screen scraping)
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")  # Get from Google Cloud Console
-GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")    # Custom Search Engine ID
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")  # Custom Search Engine ID
 GOOGLE_SEARCH_FALLBACK_ENABLED = os.getenv("GOOGLE_SEARCH_FALLBACK_ENABLED", "true").lower() == "true"
 
 # Rate limiting for Google searches
@@ -114,7 +122,8 @@ MONITORED_PROCEEDINGS = os.getenv("MONITORED_PROCEEDINGS", "R2207005").split(","
 
 # Auto-update settings
 AUTO_UPDATE_RAG_SYSTEM = os.getenv("AUTO_UPDATE_RAG_SYSTEM", "true").lower() == "true"
-AUTO_UPDATE_DELAY_MINUTES = int(os.getenv("AUTO_UPDATE_DELAY_MINUTES", "5"))  # Wait 5 minutes after download before updating RAG
+AUTO_UPDATE_DELAY_MINUTES = int(
+    os.getenv("AUTO_UPDATE_DELAY_MINUTES", "5"))  # Wait 5 minutes after download before updating RAG
 
 # --- PERFORMANCE OPTIMIZATION SETTINGS ---
 # Parallel processing settings
@@ -194,26 +203,32 @@ COMPLEX TEXT:
 
 SIMPLIFIED EXPLANATION (in layman's terms with HTML formatting):"""
 
+
 # --- PROCEEDING UTILITY FUNCTIONS ---
 def get_proceeding_info(proceeding_id: str) -> dict:
     """Get information about a specific proceeding."""
     return AVAILABLE_PROCEEDINGS.get(proceeding_id, {})
 
+
 def get_active_proceedings() -> dict:
     """Get all active proceedings."""
     return {k: v for k, v in AVAILABLE_PROCEEDINGS.items() if v.get('active', False)}
+
 
 def get_proceeding_display_name(proceeding_id: str) -> str:
     """Get display name for a proceeding."""
     return AVAILABLE_PROCEEDINGS.get(proceeding_id, {}).get('display_name', proceeding_id)
 
+
 def get_proceeding_short_name(proceeding_id: str) -> str:
     """Get short name for a proceeding."""
     return AVAILABLE_PROCEEDINGS.get(proceeding_id, {}).get('short_name', proceeding_id)
 
+
 def get_proceeding_full_name(proceeding_id: str) -> str:
     """Get full name for a proceeding."""
     return AVAILABLE_PROCEEDINGS.get(proceeding_id, {}).get('full_name', proceeding_id)
+
 
 def format_proceeding_for_search(proceeding_id: str) -> str:
     """Format proceeding ID for search queries (R2207005 -> R.22-07-005)."""
@@ -221,19 +236,38 @@ def format_proceeding_for_search(proceeding_id: str) -> str:
         return f"R.{proceeding_id[1:3]}-{proceeding_id[3:5]}-{proceeding_id[5:]}"
     return proceeding_id
 
+
 def get_proceeding_file_paths(proceeding_id: str, base_dir: Path = None) -> dict:
-    """Get standardized file paths for a proceeding."""
+    """Get standardized file paths for a proceeding using new cpuc_proceedings structure."""
     if base_dir is None:
         base_dir = PROJECT_ROOT
-    
-    proceeding_lower = proceeding_id.lower()
-    
+
+    # New cpuc_proceedings structure
+    cpuc_proceedings_dir = base_dir / "cpuc_proceedings"
+    proceeding_dir = cpuc_proceedings_dir / proceeding_id
+
     return {
-        'scraped_pdf_history': base_dir / "cpuc_csvs" / f"{proceeding_lower}_scraped_pdf_history.json",
-        'result_csv': base_dir / "cpuc_csvs" / f"{proceeding_lower}_resultCSV.csv",
+        # New structure paths
+        'proceeding_dir': proceeding_dir,
+        'documents_dir': proceeding_dir / "documents",
+        'embeddings_dir': proceeding_dir / "embeddings",
+        'scraped_pdf_history': proceeding_dir / f"{proceeding_id}_scraped_pdf_history.json",
+        'documents_csv': proceeding_dir / "documents" / f"{proceeding_id}_documents.csv",
+
+        # Embeddings and processing files (in proceeding/embeddings/)
+        'chunks_metadata': proceeding_dir / "embeddings" / "chunks_metadata.json",
+        'processing_log': proceeding_dir / "embeddings" / "processing_log.json",
+        'embedding_status': proceeding_dir / "embeddings" / "embedding_status.json",
+
+        # Centralized vector DB (still in root for shared access)
         'vector_db': base_dir / "local_chroma_db" / proceeding_id,
-        'document_hashes': base_dir / "local_chroma_db" / proceeding_id / "document_hashes.json"
+        'document_hashes': base_dir / "local_chroma_db" / proceeding_id / "document_hashes.json",
+
+        # Legacy paths for backward compatibility
+        'legacy_scraped_pdf_history': base_dir / "cpuc_csvs" / f"{proceeding_id.lower()}_scraped_pdf_history.json",
+        'legacy_result_csv': base_dir / "cpuc_csvs" / f"{proceeding_id.lower()}_resultCSV.csv"
     }
+
 
 def get_proceeding_urls(proceeding_id: str) -> dict:
     """Get standardized URLs for a proceeding."""

@@ -299,7 +299,7 @@ class PDFScheduler:
                             
                             if pdf_urls:
                                 logger.info(f"Updating RAG system with {len(pdf_urls)} new URLs...")
-                                self.rag_system.build_vector_store_from_urls(pdf_urls, force_rebuild=False)
+                                self.rag_system.build_vector_store_from_urls(pdf_urls, force_rebuild=False, incremental_mode=True)
                                 
                                 logger.info("✅ RAG system updated with new URLs")
                                 self.status['last_rag_update'] = datetime.now().isoformat()

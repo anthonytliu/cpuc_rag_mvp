@@ -98,11 +98,13 @@ class CPUCRAGSystem:
                     
                     # Convert download history to URL format
                     pdf_urls = []
-                    for hash_key, entry in download_history.items():
-                        if isinstance(entry, dict) and entry.get('url') and entry.get('filename'):
+                    for hash_key, entry in scraped_pdf_history.items():
+                        if isinstance(entry, dict) and entry.get('url'):
+                            # Use title as filename if no filename field exists
+                            filename = entry.get('filename', f"{entry.get('title', hash_key)}.pdf")
                             pdf_urls.append({
                                 'url': entry['url'],
-                                'filename': entry['filename']
+                                'filename': filename
                             })
                     
                     if pdf_urls:
@@ -351,7 +353,7 @@ class CPUCRAGSystem:
             logger.error(f"Re-ranking failed: {e}. Returning original order.")
             return documents
 
-    def build_vector_store_from_urls(self, pdf_urls: List[Dict[str, str]], force_rebuild: bool = False):
+    def build_vector_store_from_urls(self, pdf_urls: List[Dict[str, str]], force_rebuild: bool = False, incremental_mode: bool = False):
         """
         Builds or incrementally updates the vector store using PDF URLs.
         
@@ -365,6 +367,7 @@ class CPUCRAGSystem:
                 - 'title': Document title (optional)
                 - 'id': Document ID for tracking (optional)
             force_rebuild (bool): Whether to force rebuild the entire vector store
+            incremental_mode (bool): If True, only add new URLs without deleting existing ones
         """
         logger.info(f"Building vector store from {len(pdf_urls)} PDF URLs")
         
@@ -425,11 +428,15 @@ class CPUCRAGSystem:
         urls_to_process = [current_url_hashes[hash_val] for hash_val in new_url_hashes]
         
         # Log detailed statistics
-        logger.info(f"=== Vector Store URL Sync Statistics ===")
+        mode_str = "incremental" if incremental_mode else "full sync"
+        logger.info(f"=== Vector Store URL Sync Statistics ({mode_str}) ===")
         logger.info(f"Total URLs provided: {len(pdf_urls)}")
         logger.info(f"Previously processed URLs: {len(stored_url_hashes)}")
         logger.info(f"New URLs to process: {len(urls_to_process)}")
-        logger.info(f"URLs to delete: {len(deleted_url_hashes)}")
+        if not incremental_mode:
+            logger.info(f"URLs to delete: {len(deleted_url_hashes)}")
+        else:
+            logger.info(f"URLs that would be deleted in full sync: {len(deleted_url_hashes)} (skipped in incremental mode)")
         
         # Debug: Show a few examples of hash comparison
         if len(current_url_hashes) > 0:
@@ -443,9 +450,13 @@ class CPUCRAGSystem:
             for url_data in urls_to_process:
                 logger.info(f"  - {url_data.get('title', url_data['url'])}")
         
-        # Process deletions
-        if deleted_url_hashes:
+        # Process deletions (only in full sync mode, not incremental mode)
+        if deleted_url_hashes and not incremental_mode:
+            logger.info("Running full sync mode - processing deletions")
             self._delete_urls_from_db(deleted_url_hashes)
+        elif deleted_url_hashes and incremental_mode:
+            logger.info(f"Incremental mode enabled - skipping deletion of {len(deleted_url_hashes)} URLs")
+            logger.debug("Use full sync mode to remove URLs that are no longer needed")
 
         # Process new/updated URLs
         if not urls_to_process:

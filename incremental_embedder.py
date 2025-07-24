@@ -21,6 +21,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Callable, Tuple
 import hashlib
+from tqdm import tqdm
 
 import config
 from rag_core import CPUCRAGSystem
@@ -47,7 +48,7 @@ class IncrementalEmbedder:
         
         # Set up paths
         self.proceeding_paths = config.get_proceeding_file_paths(proceeding)
-        self.embedding_status_file = self.proceeding_paths['vector_db'] / 'embedding_status.json'
+        self.embedding_status_file = self.proceeding_paths['embedding_status']
         
         # Initialize embedding status tracking
         self.embedding_status = self._load_embedding_status()
@@ -162,6 +163,10 @@ class IncrementalEmbedder:
         embedded_docs = self.embedding_status.get('embedded_documents', {})
         
         for doc_hash, metadata in scraped_metadata.items():
+            # Add hash to metadata for processing
+            enhanced_metadata = metadata.copy()
+            enhanced_metadata['hash'] = doc_hash
+            
             # Check if document is already embedded
             if doc_hash in embedded_docs:
                 # Check if document was updated
@@ -170,10 +175,10 @@ class IncrementalEmbedder:
                 
                 if updated_date and embedded_date and updated_date > embedded_date:
                     logger.info(f"Document {doc_hash} was updated, re-embedding")
-                    documents_to_process.append(metadata)
+                    documents_to_process.append(enhanced_metadata)
             else:
                 # New document
-                documents_to_process.append(metadata)
+                documents_to_process.append(enhanced_metadata)
         
         logger.info(f"Identified {len(documents_to_process)} documents for embedding")
         return documents_to_process
@@ -185,12 +190,24 @@ class IncrementalEmbedder:
         
         total_docs = len(documents)
         
+        # Create progress bar for current proceeding
+        progress_bar = tqdm(
+            documents, 
+            desc=f"📄 Processing {self.proceeding}",
+            unit="doc",
+            disable=config.DEBUG,  # Hide progress bar in debug mode
+            bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]"
+        )
+        
         for i, doc_metadata in enumerate(documents):
             try:
-                self._update_progress(
-                    f"Processing document {i+1}/{total_docs}: {doc_metadata.get('title', 'Unknown')}",
-                    30 + int(60 * i / total_docs)
-                )
+                doc_title = doc_metadata.get('title', 'Unknown')
+                
+                # Update progress bar
+                progress_bar.set_postfix_str(f"{doc_title[:30]}...")
+                
+                if config.VERBOSE_LOGGING:
+                    logger.debug(f"Processing document {i+1}/{total_docs}: {doc_title}")
                 
                 # Process single document
                 result = self._process_single_document(doc_metadata)
@@ -199,28 +216,41 @@ class IncrementalEmbedder:
                     successful.append({
                         'hash': doc_metadata['hash'],
                         'url': doc_metadata['url'],
-                        'title': doc_metadata.get('title', 'Unknown'),
+                        'title': doc_title,
                         'processing_time': result.get('processing_time', 0)
                     })
+                    if config.VERBOSE_LOGGING:
+                        logger.debug(f"✅ Successfully processed: {doc_title}")
                 else:
                     failed.append({
                         'hash': doc_metadata['hash'],
                         'url': doc_metadata['url'],
                         'error': result.get('error', 'Unknown error')
                     })
+                    if config.VERBOSE_LOGGING:
+                        logger.warning(f"❌ Failed to process: {doc_title} - {result.get('error', 'Unknown error')}")
+                
+                progress_bar.update(1)
                 
                 # Small delay to prevent overwhelming the system
                 time.sleep(0.1)
                 
             except Exception as e:
-                logger.error(f"Failed to process document {doc_metadata.get('url', 'Unknown')}: {e}")
+                error_msg = f"Failed to process document {doc_metadata.get('url', 'Unknown')}: {e}"
+                if config.VERBOSE_LOGGING:
+                    logger.error(error_msg)
                 failed.append({
                     'hash': doc_metadata['hash'],
                     'url': doc_metadata.get('url', 'Unknown'),
                     'error': str(e)
                 })
+                progress_bar.update(1)
         
-        logger.info(f"Processing completed: {len(successful)} successful, {len(failed)} failed")
+        # Close progress bar
+        progress_bar.close()
+        
+        # Print clear completion message with line break
+        print(f"\n✅ {self.proceeding} completed: {len(successful)} successful, {len(failed)} failed\n" + "="*60)
         
         return {
             'successful': successful,
@@ -245,7 +275,7 @@ class IncrementalEmbedder:
                 'filename': f"{doc_metadata['hash']}.pdf"
             }]
             
-            success = self.rag_system.build_vector_store_from_urls(pdf_urls, force_rebuild=False)
+            success = self.rag_system.build_vector_store_from_urls(pdf_urls, force_rebuild=False, incremental_mode=True)
             
             processing_time = time.time() - start_time
             
