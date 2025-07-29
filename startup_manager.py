@@ -5,10 +5,10 @@ Startup Manager for CPUC RAG System
 Implements the complete startup sequence:
 1. Select first proceeding from config
 2. Initialize DB and folders
-3. Process embeddings from existing data
-4. Initialize RAG system
+3. Initialize RAG system (load existing vector store only)
 
 Note: Document discovery/scraping has been moved to standalone_scraper.py
+Note: Embedding processing has been moved to standalone_data_processor.py
 
 Author: Claude Code
 """
@@ -164,20 +164,18 @@ class StartupManager:
             True if database already existed, False if created new
         """
         try:
-            # Check if DB folder exists
-            proceeding_db_path = self.base_dir / "local_chroma_db" / self.current_proceeding
+            # Check if LanceDB folder exists
+            proceeding_db_path = self.base_dir / "local_lance_db" / self.current_proceeding
             db_existed = proceeding_db_path.exists()
             
             if db_existed:
                 logger.info(f"Database folder exists for {self.current_proceeding}")
-                # Initialize RAG system with existing DB
-                self.rag_system = CPUCRAGSystem(current_proceeding=self.current_proceeding)
             else:
                 logger.info(f"Creating new database folder for {self.current_proceeding}")
                 proceeding_db_path.mkdir(parents=True, exist_ok=True)
                 
-                # Initialize RAG system with new DB
-                self.rag_system = CPUCRAGSystem(current_proceeding=self.current_proceeding)
+            # Initialize RAG system (it will handle LanceDB initialization internally)
+            self.rag_system = CPUCRAGSystem(current_proceeding=self.current_proceeding)
             
             # Create additional required folders
             folders_to_create = [

@@ -1,0 +1,43 @@
+AGENT EVALUATION LOG
+================================================================================
+Timestamp: 2025-07-25T22:25:30.863387
+Document URL: https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M564/K706/564706741.PDF
+Document Title: Agenda Decision D2505026
+Detection Score: 0.400
+
+PROCESSING RESULTS COMPARISON:
+----------------------------------------
+
+DOCLING RESULTS:
+- Success: True
+- Processing Time: 23.71s
+- Chunks Extracted: 99
+- Content Length: 115930 characters
+- Content Types: ['text', 'section_header', 'table', 'footnote', 'list_item']
+- Tables Found: 28
+- Error: None
+
+CHONKIE RESULTS:
+- Success: True
+- Processing Time: 3.06s
+- Chunks Extracted: 49
+- Content Length: 47423 characters
+- Strategy Used: recursive
+- Text Quality: 0.803
+- Error: None
+
+AGENT DECISION:
+----------------------------------------
+Chosen Method: CHONKIE
+
+AGENT REASONING:
+----------------------------------------
+Agent evaluation failed, defaulting to Chonkie for low detection score (0.400)
+
+PERFORMANCE METRICS:
+----------------------------------------
+Speed Advantage: 7.8x (Docling vs Chonkie)
+Content Volume: Docling=115930, Chonkie=47423
+Reliability: Docling=Success, Chonkie=Success
+
+================================================================================

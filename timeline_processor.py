@@ -55,10 +55,24 @@ class TimelineProcessor:
             logger.error("No RAG system or vector database available")
             return TimelineData()
         
-        # Get all chunks from vector store
+        # Get all chunks from vector store (LanceDB compatible)
         try:
-            all_chunks = self.rag_system.vectordb.get()
-            logger.info(f"Retrieved {len(all_chunks['ids'])} chunks from vector store")
+            # For LanceDB, we need to use search or to_pandas() instead of get()
+            if hasattr(self.rag_system.vectordb, 'search'):
+                # Use similarity search with a dummy query to get all documents
+                all_chunks_result = self.rag_system.vectordb.similarity_search("", k=10000)
+                logger.info(f"Retrieved {len(all_chunks_result)} chunks from LanceDB vector store")
+                
+                # Convert to expected format
+                all_chunks = {
+                    'ids': [f"doc_{i}" for i in range(len(all_chunks_result))],
+                    'metadatas': [doc.metadata for doc in all_chunks_result],
+                    'documents': [doc.page_content for doc in all_chunks_result]
+                }
+            else:
+                logger.error("Vector store does not support required operations")
+                return TimelineData()
+                
         except Exception as e:
             logger.error(f"Failed to retrieve chunks from vector store: {e}")
             return TimelineData()
@@ -67,7 +81,7 @@ class TimelineProcessor:
         events = []
         processed_documents = set()
         
-        for chunk_id, metadata in zip(all_chunks['ids'], all_chunks['metadatas']):
+        for i, metadata in enumerate(all_chunks['metadatas']):
             try:
                 # Skip if we've already processed this document
                 doc_key = f"{metadata.get('source', '')}-{metadata.get('document_date', '')}"
@@ -85,7 +99,7 @@ class TimelineProcessor:
                     processed_documents.add(doc_key)
                     
             except Exception as e:
-                logger.warning(f"Error processing chunk {chunk_id}: {e}")
+                logger.warning(f"Error processing chunk {i}: {e}")
                 continue
         
         # Create timeline data

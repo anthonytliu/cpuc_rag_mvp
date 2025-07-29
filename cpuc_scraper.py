@@ -100,6 +100,13 @@ class CPUCSimplifiedScraper:
         self.chrome_options = Options()
         if headless:
             self.chrome_options.add_argument("--headless")
+            # Add focus prevention options when in headless mode
+            self.chrome_options.add_argument("--no-startup-window")
+            self.chrome_options.add_argument("--disable-focus-on-open")
+            self.chrome_options.add_argument("--window-position=-2000,-2000")
+            self.chrome_options.add_argument("--disable-notifications")
+            self.chrome_options.add_argument("--disable-infobars")
+            self.chrome_options.add_argument("--silent")
         self.chrome_options.add_argument("--disable-gpu")
         self.chrome_options.add_argument("--no-sandbox")
         self.chrome_options.add_argument("--disable-dev-shm-usage")
@@ -124,7 +131,7 @@ class CPUCSimplifiedScraper:
     def _create_background_webdriver(self):
         """
         Create a WebDriver instance optimized for background processing
-        Ensures minimal interference with user's computer activities
+        Ensures minimal interference with user's computer activities while maintaining functionality
         """
         # Create enhanced options for background processing
         background_options = Options()
@@ -135,45 +142,15 @@ class CPUCSimplifiedScraper:
         background_options.add_argument("--disable-dev-shm-usage")
         background_options.add_argument("--disable-gpu")
 
-        # Minimize resource usage and interference - ensure NO visible windows
-        background_options.add_argument("--disable-web-security")
-        background_options.add_argument("--disable-features=VizDisplayCompositor")
+        # Basic focus prevention without breaking functionality
+        background_options.add_argument("--window-position=-2000,-2000")  # Position off-screen
+        background_options.add_argument("--window-size=800,600")  # Small but functional window size
+        background_options.add_argument("--disable-notifications")
+        background_options.add_argument("--disable-infobars")
+        background_options.add_argument("--no-default-browser-check")
         background_options.add_argument("--disable-extensions")
-        background_options.add_argument("--disable-plugins")
-        background_options.add_argument("--disable-images")  # Don't load images for faster processing
-        background_options.add_argument("--disable-background-timer-throttling")
-        background_options.add_argument("--disable-renderer-backgrounding")
-        background_options.add_argument("--disable-backgrounding-occluded-windows")
-        background_options.add_argument("--disable-client-side-phishing-detection")
-        background_options.add_argument("--disable-default-apps")
-        background_options.add_argument("--disable-hang-monitor")
-        background_options.add_argument("--disable-prompt-on-repost")
-        background_options.add_argument("--disable-sync")
-        background_options.add_argument("--disable-translate")
-        background_options.add_argument("--disable-web-resources")
-        background_options.add_argument("--hide-scrollbars")
-        background_options.add_argument("--metrics-recording-only")
         background_options.add_argument("--mute-audio")
         background_options.add_argument("--no-first-run")
-        background_options.add_argument("--safebrowsing-disable-auto-update")
-        background_options.add_argument("--disable-background-networking")
-
-        # Additional options to ensure complete background operation
-        background_options.add_argument("--disable-infobars")
-        background_options.add_argument("--disable-notifications")
-        background_options.add_argument("--disable-popup-blocking")
-        background_options.add_argument("--no-default-browser-check")
-        background_options.add_argument("--disable-blink-features=AutomationControlled")
-        background_options.add_argument("--remote-debugging-port=0")  # Disable remote debugging
-        background_options.add_argument("--silent")  # Run silently
-
-        # Set low priority process
-        background_options.add_argument("--process-per-tab")
-        background_options.add_argument("--max_old_space_size=512")  # Limit memory usage
-
-        # Configure for minimal window interference
-        background_options.add_argument("--window-position=-2000,-2000")  # Position off-screen
-        background_options.add_argument("--window-size=800,600")  # Small window size
 
         # Configure download preferences (copy from main options)
         prefs = {
@@ -184,13 +161,23 @@ class CPUCSimplifiedScraper:
             "plugins.always_open_pdf_externally": True,
             "profile.default_content_setting_values": {
                 "notifications": 2,  # Block notifications
-                "media_stream": 2,   # Block media access
-            }
+                "popups": 2,         # Block popups
+            },
+            "download.extensions_to_open": "",  # Don't auto-open any files
         }
         background_options.add_experimental_option("prefs", prefs)
 
+        # Create Chrome service with background options
+        from selenium.webdriver.chrome.service import Service
+        service = Service()
+        
+        # Platform-specific service configuration for background operation
+        import platform
+        if platform.system() == "Windows":
+            service.creation_flags = 0x08000000  # CREATE_NO_WINDOW flag for Windows
+        
         # Create and return the background WebDriver
-        return webdriver.Chrome(options=background_options)
+        return webdriver.Chrome(service=service, options=background_options)
 
     def _set_background_priority(self):
         """
@@ -501,6 +488,9 @@ class CPUCSimplifiedScraper:
             # Step 7: The file should be downloaded - handle the download
             # Since Selenium downloads go to default download folder, we need to handle this
             self._handle_csv_download(csv_path, proceeding)
+            
+            # Step 8: Clean the downloaded CSV to remove invalid document type links
+            self._clean_downloaded_csv(csv_path)
 
         except Exception as e:
             logger.error(f"Error in CPUC navigation sequence: {e}")
@@ -560,6 +550,30 @@ class CPUCSimplifiedScraper:
         except Exception as e:
             logger.error(f"Error handling CSV download: {e}")
             raise Exception(f"Failed to handle CSV download: {e}")
+
+    def _clean_downloaded_csv(self, csv_path: Path):
+        """
+        Clean the downloaded CSV file to remove invalid document type links.
+        This ensures coverage calculations are accurate and processing is clean.
+        """
+        logger.info(f"Step 8: Cleaning downloaded CSV at {csv_path}")
+        
+        try:
+            # Read the CSV file
+            df = pd.read_csv(csv_path)
+            logger.info(f"Original CSV contains {len(df)} rows")
+            
+            # Clean the CSV using our cleaning function
+            cleaned_df = self._clean_csv_document_types(df)
+            
+            # Save the cleaned CSV back to the same location
+            cleaned_df.to_csv(csv_path, index=False)
+            logger.info(f"✅ Cleaned CSV saved with {len(cleaned_df)} valid rows")
+            
+        except Exception as e:
+            logger.error(f"Error cleaning downloaded CSV: {e}")
+            # Don't raise exception - allow processing to continue with uncleaned CSV
+            logger.warning("⚠️ Proceeding with uncleaned CSV - coverage calculations may be inaccurate")
 
     def _create_fallback_csv(self, csv_path: Path):
         """Create a fallback CSV structure if download fails"""
@@ -625,10 +639,77 @@ class CPUCSimplifiedScraper:
                 if '.pdf' in href.lower() or '.PDF' in href:
                     # Ensure it's a full URL
                     if href.startswith('http'):
-                        return href
+                        full_url = href
                     elif href.startswith('/'):
-                        return f"https://docs.cpuc.ca.gov{href}"
+                        full_url = f"https://docs.cpuc.ca.gov{href}"
+                    else:
+                        full_url = href
+                    
+                    # Skip URLs that don't contain "docs.cpuc.ca.gov"
+                    if "docs.cpuc.ca.gov" not in full_url:
+                        continue
+                    
+                    return full_url
         return None
+
+    def _clean_csv_document_types(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Clean CSV by removing rows with invalid Document Type links.
+        Valid format: https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=[ID_NUMBER]
+        where ID_NUMBER is a digit-only string.
+        """
+        logger.info("Cleaning CSV Document Type column for invalid links")
+        
+        if 'Document Type' not in df.columns:
+            logger.warning("No 'Document Type' column found in CSV")
+            return df
+            
+        initial_row_count = len(df)
+        valid_pattern = r'https://docs\.cpuc\.ca\.gov/SearchRes\.aspx\?DocFormat=ALL&DocID=\d+$'
+        
+        # Track which rows to keep
+        rows_to_keep = []
+        
+        for idx, row in df.iterrows():
+            if pd.notna(row.get('Document Type')):
+                doc_type_html = row['Document Type']
+                if 'href=' in doc_type_html:
+                    try:
+                        # Parse HTML to extract URL
+                        soup = BeautifulSoup(doc_type_html, 'html.parser')
+                        link = soup.find('a')
+                        if link and link.get('href'):
+                            url = link['href']
+                            # Convert relative URL to absolute if needed
+                            if url.startswith('/'):
+                                url = f"https://docs.cpuc.ca.gov{url}"
+                            elif not url.startswith('http'):
+                                url = f"https://docs.cpuc.ca.gov/{url}"
+                            
+                            # Check if URL matches valid pattern
+                            import re
+                            if re.match(valid_pattern, url):
+                                rows_to_keep.append(idx)
+                            else:
+                                logger.debug(f"Removing invalid Document Type URL: {url}")
+                        else:
+                            logger.debug(f"Removing row with no href in Document Type")
+                    except Exception as e:
+                        logger.debug(f"Error parsing Document Type HTML in row {idx}: {e}")
+                else:
+                    # No href in Document Type, remove this row
+                    logger.debug(f"Removing row {idx} with no href in Document Type")
+            else:
+                # Empty Document Type, remove this row
+                logger.debug(f"Removing row {idx} with empty Document Type")
+        
+        # Filter dataframe to keep only valid rows
+        cleaned_df = df.iloc[rows_to_keep].copy()
+        
+        removed_count = initial_row_count - len(cleaned_df)
+        logger.info(f"CSV cleaning completed: Removed {removed_count} invalid rows, kept {len(cleaned_df)} valid rows")
+        
+        return cleaned_df
 
     def _analyze_csv_and_scrape_pdfs(self, proceeding: str, csv_path: Path, progress: ProgressBar, proceeding_folder: Path) -> List[Dict]:
         """
@@ -644,8 +725,12 @@ class CPUCSimplifiedScraper:
             logger.error(f"Error reading CSV: {e}")
             return []
 
+        # Clean CSV before processing
+        df = self._clean_csv_document_types(df)
+
         # Extract URLs from the Document Type column which contains HTML links
         document_urls = []
+        filtered_url_count = 0
         for idx, row in df.iterrows():
             if pd.notna(row.get('Document Type')):
                 # Parse HTML to extract URL from Document Type column
@@ -662,6 +747,12 @@ class CPUCSimplifiedScraper:
                             elif not url.startswith('http'):
                                 url = f"https://docs.cpuc.ca.gov/{url}"
 
+                            # Skip URLs that don't contain "docs.cpuc.ca.gov"
+                            if "docs.cpuc.ca.gov" not in url:
+                                logger.debug(f"⏭️ Skipping non-CPUC URL: {url}")
+                                filtered_url_count += 1
+                                continue
+
                             document_urls.append({
                                 'url': url,
                                 'filing_date': row.get('Filing Date', 'Unknown'),
@@ -672,6 +763,8 @@ class CPUCSimplifiedScraper:
                         logger.error(f"Error parsing HTML in row {idx}: {e}")
 
         logger.info(f"Found {len(document_urls)} document URLs from CSV")
+        if filtered_url_count > 0:
+            logger.info(f"Filtered out {filtered_url_count} non-CPUC URLs")
 
         # Filter out already processed URLs (with optimized batch checking)
         unprocessed_urls = []
@@ -874,6 +967,11 @@ class CPUCSimplifiedScraper:
                                     pdf_url = f"https://docs.cpuc.ca.gov/{href}"
                                 else:
                                     pdf_url = href
+
+                                # Skip URLs that don't contain "docs.cpuc.ca.gov"
+                                if "docs.cpuc.ca.gov" not in pdf_url:
+                                    logger.debug(f"⏭️ Skipping non-CPUC PDF URL: {pdf_url}")
+                                    continue
 
                                 # Create PDF info dictionary
                                 pdf_info = {
@@ -1552,6 +1650,11 @@ class CPUCSimplifiedScraper:
                         full_url = f"https://www.cpuc.ca.gov{href}"
                     else:
                         full_url = href
+
+                    # Skip URLs that don't contain "docs.cpuc.ca.gov"
+                    if "docs.cpuc.ca.gov" not in full_url:
+                        logger.debug(f"⏭️ Skipping non-CPUC PDF URL from source: {full_url}")
+                        continue
 
                     if full_url not in existing_urls:
                         logger.info(f"📄 Attempting to analyze PDF from source: {full_url}")

@@ -17,7 +17,7 @@ def test_db_directory_creation():
     print("Testing DB Directory Creation...")
     
     # Check if the directory exists
-    db_dir = Path("/Users/anthony.liu/Downloads/CPUC_REG_RAG/local_chroma_db")
+    db_dir = Path("/Users/anthony.liu/Downloads/CPUC_REG_RAG/local_lance_db")
     
     if db_dir.exists():
         print(f"✅ DB directory exists: {db_dir}")

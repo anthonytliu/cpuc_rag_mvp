@@ -286,11 +286,25 @@ def load_scraped_pdf_data(proceeding: str) -> Optional[Dict]:
         import config
         paths = config.get_proceeding_file_paths(proceeding)
         
-        if not paths['scraped_pdf_history'].exists():
-            logger.warning(f"No scraped PDF history found for {proceeding}")
-            return None
+        # Try the standard path first (scraped_pdf_history.json)
+        scraped_pdf_path = paths['scraped_pdf_history']
         
-        with open(paths['scraped_pdf_history'], 'r') as f:
+        # If standard path doesn't exist, try proceeding-specific naming pattern
+        if not scraped_pdf_path.exists():
+            proceeding_dir = paths['proceeding_dir']
+            alt_scraped_path = proceeding_dir / f"{proceeding}_scraped_pdf_history.json"
+            
+            if alt_scraped_path.exists():
+                scraped_pdf_path = alt_scraped_path
+                logger.info(f"Using proceeding-specific scraped PDF history: {alt_scraped_path}")
+            else:
+                logger.warning(f"No scraped PDF history found for {proceeding}")
+                logger.warning(f"Checked paths:")
+                logger.warning(f"  - {paths['scraped_pdf_history']}")
+                logger.warning(f"  - {alt_scraped_path}")
+                return None
+        
+        with open(scraped_pdf_path, 'r') as f:
             scraped_data = json.load(f)
         
         logger.info(f"Loaded {len(scraped_data)} scraped PDFs for {proceeding}")

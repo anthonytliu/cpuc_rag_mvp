@@ -3,8 +3,10 @@ langchain~=0.3.26
 langchain-community~=0.3.27
 langchain-huggingface
 langchain-openai~=0.3.27
-chromadb
+lancedb
 pdfplumber>=0.10.0
+chonkie  # Fallback chunker for failed PDF processing
+PyPDF2  # Alternative PDF text extraction
 streamlit~=1.46.1
 python-dotenv~=1.1.1
 tqdm~=4.67.1

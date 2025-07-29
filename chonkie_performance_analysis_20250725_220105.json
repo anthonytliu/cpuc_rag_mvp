@@ -1,0 +1,701 @@
+{
+  "test_metadata": {
+    "test_start_time": "2025-07-25T22:01:05.453840",
+    "test_end_time": "2025-07-25T22:01:44.825760",
+    "total_duration_seconds": 39.37192,
+    "proceeding": "R2207005",
+    "processing_mode": "pure_chonkie_all_strategies",
+    "documents_tested": 5,
+    "strategies_tested": [
+      "recursive",
+      "sentence",
+      "token"
+    ],
+    "total_combinations": 15,
+    "success_rate": 100.0
+  },
+  "strategy_results": {
+    "recursive": [
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M571/K985/571985189.PDF",
+          "title": "571985189 - Final Decision D2506047",
+          "chunker_type": "recursive",
+          "id": "doc1_final_decision",
+          "document_type": "Final Decision",
+          "expected_complexity": "medium",
+          "description": "Decision correcting errors in Decision 25-01-039"
+        },
+        "processing_time_seconds": 1.0175321102142334,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 17,
+          "total_text_length": 16175,
+          "avg_chunk_length": 951.4705882352941,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/nd3 Date of Issuance 7/3/2025\nDecision 25-06-047 June 26, 2025\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to\nAdvance Demand Flexibility Through\nRulemaking 22-07-005\nElectric Rates.\nDECISION CORRECTING ERRORS IN DECISION 25-01-039\nSummary\nTh...",
+          "chunk_length_stats": {
+            "min": 710,
+            "max": 988,
+            "median": 973,
+            "std_dev": 65.02030225923556
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 16.70708946612091,
+          "chars_per_second": 15896.304242029748,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "recursive",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:05.453899"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K911/566911513.PDF",
+          "title": "566911513 - Joint Compliance Report",
+          "chunker_type": "recursive",
+          "id": "doc2_compliance_filing",
+          "document_type": "E-Filed: Compliance Filing",
+          "expected_complexity": "high",
+          "description": "Joint report in compliance with Ordering Paragraph 5 of D.24-05-028"
+        },
+        "processing_time_seconds": 5.572774887084961,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 201,
+          "total_text_length": 191553,
+          "avg_chunk_length": 953.0,
+          "content_quality_score": 1.0,
+          "sample_content": "BEFORE THE PUBLIC UTILITIES COMMISSION\nOF THE STATE OF CALIFORNIA\nFILED\n05/27/25\nOrder Instituting Rulemaking to Advance 04:59 PM\nDemand Flexibility Through Electric Rates. R.22-07-005 R2207005\nJOINT REPORT OF PACIFIC GAS AND ELECTRIC COMPANY (U-39),\nSAN DIEGO GAS & ELECTRIC COMPANY (U-902E), AND\nSO...",
+          "chunk_length_stats": {
+            "min": 116,
+            "max": 999,
+            "median": 961,
+            "std_dev": 65.65866279479046
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 36.06820732447354,
+          "chars_per_second": 34373.00158022329,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "recursive",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:08.998401"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K593/566593612.PDF",
+          "title": "566593612 - Proposed Decision",
+          "chunker_type": "recursive",
+          "id": "doc3_proposed_decision",
+          "document_type": "E-Filed: Proposed Decision",
+          "expected_complexity": "medium",
+          "description": "Proposed Decision correcting errors in Decision 15-01-039"
+        },
+        "processing_time_seconds": 0.9681048393249512,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 19,
+          "total_text_length": 17661,
+          "avg_chunk_length": 929.5263157894736,
+          "content_quality_score": 1.0,
+          "sample_content": "STATE OF CALIFORNIA GAVIN NEWSOM, Governor\nPUBLIC UTILITIES COMMISSION FILED\n505 VAN NESS AVENUE\n05/20/25\nSAN FRANCISCO, CA 94102-3298\n10:33 AM\nR2207005\nMay 20, 2025 Agenda ID #23513\nRatesetting\nTO PARTIES OF RECORD IN RULEMAKING 22-07-005:\nThis is the proposed decision of Administrative Law Judge C...",
+          "chunk_length_stats": {
+            "min": 38,
+            "max": 999,
+            "median": 982,
+            "std_dev": 216.46153582386887
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 19.62597358076269,
+          "chars_per_second": 18242.858916307887,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "recursive",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:23.998880"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M564/K706/564706741.PDF",
+          "title": "564706741 - Agenda Decision D2505026",
+          "chunker_type": "recursive",
+          "id": "doc4_agenda_decision",
+          "document_type": "Agenda Decision",
+          "expected_complexity": "high",
+          "description": "Decision granting compensation for substantial contribution"
+        },
+        "processing_time_seconds": 2.357893705368042,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 49,
+          "total_text_length": 47423,
+          "avg_chunk_length": 967.8163265306123,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/RM3/jds PROPOSED DECISION Agenda ID #23459\nRatesetting\nDecision\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to Advance Demand\nFlexibility Through Electric Rates. Rulemaking 22-07-005\n(Filed July 14, 2022)\nDECISION GRANTING COMPENSATION TO UT...",
+          "chunk_length_stats": {
+            "min": 796,
+            "max": 998,
+            "median": 978,
+            "std_dev": 34.11907669556466
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 20.781259090876457,
+          "chars_per_second": 20112.441834012945,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "recursive",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:27.124345"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M562/K527/562527349.PDF",
+          "title": "562527349 - Compensation Decision D2504015",
+          "chunker_type": "recursive",
+          "id": "doc5_compensation_decision",
+          "document_type": "Final Decision",
+          "expected_complexity": "high",
+          "description": "Decision granting compensation to California Environmental Justice Alliance"
+        },
+        "processing_time_seconds": 4.192461013793945,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 58,
+          "total_text_length": 55473,
+          "avg_chunk_length": 956.4310344827586,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/RM3/avs Date of Issuance 4/7/2025\nDecision 25-04-015 April 3, 2025\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to\nAdvance Demand Flexibility Rulemaking 22-07-005\nThrough Electric Rates.\nDECISION GRANTING COMPENSATION TO CALIFORNIA ENVIRONMEN...",
+          "chunk_length_stats": {
+            "min": 223,
+            "max": 999,
+            "median": 972.0,
+            "std_dev": 99.83251097730577
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 13.834356433886837,
+          "chars_per_second": 13231.607835465595,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "recursive",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:34.959159"
+      }
+    ],
+    "sentence": [
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M571/K985/571985189.PDF",
+          "title": "571985189 - Final Decision D2506047",
+          "chunker_type": "sentence",
+          "id": "doc1_final_decision",
+          "document_type": "Final Decision",
+          "expected_complexity": "medium",
+          "description": "Decision correcting errors in Decision 25-01-039"
+        },
+        "processing_time_seconds": 1.3035521507263184,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 17,
+          "total_text_length": 16175,
+          "avg_chunk_length": 951.4705882352941,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/nd3 Date of Issuance 7/3/2025\nDecision 25-06-047 June 26, 2025\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to\nAdvance Demand Flexibility Through\nRulemaking 22-07-005\nElectric Rates.\nDECISION CORRECTING ERRORS IN DECISION 25-01-039\nSummary\nTh...",
+          "chunk_length_stats": {
+            "min": 605,
+            "max": 995,
+            "median": 980,
+            "std_dev": 91.75927585744317
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 13.041288751299955,
+          "chars_per_second": 12408.402679545694,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "sentence",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:06.473151"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K911/566911513.PDF",
+          "title": "566911513 - Joint Compliance Report",
+          "chunker_type": "sentence",
+          "id": "doc2_compliance_filing",
+          "document_type": "E-Filed: Compliance Filing",
+          "expected_complexity": "high",
+          "description": "Joint report in compliance with Ordering Paragraph 5 of D.24-05-028"
+        },
+        "processing_time_seconds": 5.381416082382202,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 200,
+          "total_text_length": 191553,
+          "avg_chunk_length": 957.765,
+          "content_quality_score": 1.0,
+          "sample_content": "BEFORE THE PUBLIC UTILITIES COMMISSION\nOF THE STATE OF CALIFORNIA\nFILED\n05/27/25\nOrder Instituting Rulemaking to Advance 04:59 PM\nDemand Flexibility Through Electric Rates. R.22-07-005 R2207005\nJOINT REPORT OF PACIFIC GAS AND ELECTRIC COMPANY (U-39),\nSAN DIEGO GAS & ELECTRIC COMPANY (U-902E), AND\nSO...",
+          "chunk_length_stats": {
+            "min": 857,
+            "max": 999,
+            "median": 962.5,
+            "std_dev": 28.38818805604767
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 37.164938919100564,
+          "chars_per_second": 35595.277723852356,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "sentence",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:14.571312"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K593/566593612.PDF",
+          "title": "566593612 - Proposed Decision",
+          "chunker_type": "sentence",
+          "id": "doc3_proposed_decision",
+          "document_type": "E-Filed: Proposed Decision",
+          "expected_complexity": "medium",
+          "description": "Proposed Decision correcting errors in Decision 15-01-039"
+        },
+        "processing_time_seconds": 1.2580180168151855,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 19,
+          "total_text_length": 17661,
+          "avg_chunk_length": 929.5263157894736,
+          "content_quality_score": 1.0,
+          "sample_content": "STATE OF CALIFORNIA GAVIN NEWSOM, Governor\nPUBLIC UTILITIES COMMISSION FILED\n505 VAN NESS AVENUE\n05/20/25\nSAN FRANCISCO, CA 94102-3298\n10:33 AM\nR2207005\nMay 20, 2025 Agenda ID #23513\nRatesetting\nTO PARTIES OF RECORD IN RULEMAKING 22-07-005:\nThis is the proposed decision of Administrative Law Judge C...",
+          "chunk_length_stats": {
+            "min": 38,
+            "max": 999,
+            "median": 982,
+            "std_dev": 216.44151594498086
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 15.103122328963652,
+          "chars_per_second": 14038.74965535932,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "sentence",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:24.967061"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M564/K706/564706741.PDF",
+          "title": "564706741 - Agenda Decision D2505026",
+          "chunker_type": "sentence",
+          "id": "doc4_agenda_decision",
+          "document_type": "Agenda Decision",
+          "expected_complexity": "high",
+          "description": "Decision granting compensation for substantial contribution"
+        },
+        "processing_time_seconds": 2.7266790866851807,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 49,
+          "total_text_length": 47423,
+          "avg_chunk_length": 967.8163265306123,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/RM3/jds PROPOSED DECISION Agenda ID #23459\nRatesetting\nDecision\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to Advance Demand\nFlexibility Through Electric Rates. Rulemaking 22-07-005\n(Filed July 14, 2022)\nDECISION GRANTING COMPENSATION TO UT...",
+          "chunk_length_stats": {
+            "min": 706,
+            "max": 998,
+            "median": 973,
+            "std_dev": 41.85325229765492
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 17.970578290373446,
+          "chars_per_second": 17392.219066619997,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "sentence",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:29.482325"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M562/K527/562527349.PDF",
+          "title": "562527349 - Compensation Decision D2504015",
+          "chunker_type": "sentence",
+          "id": "doc5_compensation_decision",
+          "document_type": "Final Decision",
+          "expected_complexity": "high",
+          "description": "Decision granting compensation to California Environmental Justice Alliance"
+        },
+        "processing_time_seconds": 3.190673828125,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 57,
+          "total_text_length": 55473,
+          "avg_chunk_length": 973.2105263157895,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/RM3/avs Date of Issuance 4/7/2025\nDecision 25-04-015 April 3, 2025\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to\nAdvance Demand Flexibility Rulemaking 22-07-005\nThrough Electric Rates.\nDECISION GRANTING COMPENSATION TO CALIFORNIA ENVIRONMEN...",
+          "chunk_length_stats": {
+            "min": 924,
+            "max": 999,
+            "median": 977,
+            "std_dev": 19.872573384751426
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 17.864565001147753,
+          "chars_per_second": 17385.982707169638,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "sentence",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:39.151706"
+      }
+    ],
+    "token": [
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M571/K985/571985189.PDF",
+          "title": "571985189 - Final Decision D2506047",
+          "chunker_type": "token",
+          "id": "doc1_final_decision",
+          "document_type": "Final Decision",
+          "expected_complexity": "medium",
+          "description": "Decision correcting errors in Decision 25-01-039"
+        },
+        "processing_time_seconds": 1.2214982509613037,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 17,
+          "total_text_length": 16175,
+          "avg_chunk_length": 951.4705882352941,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/nd3 Date of Issuance 7/3/2025\nDecision 25-06-047 June 26, 2025\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to\nAdvance Demand Flexibility Through\nRulemaking 22-07-005\nElectric Rates.\nDECISION CORRECTING ERRORS IN DECISION 25-01-039\nSummary\nTh...",
+          "chunk_length_stats": {
+            "min": 175,
+            "max": 1000,
+            "median": 1000,
+            "std_dev": 200.0918906549747
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 13.917334704835815,
+          "chars_per_second": 13241.934638277606,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "token",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:07.776788"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K911/566911513.PDF",
+          "title": "566911513 - Joint Compliance Report",
+          "chunker_type": "token",
+          "id": "doc2_compliance_filing",
+          "document_type": "E-Filed: Compliance Filing",
+          "expected_complexity": "high",
+          "description": "Joint report in compliance with Ordering Paragraph 5 of D.24-05-028"
+        },
+        "processing_time_seconds": 4.045864105224609,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 192,
+          "total_text_length": 191553,
+          "avg_chunk_length": 997.671875,
+          "content_quality_score": 1.0,
+          "sample_content": "BEFORE THE PUBLIC UTILITIES COMMISSION\nOF THE STATE OF CALIFORNIA\nFILED\n05/27/25\nOrder Instituting Rulemaking to Advance 04:59 PM\nDemand Flexibility Through Electric Rates. R.22-07-005 R2207005\nJOINT REPORT OF PACIFIC GAS AND ELECTRIC COMPANY (U-39),\nSAN DIEGO GAS & ELECTRIC COMPANY (U-902E), AND\nSO...",
+          "chunk_length_stats": {
+            "min": 553,
+            "max": 1000,
+            "median": 1000.0,
+            "std_dev": 32.25944629097034
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 47.45586974907576,
+          "chars_per_second": 47345.38655231619,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "token",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:19.952861"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K593/566593612.PDF",
+          "title": "566593612 - Proposed Decision",
+          "chunker_type": "token",
+          "id": "doc3_proposed_decision",
+          "document_type": "E-Filed: Proposed Decision",
+          "expected_complexity": "medium",
+          "description": "Proposed Decision correcting errors in Decision 15-01-039"
+        },
+        "processing_time_seconds": 0.8990592956542969,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 18,
+          "total_text_length": 17661,
+          "avg_chunk_length": 981.1666666666666,
+          "content_quality_score": 1.0,
+          "sample_content": "STATE OF CALIFORNIA GAVIN NEWSOM, Governor\nPUBLIC UTILITIES COMMISSION FILED\n505 VAN NESS AVENUE\n05/20/25\nSAN FRANCISCO, CA 94102-3298\n10:33 AM\nR2207005\nMay 20, 2025 Agenda ID #23513\nRatesetting\nTO PARTIES OF RECORD IN RULEMAKING 22-07-005:\nThis is the proposed decision of Administrative Law Judge C...",
+          "chunk_length_stats": {
+            "min": 661,
+            "max": 1000,
+            "median": 1000.0,
+            "std_dev": 79.90306627407988
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 20.02092641386948,
+          "chars_per_second": 19643.865633074936,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "token",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:26.225183"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M564/K706/564706741.PDF",
+          "title": "564706741 - Agenda Decision D2505026",
+          "chunker_type": "token",
+          "id": "doc4_agenda_decision",
+          "document_type": "Agenda Decision",
+          "expected_complexity": "high",
+          "description": "Decision granting compensation for substantial contribution"
+        },
+        "processing_time_seconds": 2.7499451637268066,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 48,
+          "total_text_length": 47423,
+          "avg_chunk_length": 987.9791666666666,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/RM3/jds PROPOSED DECISION Agenda ID #23459\nRatesetting\nDecision\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to Advance Demand\nFlexibility Through Electric Rates. Rulemaking 22-07-005\n(Filed July 14, 2022)\nDECISION GRANTING COMPENSATION TO UT...",
+          "chunk_length_stats": {
+            "min": 423,
+            "max": 1000,
+            "median": 1000.0,
+            "std_dev": 83.28277633060351
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 17.454893513203363,
+          "chars_per_second": 17245.071147430066,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "token",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:32.209098"
+      },
+      {
+        "document_info": {
+          "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M562/K527/562527349.PDF",
+          "title": "562527349 - Compensation Decision D2504015",
+          "chunker_type": "token",
+          "id": "doc5_compensation_decision",
+          "document_type": "Final Decision",
+          "expected_complexity": "high",
+          "description": "Decision granting compensation to California Environmental Justice Alliance"
+        },
+        "processing_time_seconds": 2.4832072257995605,
+        "processing_errors": [],
+        "content_analysis": {
+          "total_chunks": 56,
+          "total_text_length": 55473,
+          "avg_chunk_length": 990.5892857142857,
+          "content_quality_score": 1.0,
+          "sample_content": "ALJ/CS8/RM3/avs Date of Issuance 4/7/2025\nDecision 25-04-015 April 3, 2025\nBEFORE THE PUBLIC UTILITIES COMMISSION OF THE STATE OF CALIFORNIA\nOrder Instituting Rulemaking to\nAdvance Demand Flexibility Rulemaking 22-07-005\nThrough Electric Rates.\nDECISION GRANTING COMPENSATION TO CALIFORNIA ENVIRONMEN...",
+          "chunk_length_stats": {
+            "min": 473,
+            "max": 1000,
+            "median": 1000.0,
+            "std_dev": 70.42333724392383
+          }
+        },
+        "efficiency_metrics": {
+          "chunks_per_second": 22.551480769780994,
+          "chars_per_second": 22339.255227536803,
+          "processing_success": true,
+          "error_count": 0
+        },
+        "chonkie_config": {
+          "chunker_type": "token",
+          "chunk_size": 1000,
+          "chunk_overlap": 100,
+          "min_text_length": 100,
+          "use_pdfplumber": true,
+          "use_pypdf2": true
+        },
+        "timestamp": "2025-07-25T22:01:42.342472"
+      }
+    ]
+  },
+  "comparative_analysis": {
+    "recursive": {
+      "success_rate": 100.0,
+      "avg_processing_time": 2.8217533111572264,
+      "avg_chunks_produced": 68.8,
+      "avg_quality_score": 1.0,
+      "total_successful": 5,
+      "total_attempted": 5,
+      "combined_performance_score": 0.8026780730783798
+    },
+    "sentence": {
+      "success_rate": 100.0,
+      "avg_processing_time": 2.772067832946777,
+      "avg_chunks_produced": 68.4,
+      "avg_quality_score": 1.0,
+      "total_successful": 5,
+      "total_attempted": 5,
+      "combined_performance_score": 0.8044543574349343
+    },
+    "token": {
+      "success_rate": 100.0,
+      "avg_processing_time": 2.2799148082733156,
+      "avg_chunks_produced": 66.2,
+      "avg_quality_score": 1.0,
+      "total_successful": 5,
+      "total_attempted": 5,
+      "combined_performance_score": 0.826054932284596
+    }
+  },
+  "aggregate_statistics": {
+    "total_combinations_attempted": 15,
+    "successful_combinations": 15,
+    "overall_success_rate": 100.0,
+    "processing_time_stats": {
+      "mean": 2.6245786507924396,
+      "median": 2.4832072257995605,
+      "min": 0.8990592956542969,
+      "max": 5.572774887084961,
+      "std_dev": 1.5832423236513264
+    },
+    "chunk_extraction_stats": {
+      "total_chunks": 1017,
+      "mean_chunks_per_combination": 67.8,
+      "median_chunks": 49,
+      "min_chunks": 17,
+      "max_chunks": 201
+    },
+    "content_quality_stats": {
+      "mean_quality_score": 1.0,
+      "median_quality_score": 1.0,
+      "min_quality_score": 1.0,
+      "max_quality_score": 1.0
+    },
+    "text_extraction_stats": {
+      "total_characters_extracted": 984855,
+      "mean_chars_per_document": 65657,
+      "median_chars": 47423,
+      "min_chars": 16175,
+      "max_chars": 191553
+    }
+  }
+}

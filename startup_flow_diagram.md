@@ -206,7 +206,7 @@ Error: PDF Processing     ──────► Log errors, continue with remain
 ## Key File System Structure Created:
 
 ```
-local_chroma_db/
+local_lance_db/
 ├── {proceeding}/                    # Vector database storage
 ├── document_hashes.json             # URL hash tracking for deduplication
 │

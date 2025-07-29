@@ -1,0 +1,3558 @@
+{
+  "4bfd090053ed47b83514644a61c2dcb8": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M565/K235/565235984.PDF",
+    "title": "565235984",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "04/30/2025",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=565235984",
+    "metadata": {
+      "file_size": "971398",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 30 Apr 2025 21:28:03 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:21.642051",
+      "timeout_used": 10
+    },
+    "filing_date": "04/30/2025",
+    "filed_by": NaN,
+    "description": "Decision D2504042 - Decision Granting Intervenor Compensation To National Diversity Coalition For Substantial Contribution To Decision 24-09-035."
+  },
+  "b064940b5dddc92869f6a6d96a5516b0": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M563/K019/563019535.PDF",
+    "title": "563019535",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "04/09/2025",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=563019535",
+    "metadata": {
+      "file_size": "757896",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 09 Apr 2025 17:46:12 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:23.769201",
+      "timeout_used": 10
+    },
+    "filing_date": "04/09/2025",
+    "filed_by": NaN,
+    "description": "Decision D2504018 - Decision Granting Intervenor Compensation To Center For Accessible Technology For Substantial Contribution To Decision 24-09-035."
+  },
+  "504d1123356ed4cd5faf1ba9ca7ce3c6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M555/K977/555977575.PDF",
+    "title": "555977575",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "01/31/2025",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=555977575",
+    "metadata": {
+      "file_size": "216429",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 31 Jan 2025 01:13:25 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:25.285089",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2025",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "Supplement (public version): to Request for Intervenor Compensation [filed December 2, 2024]"
+  },
+  "bc00fed40178bd9835a0262c39b39de6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M556/K052/556052972.PDF",
+    "title": "556052972",
+    "document_type": "E-Filed: Law & Motion",
+    "pdf_creation_date": "01/31/2025",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=556052972",
+    "metadata": {
+      "file_size": "195085",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 31 Jan 2025 01:13:25 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:27.254676",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2025",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "Supplement (public version): to Request for Intervenor Compensation [filed December 2, 2024]"
+  },
+  "ae33571b470b9db44ebaa05dd6064b66": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M547/K538/547538678.PDF",
+    "title": "547538678",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "12/02/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=547538678",
+    "metadata": {
+      "file_size": "253208",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 02 Dec 2024 22:48:24 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:28.919232",
+      "timeout_used": 10
+    },
+    "filing_date": "12/02/2024",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "Intervenor Compensation Claim for Contribution to D24-09-035"
+  },
+  "4f6405264cb3173e9c75c1ce17fc3dd9": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M547/K537/547537675.PDF",
+    "title": "547537675",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "11/27/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=547537675",
+    "metadata": {
+      "file_size": "438412",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 27 Nov 2024 22:51:51 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:32.253962",
+      "timeout_used": 10
+    },
+    "filing_date": "11/27/2024",
+    "filed_by": "Center for Accessible Technology",
+    "description": "for intervenor compensation for contribution to D24-09-035"
+  },
+  "5ee3a33b7804a9d9e63a480cb01907a9": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M542/K039/542039069.PDF",
+    "title": "542039069",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "10/02/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=542039069",
+    "metadata": {
+      "file_size": "1036799",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Oct 2024 16:38:01 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:33.256979",
+      "timeout_used": 10
+    },
+    "filing_date": "10/02/2024",
+    "filed_by": NaN,
+    "description": "Decision D2409035 - Phase Two Decision Updating General Order 156 Supplier Diversity Program. Rulemaking 21-03-010 is closed."
+  },
+  "fba040cabc40557e333d0dab8b459ed9": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M540/K720/540720458.PDF",
+    "title": "540720458",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/23/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=540720458",
+    "metadata": {
+      "file_size": "1652823",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 23 Sep 2024 17:29:25 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:35.916174",
+      "timeout_used": 10
+    },
+    "filing_date": "09/23/2024",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "REPLY COMMENTS ON PROPOSED DECISION"
+  },
+  "86444c7d4c63293ac3e89a26070a83ad": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M540/K719/540719936.PDF",
+    "title": "540719936",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/16/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=540719936",
+    "metadata": {
+      "file_size": "193984",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 16 Sep 2024 18:46:42 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:36.583719",
+      "timeout_used": 10
+    },
+    "filing_date": "09/16/2024",
+    "filed_by": "Center for Accessible Technology",
+    "description": "OPENING COMMENTS ON PROPOSED DECISION"
+  },
+  "22cb295e91d441c6c4b5308de27628b9": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M540/K719/540719409.PDF",
+    "title": "540719409",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/17/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=540719409",
+    "metadata": {
+      "file_size": "242311",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 17 Sep 2024 22:10:51 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:39.533325",
+      "timeout_used": 10
+    },
+    "filing_date": "09/17/2024",
+    "filed_by": "Alliance for Retail Energy Markets",
+    "description": "Comments of the Alliance for Retail Energy Markets on the Proposed Phase Two Decision updating General Order 156 Supplier Diversity Program."
+  },
+  "ec0ba02f4ae543f59f51422dc884116e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M540/K719/540719405.PDF",
+    "title": "540719405",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/17/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=540719405",
+    "metadata": {
+      "file_size": "213734",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 17 Sep 2024 20:34:13 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:40.115571",
+      "timeout_used": 10
+    },
+    "filing_date": "09/17/2024",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "California Community Choice Associations opening comments on the Proposed Phase Two Decision updating General Order 156 Supplier Diversity Program."
+  },
+  "65248b9215d31c714e4c25f0cb1d885d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M538/K693/538693998.PDF",
+    "title": "538693998",
+    "document_type": "E-Filed: Proposed Decision",
+    "pdf_creation_date": "08/27/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=538693998",
+    "metadata": {
+      "file_size": "450360",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 27 Aug 2024 22:14:27 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:43.451968",
+      "timeout_used": 10
+    },
+    "filing_date": "08/27/2024",
+    "filed_by": "CMMR/DOUGLAS/CPUC",
+    "description": "PROPOSED PHASE TWO DECISION UPDATING GENERAL ORDER 156 SUPPLIER DIVERSITY PROGRAM. Opening comments, which shall not exceed 15 pages, are due no later than September 16, 2024. Reply comments, which shall not exceed 5 pages, are due within five days after the last day for filing opening comments."
+  },
+  "cf3dce2dea093ca050ba1325e9bbf08d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M523/K965/523965974.PDF",
+    "title": "523965974",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "01/25/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=523965974",
+    "metadata": {
+      "file_size": "2928855",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 25 Jan 2024 14:02:23 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:43.505556",
+      "timeout_used": 10
+    },
+    "filing_date": "01/25/2024",
+    "filed_by": "Ava Community Energy Authority",
+    "description": "NOTICE OF PARTY NAME CHANGE FROM EAST BAY COMMUNITY ENERGY AUTHORITY TO AVA COMMUNITY ENERGY AUTHORITY"
+  },
+  "3c145f2490e15f5f65a88aa1a6526c26": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M520/K758/520758646.PDF",
+    "title": "520758646",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "11/08/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=520758646",
+    "metadata": {
+      "file_size": "1573096",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 08 Nov 2023 15:26:34 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:46.772105",
+      "timeout_used": 10
+    },
+    "filing_date": "11/08/2023",
+    "filed_by": NaN,
+    "description": "Decision D2311038 - Decision Granting Compensation To National Diversity Coalition For Substantial Contribution To Decision (D.) 22-04-035."
+  },
+  "71422c8fa918a83814050756fd9a96d4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M520/K768/520768243.PDF",
+    "title": "520768243",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "11/08/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=520768243",
+    "metadata": {
+      "file_size": "887578",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 08 Nov 2023 01:47:37 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:46.792778",
+      "timeout_used": 10
+    },
+    "filing_date": "11/07/2023",
+    "filed_by": NaN,
+    "description": "Decision D2311043 - Decision Granting Compensation To The Small Business Utilities Advocates For Substantial Contribution To Decision (D.) 22-04-035."
+  },
+  "03fb2a4e36f48bdee700a23a12f37673": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M520/K490/520490918.PDF",
+    "title": "520490918",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "09/26/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=520490918",
+    "metadata": {
+      "file_size": "207625",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 26 Sep 2023 19:01:55 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:50.067400",
+      "timeout_used": 10
+    },
+    "filing_date": "09/26/2023",
+    "filed_by": NaN,
+    "description": "Decision D2309014 - Order Extending Statutory Deadline. This decision extends the statutory deadline in this proceeding from September 17, 2023 to September 17, 2024."
+  },
+  "2d25a7607824b190378f6deb28f846df": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M503/K589/503589502.PDF",
+    "title": "503589502",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "03/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=503589502",
+    "metadata": {
+      "file_size": "389374",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 13 Mar 2023 22:26:19 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:53.128922",
+      "timeout_used": 10
+    },
+    "filing_date": "03/13/2023",
+    "filed_by": "ALJ/AFARY/CPUC",
+    "description": "ADMINISTRATIVE LAW JUDGE\u2019S RULING REJECTING HISPANICS IN ENERGY\u2019S NOTICE OF INTENT TO CLAIM INTERVENOR COMPENSATION"
+  },
+  "d36e179bd69d74a72909b5c55cc4413f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M503/K284/503284029.PDF",
+    "title": "503284029",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "03/08/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=503284029",
+    "metadata": {
+      "file_size": "133686",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 08 Mar 2023 18:06:31 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:53.578894",
+      "timeout_used": 10
+    },
+    "filing_date": "03/08/2023",
+    "filed_by": "CALJ/Cooke/CPUC",
+    "description": "NOTICE OF REASSIGNMENT. Rulemaking 21-03-010 is being Reassigned from Administrative Law Judge (ALJ) Regina DeAngelis to ALJ Lena Afary."
+  },
+  "4489d3c145ef1296e5b7123abe806bbc": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M502/K757/502757213.PDF",
+    "title": "502757213",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "02/24/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=502757213",
+    "metadata": {
+      "file_size": "168900",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 24 Feb 2023 21:45:11 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:56.664256",
+      "timeout_used": 10
+    },
+    "filing_date": "02/24/2023",
+    "filed_by": "CTIA",
+    "description": "NOTICE OF SUBSTITUTION OF REPRESENTATIVE"
+  },
+  "18b57aa6aa35812deccc83b33ad3239f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K652/501652375.PDF",
+    "title": "501652375",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501652375",
+    "metadata": {
+      "file_size": "134235",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 19:16:56 GMT",
+      "analysis_timestamp": "2025-07-28T05:28:57.205423",
+      "timeout_used": 10
+    },
+    "filing_date": "01/31/2023",
+    "filed_by": "CALJ/Cooke/CPUC",
+    "description": "NOTICE OF REASSIGNMENT"
+  },
+  "ce358c766a5b490fbd4fe5b5db7682f2": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K680/501680031.PDF",
+    "title": "501680031",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501680031",
+    "metadata": {
+      "file_size": "235341",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:37:39 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:00.738914",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION\u2019S REPLY COMMENTS ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "0d48daf9bb7576945551275b1746ce65": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K680/501680135.PDF",
+    "title": "501680135",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501680135",
+    "metadata": {
+      "file_size": "248897",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:31:44 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:02.824733",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "Center for Accessible Technology",
+    "description": "REPLY COMMENTS OF THE CENTER FOR ACCESSIBLE TECHNOLOGY ON ADMINISTRATIVE LAW JUDGE'S RULING ON PHASE 2"
+  },
+  "0e57fea2546dfb4877458c8b777f796d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K679/501679088.PDF",
+    "title": "501679088",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/30/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501679088",
+    "metadata": {
+      "file_size": "255463",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 30 Jan 2023 17:17:34 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:04.302842",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "Reply Comments on ALJ Ruling Regarding Phase 2"
+  },
+  "1c7f2cf5fe7b689aa9bf0a9aebe25e58": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K679/501679033.PDF",
+    "title": "501679033",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501679033",
+    "metadata": {
+      "file_size": "206055",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 16:26:33 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:06.027499",
+      "timeout_used": 10
+    },
+    "filing_date": "01/31/2023",
+    "filed_by": "Hispanics In Energy",
+    "description": "REPLY COMMENTS OF HISPANICS IN ENERGY TO THE ADMINISTRATIVE LAW JUDGE\u2019S RULING FOR PHASE "
+  },
+  "cbfb4c8e97961db0c1ecc9537b531ac2": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K680/501680242.PDF",
+    "title": "501680242",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501680242",
+    "metadata": {
+      "file_size": "371646",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:44:26 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:08.002292",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "Charter Fiberlink CA- CCO, LLC,Time Warner Cable Information Services (California), LLC,Bright House Network Infromation Services (California), LLC",
+    "description": "REPLY COMMENTS OF CHARTER FIBERLINK CA-CCO, LLC, TIME WARNER CABLE INFORMATION SERVICES (CALIFORNIA), LLC, AND BRIGHT HOUSE NETWORKS INFORMATION SERVICES (CALIFORNIA), LLC ON THE ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "112ef818f46cbc1b5df1c335fdcbee93": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K654/501654058.PDF",
+    "title": "501654058",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501654058",
+    "metadata": {
+      "file_size": "214386",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:39:41 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:09.311079",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "California Efficiency + Demand Management Council",
+    "description": "REPLY COMMENTS OF THE CALIFORNIA EFFICIENCY + DEMAND MANAGEMENT COUNCIL ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "566a18d626342e4f8d6da1d192d1426d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K679/501679017.PDF",
+    "title": "501679017",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501679017",
+    "metadata": {
+      "file_size": "183767",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:35:37 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:11.356577",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "Comcast Phone of California, LLC",
+    "description": "REPLY COMMENTS OF COMCAST PHONE OF CALIFORNIA, LLC (U-5698-C) ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "79d77ca934b5d40feee0f55e3fd6af5a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K680/501680239.PDF",
+    "title": "501680239",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/30/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501680239",
+    "metadata": {
+      "file_size": "182789",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 30 Jan 2023 23:58:24 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:12.661680",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "Southern California Edison Company",
+    "description": "SOUTHERN CALIFORNIA EDISON COMPANY\u2019S (U 338-E) REPLY COMMENTS ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "42ef569f884f687380984c5fb4b85be0": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K872/501872272.PDF",
+    "title": "501872272",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "02/02/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501872272",
+    "metadata": {
+      "file_size": "363786",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 02 Feb 2023 16:12:28 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:15.255466",
+      "timeout_used": 10
+    },
+    "filing_date": "02/02/2023",
+    "filed_by": "CALIFORNIA WATER ASSOCIATION",
+    "description": "Reply Comments on ALJ Ruling Regarding Phase 2"
+  },
+  "6cc91488bc35f18e4fdca9ea8da26e42": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K872/501872573.PDF",
+    "title": "501872573",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "02/02/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501872573",
+    "metadata": {
+      "file_size": "193448",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 02 Feb 2023 17:45:48 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:16.176599",
+      "timeout_used": 10
+    },
+    "filing_date": "02/02/2023",
+    "filed_by": "Pacific Bell Telephone Company,AT&T Corp.,SBC Long Distance, LLC,AT&T Mobility Wireless Operations Holdings, Inc.,New Cingular Wireless PCS, LLC,Santa Barbara Cellular Systems, Ltd.",
+    "description": "Reply comments of AT&T on Administrative Law Judge\u2019s Ruling regarding Phase 2."
+  },
+  "f184514e10d76d59fcc9189aec48238a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K652/501652356.PDF",
+    "title": "501652356",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501652356",
+    "metadata": {
+      "file_size": "179175",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:42:12 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:19.285816",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "Southern California Gas Company,San Diego Gas & Electric Company",
+    "description": "REPLY COMMENTS OF SAN DIEGO GAS & ELECTRIC COMPANY (U902M) SOUTHERN CALIFORNIA GAS COMPANY (U904G) ON THE NOVEMBER 30, 2022, ADMINIS7RATIVE LAW JUDGE RULING SEEKING INFORMATION TO DEVELOP THE RECORD IN PHASE 2 OF THIS PROCEEDING"
+  },
+  "79142f4a3417bdf57970998a235a1c40": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K683/501683666.PDF",
+    "title": "501683666",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501683666",
+    "metadata": {
+      "file_size": "670599",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:51:03 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:19.556136",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "National Diversity Coalition",
+    "description": "COMMENTS OF THE NATIONAL DIVERSITY COALITION ON THE ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE "
+  },
+  "f2850386abf611b64e7384b885420a6f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K282/501282431.PDF",
+    "title": "501282431",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "01/19/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501282431",
+    "metadata": {
+      "file_size": "422708",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Jan 2023 22:14:34 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:23.204552",
+      "timeout_used": 10
+    },
+    "filing_date": "01/19/2023",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "EMAIL RULING GRANTING MOTION FOR PARTY STATUS BY CTIA03010"
+  },
+  "ed107628132fb93e3561239f7e23f6d8": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K534/501534020.PDF",
+    "title": "501534020",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/26/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501534020",
+    "metadata": {
+      "file_size": "291541",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 26 Jan 2023 17:55:10 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:23.313016",
+      "timeout_used": 10
+    },
+    "filing_date": "01/26/2023",
+    "filed_by": "Hispanics In Energy",
+    "description": "Comments of Hispanics In Energy to the Administrative Law Judge\u2019s Ruling for Phase 2 (late-filed authorized by ALJ DeAngelis per e-mail of 1/26/2023)."
+  },
+  "1aa9832d249285ec14ec1a9abb88c8d4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K145/501145592.PDF",
+    "title": "501145592",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "01/17/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501145592",
+    "metadata": {
+      "file_size": "149569",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 17 Jan 2023 14:26:49 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:26.554647",
+      "timeout_used": 10
+    },
+    "filing_date": "01/17/2023",
+    "filed_by": "CTIA",
+    "description": "MOTION FOR PARTY STATUS. MFPS GRANTED via E-mail Ruling issued by ALJ Regina DeAngelis on January 18, 2023.\n"
+  },
+  "1eec19b474ac5f4724f672a65393d6fe": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K002/501002993.PDF",
+    "title": "501002993",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501002993",
+    "metadata": {
+      "file_size": "358083",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 21:14:49 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:26.742438",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "CALIFORNIA WATER ASSOCIATION",
+    "description": "COMMENTS  ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "9d423b71ec88343c8e8f505ae616ec9d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K519/501519023.PDF",
+    "title": "501519023",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/23/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501519023",
+    "metadata": {
+      "file_size": "175163",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 23 Jan 2023 18:43:56 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:30.131325",
+      "timeout_used": 10
+    },
+    "filing_date": "01/23/2023",
+    "filed_by": "T-Mobile West LLC,Sprint Spectrum LLC",
+    "description": "Comments of T-Mobile West LLC and Sprint Spectrum LLC on Administrative Law Judge DeAngelis\u2019s November 30, 2022 Ruling regarding Phase 2. "
+  },
+  "087fd31e58869927f2318e3e31b90c56": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K407/501407540.PDF",
+    "title": "501407540",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/23/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501407540",
+    "metadata": {
+      "file_size": "192161",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 23 Jan 2023 19:29:05 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:30.175063",
+      "timeout_used": 10
+    },
+    "filing_date": "01/23/2023",
+    "filed_by": "Pacific Bell Telephone Company,AT&T Corp.,SBC Long Distance, LLC,AT&T Mobility Wireless Operations Holdings, Inc.,New Cingular Wireless PCS, LLC,Santa Barbara Cellular Systems, Ltd.",
+    "description": "Opening comments of AT&T on Administrative Law Judge\u2019s Ruling regarding Phase 2."
+  },
+  "ea1ed2c86c491ba42d89f7e24794154a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K100/501100232.PDF",
+    "title": "501100232",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501100232",
+    "metadata": {
+      "file_size": "708384",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 20:56:45 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:33.632293",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "OPENING COMMENTS ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2 "
+  },
+  "c8e51ad59b017361dc79a2502dbf924e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K102/501102673.PDF",
+    "title": "501102673",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501102673",
+    "metadata": {
+      "file_size": "183679",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 23:55:18 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:36.643570",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Pacific Gas and Electric Company",
+    "description": "Opening Comments on Administrative Law Judge\u2019s Ruling"
+  },
+  "4e2b67702def299e231c3578f3ee67ff": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K105/501105408.PDF",
+    "title": "501105408",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/14/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501105408",
+    "metadata": {
+      "file_size": "211183",
+      "content_type": "application/pdf",
+      "last_modified": "Sat, 14 Jan 2023 00:26:29 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:37.077586",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Comcast Phone of California, LLC",
+    "description": "Comments on Administrative Law Judge\u2019s Ruling"
+  },
+  "d9a13ca55d2e22e1866e178ca2ba2824": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K140/501140335.PDF",
+    "title": "501140335",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/14/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501140335",
+    "metadata": {
+      "file_size": "653048",
+      "content_type": "application/pdf",
+      "last_modified": "Sat, 14 Jan 2023 00:23:40 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:40.168204",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Alliance for Retail Energy Markets",
+    "description": "Comments on Administrative Law Judge\u2019s Ruling"
+  },
+  "acc5c2ab278871b465ae1d9cd04064dd": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K140/501140346.PDF",
+    "title": "501140346",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/17/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501140346",
+    "metadata": {
+      "file_size": "3160871",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 17 Jan 2023 16:18:58 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:40.532080",
+      "timeout_used": 10
+    },
+    "filing_date": "01/17/2023",
+    "filed_by": "Charter Fiberlink CA- CCO, LLC,Time Warner Cable Information Services (California), LLC,Bright House Network Infromation Services (California), LLC",
+    "description": "COMMENTS OF CHARTER FIBERLINK CA-CCO, LLC, TIME WARNER CABLE INFORMATION SERVICES (CALIFORNIA), LLC, AND BRIGHT HOUSE NETWORKS INFORMATION SERVICES (CALIFORNIA), LLC ON THE ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "1595c40121c0ca8cb2251da5db40d845": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K134/501134676.PDF",
+    "title": "501134676",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501134676",
+    "metadata": {
+      "file_size": "573656",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 23:25:15 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:43.724675",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "SAN DIEGO GAS & ELECTRIC COMPANY,SOUTHERN CALIFORNIA GAS COMPANY",
+    "description": "Joint Opening Comments on Administrative Law Judge\u2019s Ruling"
+  },
+  "701a9ee96660cdd94c98832a8cf369df": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K099/501099644.PDF",
+    "title": "501099644",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501099644",
+    "metadata": {
+      "file_size": "1243067",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 23:09:42 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:44.198228",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Southern California Edison Company",
+    "description": "Comments on Administrative Law Judge\u2019s Ruling"
+  },
+  "2bad9d0de6569b9832bfeb1d74e21bd2": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K099/501099645.PDF",
+    "title": "501099645",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501099645",
+    "metadata": {
+      "file_size": "304536",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 23:14:19 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:47.336792",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Southwest Gas Corporation",
+    "description": "Opening Comments on Administrative Law Judge\u2019s Ruling"
+  },
+  "450342b87ce933b4bf0caba7e8ba3a73": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K282/501282760.PDF",
+    "title": "501282760",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/19/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501282760",
+    "metadata": {
+      "file_size": "228055",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Jan 2023 22:47:02 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:47.396478",
+      "timeout_used": 10
+    },
+    "filing_date": "01/19/2023",
+    "filed_by": "CTIA",
+    "description": "COMMENTS OF CTIA ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2 "
+  },
+  "34ad41e45f7d535c0cd0db9bfb00b9b2": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M500/K976/500976999.PDF",
+    "title": "500976999",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=500976999",
+    "metadata": {
+      "file_size": "550793",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 19:31:03 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:50.686790",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Center for Accessible Technology",
+    "description": "Opening Comments on ALJ Ruling on Phase 2"
+  },
+  "8e80cc32c619b8daa79f2a5b04d628f5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M500/K986/500986425.PDF",
+    "title": "500986425",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=500986425",
+    "metadata": {
+      "file_size": "189096",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 23:33:53 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:50.898462",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "Shell Energy North America (US), L.P.",
+    "description": "Opening Comments on Administrative Law Judge\u2019s Ruling"
+  },
+  "49c56ead89eed1027d06af793fd878b7": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K105/501105395.PDF",
+    "title": "501105395",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/13/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501105395",
+    "metadata": {
+      "file_size": "1692537",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 13 Jan 2023 21:51:31 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:54.076395",
+      "timeout_used": 10
+    },
+    "filing_date": "01/13/2023",
+    "filed_by": "National Diversity Coalition",
+    "description": "Opening Comments on ALJ Ruling Regarding Phase 2"
+  },
+  "be20e0cc1d1caf7e08665166c69a3e8f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M499/K887/499887523.PDF",
+    "title": "499887523",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "12/13/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=499887523",
+    "metadata": {
+      "file_size": "450152",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Dec 2022 16:45:34 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:54.310503",
+      "timeout_used": 10
+    },
+    "filing_date": "12/13/2022",
+    "filed_by": "ALJ/DeANGELIS/CPUC",
+    "description": "E-MAIL RULING GRANTING REQUEST FOR EXTENSION OF TIME TO FILE COMMENTS The request for an extension of time to file opening and reply comments by Center for Accessible Technology (CforAT) is granted. Opening comments are due on or before January 13, 2023, and reply comments are due on or before January 30, 2023. "
+  },
+  "6218e2d4af2b6450841fe4b8bb5e5d33": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M499/K887/499887687.PDF",
+    "title": "499887687",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "12/14/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=499887687",
+    "metadata": {
+      "file_size": "456842",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 14 Dec 2022 21:51:18 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:57.640467",
+      "timeout_used": 10
+    },
+    "filing_date": "12/14/2022",
+    "filed_by": "Hispanics In Energy",
+    "description": "of intent to claim intervenor compensation. "
+  },
+  "4ce4211f240da00bf0f9559f4aa99acd": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M499/K347/499347363.PDF",
+    "title": "499347363",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "11/30/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=499347363",
+    "metadata": {
+      "file_size": "230361",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 30 Nov 2022 20:17:35 GMT",
+      "analysis_timestamp": "2025-07-28T05:29:57.877396",
+      "timeout_used": 10
+    },
+    "filing_date": "11/30/2022",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2 "
+  },
+  "4f29039e57a772224452f9017625a2f2": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M496/K628/496628787.PDF",
+    "title": "496628787",
+    "document_type": "E-Filed: Scoping Ruling",
+    "pdf_creation_date": "08/30/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=496628787",
+    "metadata": {
+      "file_size": "292984",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 30 Aug 2022 21:15:54 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:01.101514",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2022",
+    "filed_by": "CMMR/RECHTSCHAFFEN/CPUC",
+    "description": "Assigned Commissioner\u2019s Amended Scoping Memo and Ruling for Phase 2. The category of the proceeding remains quasi-legislative. The statutory deadline is extended to September 17, 2023. Evidentiary hearings are not needed for Phase 2. The scope and the schedule of Phase 2 are as set forth."
+  },
+  "2f2ab502d1318e532aa3755f434beeb6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M486/K447/486447196.PDF",
+    "title": "486447196",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "06/17/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=486447196",
+    "metadata": {
+      "file_size": "330219",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 17 Jun 2022 00:47:50 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:01.681117",
+      "timeout_used": 10
+    },
+    "filing_date": "06/16/2022",
+    "filed_by": "National Diversity Coalition",
+    "description": "for intervenor compensation for contribution to D22-04-035"
+  },
+  "984d760bbeefadf30dd5a81545f6150e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M485/K544/485544988.PDF",
+    "title": "485544988",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "06/14/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=485544988",
+    "metadata": {
+      "file_size": "429071",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 14 Jun 2022 20:25:42 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:06.022165",
+      "timeout_used": 10
+    },
+    "filing_date": "06/14/2022",
+    "filed_by": "Center for Accessible Technology",
+    "description": "for intervenor compensation for contribution to D22-04-035"
+  },
+  "260e4265f24a76a1d2f26b1dea1286a1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M486/K440/486440007.PDF",
+    "title": "486440007",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "06/17/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=486440007",
+    "metadata": {
+      "file_size": "326485",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 17 Jun 2022 00:43:01 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:06.046054",
+      "timeout_used": 10
+    },
+    "filing_date": "06/16/2022",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "for intervenor compensation for contribution to D22-04-035"
+  },
+  "aa8248fdb5c3b2c4d49526606b8bfcfb": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M466/K761/466761944.PDF",
+    "title": "466761944",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "04/18/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=466761944",
+    "metadata": {
+      "file_size": "2534441",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 18 Apr 2022 21:39:14 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:09.750677",
+      "timeout_used": 10
+    },
+    "filing_date": "04/18/2022",
+    "filed_by": NaN,
+    "description": "Decision D2204035 - Decision Revising General Order 156 Supplier Diversity Program To Implement Senate Bill 255, Adopt A Voluntary Procurement Goal For LGBT Business Enterprises, Incorporate Persons With Disabilities Business-Enterprises, And Other Updates."
+  },
+  "61c1b09ddb578c8f04e090ea9cc3963d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K555/456555104.PDF",
+    "title": "456555104",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/07/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456555104",
+    "metadata": {
+      "file_size": "253909",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 07 Mar 2022 21:29:57 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:13.493359",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "BuildOUT California",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "1cbe0b5383dc12dd2f0d1f397c116075": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K594/456594207.PDF",
+    "title": "456594207",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/07/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456594207",
+    "metadata": {
+      "file_size": "109647",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 07 Mar 2022 23:06:01 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:15.540798",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "MCI Communications Services LLC,XO Communications Services,Cellco Partnership",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "fbc9f608aec35352a7e31e32ab902af4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K312/456312813.PDF",
+    "title": "456312813",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/07/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456312813",
+    "metadata": {
+      "file_size": "228112",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 07 Mar 2022 20:57:51 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:17.089132",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "2167146063b9c2ad8f70c3826cf54317": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K312/456312816.PDF",
+    "title": "456312816",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/07/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456312816",
+    "metadata": {
+      "file_size": "318589",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 07 Mar 2022 22:06:37 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:19.314400",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "National Diversity Coalition",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "54e7679c34b9ce2566018f2a63f51b0a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K594/456594219.PDF",
+    "title": "456594219",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/08/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456594219",
+    "metadata": {
+      "file_size": "198505",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 08 Mar 2022 15:00:10 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:20.726460",
+      "timeout_used": 10
+    },
+    "filing_date": "03/08/2022",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "REPLY COMMENTS ON THE PROPOSED DECISION"
+  },
+  "f2b8182a2e54635a7e5fdc33abaecb69": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K594/456594214.PDF",
+    "title": "456594214",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/08/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456594214",
+    "metadata": {
+      "file_size": "191241",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 08 Mar 2022 00:16:58 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:23.110518",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "Comcast Phone of California, LLC",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "be0369703f88982b01ba19aef5809b95": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K277/456277971.PDF",
+    "title": "456277971",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/07/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456277971",
+    "metadata": {
+      "file_size": "135671",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 07 Mar 2022 22:09:36 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:23.995668",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "Southern California Edison Company",
+    "description": "Southern California Edison Company\u2019s reply comments on the Proposed Decision revising General Order 156 Supplier Diversity Program."
+  },
+  "85c8fc12afcf36af2d87844f37ad33a4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K801/456801757.PDF",
+    "title": "456801757",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/07/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456801757",
+    "metadata": {
+      "file_size": "172241",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 07 Mar 2022 20:51:45 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:26.756282",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "Center for Accessible Technology",
+    "description": "Reply Comments on Proposed Decision"
+  },
+  "fc80cdf4c2b4d8d410e5ffe6d1b2e9b0": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M461/K182/461182771.PDF",
+    "title": "461182771",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/21/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=461182771",
+    "metadata": {
+      "file_size": "201189",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 21 Mar 2022 20:40:38 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:27.907016",
+      "timeout_used": 10
+    },
+    "filing_date": "03/21/2022",
+    "filed_by": "Regents of the University of California",
+    "description": "REPLY COMMENTS ON THE PROPOSED DECISION"
+  },
+  "63466253628470935ff49773daecbd1c": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K594/456594218.PDF",
+    "title": "456594218",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "03/08/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456594218",
+    "metadata": {
+      "file_size": "183348",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 08 Mar 2022 14:17:42 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:30.571142",
+      "timeout_used": 10
+    },
+    "filing_date": "03/08/2022",
+    "filed_by": "Regents of the University of California",
+    "description": "MOTION FOR PARTY STATUS"
+  },
+  "379a751227486c0fe0e984805f0e6f23": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M456/K801/456801766.PDF",
+    "title": "456801766",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/07/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=456801766",
+    "metadata": {
+      "file_size": "117805",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 07 Mar 2022 23:12:32 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:31.418410",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2022",
+    "filed_by": "Shell Energy North America (US), L.P. d/b/a Shell Energy Solutions,Alliance for Retail Energy Markets",
+    "description": "Joint Reply Comments on Proposed Decision"
+  },
+  "bcd8829720fd32b8bc2335992121235c": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M457/K756/457756792.PDF",
+    "title": "457756792",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/09/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=457756792",
+    "metadata": {
+      "file_size": "188696",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 09 Mar 2022 16:35:08 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:34.017720",
+      "timeout_used": 10
+    },
+    "filing_date": "03/09/2022",
+    "filed_by": "Pacific Bell Telephone Company,AT&T Corp.,SBC Long Distance, LLC,AT&T Mobility Wireless Operations Holdings, Inc.,New Cingular Wireless PCS, LLC,Santa Barbara Cellular Systems, Ltd.",
+    "description": "Reply comments of AT&T on Proposed Decision."
+  },
+  "2f03262dd9e4acc4401ccad1eef32c09": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M454/K983/454983905.PDF",
+    "title": "454983905",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/01/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=454983905",
+    "metadata": {
+      "file_size": "567970",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 01 Mar 2022 18:34:58 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:34.689170",
+      "timeout_used": 10
+    },
+    "filing_date": "03/01/2022",
+    "filed_by": "Pacific Gas and Electric Company",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "5ba1ba833c20e3752dd2a0aec700d23d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K004/455004666.PDF",
+    "title": "455004666",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455004666",
+    "metadata": {
+      "file_size": "184177",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 22:07:49 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:37.618206",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "California Efficiency + Demand Management Council",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "87453d36ea08eccb342954cdc858b8f1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M454/K865/454865327.PDF",
+    "title": "454865327",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=454865327",
+    "metadata": {
+      "file_size": "279667",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 17:15:07 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:38.072788",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "598e084f32c1c2008eb487751e5f2f9f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K736/455736673.PDF",
+    "title": "455736673",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/01/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455736673",
+    "metadata": {
+      "file_size": "148921",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 01 Mar 2022 19:42:13 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:41.094314",
+      "timeout_used": 10
+    },
+    "filing_date": "03/01/2022",
+    "filed_by": "Center for Accessible Technology",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "a1b23573387ca4177428bfd8e2c65495": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K663/455663364.PDF",
+    "title": "455663364",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455663364",
+    "metadata": {
+      "file_size": "585550",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 16:46:53 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:41.419957",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "Alliance for Retail Energy Markets,Shell Energy North America (US), L.P.",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "8441799565860c4a34b0aaa0891311c1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K004/455004634.PDF",
+    "title": "455004634",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455004634",
+    "metadata": {
+      "file_size": "114059",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 16:08:15 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:44.804111",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "MCI Communications Services LLC,XO Communications Services,Cellco Partnership",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "df7876ce7889a1b397428f5de550ef15": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K677/455677109.PDF",
+    "title": "455677109",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455677109",
+    "metadata": {
+      "file_size": "295529",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 21:38:44 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:45.010717",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "Pacific Bell Telephone Company,AT&T Corp.,SBC Long Distance, LLC,AT&T Mobility Wireless Operations Holdings, Inc.,New Cingular Wireless PCS, LLC,Santa Barbara Cellular Systems, Ltd.",
+    "description": "Opening comments on Proposed Decision."
+  },
+  "311ea6effe24a896b3e8bfb4bb718ab2": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M454/K876/454876245.PDF",
+    "title": "454876245",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=454876245",
+    "metadata": {
+      "file_size": "551305",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 16:42:14 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:48.169404",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "National Diversity Coalition",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "3fe47f2579ac32acc945ee3791716f16": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K736/455736694.PDF",
+    "title": "455736694",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455736694",
+    "metadata": {
+      "file_size": "247105",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 16:38:17 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:48.623901",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "San Diego Gas & Electric Company,Southern California Gas Company",
+    "description": "Joint Opening Comments on Proposed Decision"
+  },
+  "d96afed32f83dcb20c88764df3baa77d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M454/K876/454876252.PDF",
+    "title": "454876252",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=454876252",
+    "metadata": {
+      "file_size": "151344",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 16:54:59 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:51.692475",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "Southern California Edison Company",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "e177618d65cf2f8cd5f8aaf9e18793ce": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K736/455736695.PDF",
+    "title": "455736695",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455736695",
+    "metadata": {
+      "file_size": "175501",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 16:47:24 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:52.100093",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "Cox California Telcom, LLC",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "1c3cf75d07ef799073004ec2b25ef6b6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M454/K865/454865320.PDF",
+    "title": "454865320",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=454865320",
+    "metadata": {
+      "file_size": "93382",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 15:46:27 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:55.369008",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "Charter Fiberlink CA-CCO, LLC,Time Warner Cable Information Services (California), LLC,Bright House Networks Information Services (California), LLC",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "65a545eff9f97e1ba44b813d1b5de2ad": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K663/455663367.PDF",
+    "title": "455663367",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455663367",
+    "metadata": {
+      "file_size": "363127",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 16:54:42 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:55.520488",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "CALIFORNIA WATER ASSOCIATION",
+    "description": "CALIFORNIA WATER ASSOCIATION COMMENTS ON THE PROPOSED DECISION OF COMMISSIONER RECHTSCHAFFEN"
+  },
+  "43f1e12e3bf09b506809978389b3642a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M454/K982/454982025.PDF",
+    "title": "454982025",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=454982025",
+    "metadata": {
+      "file_size": "170331",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 17:34:28 GMT",
+      "analysis_timestamp": "2025-07-28T05:30:58.712935",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "National LGBT Chamber of Commerce",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "14d483c1c5474d6a5057200aeecf69ca": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K736/455736676.PDF",
+    "title": "455736676",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/01/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455736676",
+    "metadata": {
+      "file_size": "163370",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 01 Mar 2022 20:10:20 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:02.362093",
+      "timeout_used": 10
+    },
+    "filing_date": "03/01/2022",
+    "filed_by": "BuildOUT California",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "6e3a167f72047d065461ac43df097f32": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M455/K736/455736740.PDF",
+    "title": "455736740",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/03/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=455736740",
+    "metadata": {
+      "file_size": "627717",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 03 Mar 2022 21:32:54 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:02.363594",
+      "timeout_used": 10
+    },
+    "filing_date": "03/03/2022",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "California Community Choice Association\u2019s comments on the Proposed Decision."
+  },
+  "45235f9a6802924649555e425a5e5539": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M449/K435/449435153.PDF",
+    "title": "449435153",
+    "document_type": "E-Filed: Proposed Decision",
+    "pdf_creation_date": "02/09/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=449435153",
+    "metadata": {
+      "file_size": "660528",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 09 Feb 2022 19:58:30 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:06.005334",
+      "timeout_used": 10
+    },
+    "filing_date": "02/09/2022",
+    "filed_by": "CMMR/RECHTSCHAFFEN/CPUC",
+    "description": "PROPOSED DECISION REVISING GENERAL ORDER 156 SUPPLIER DIVERSITY PROGRAM TO IMPLEMENT SENATE BILL 255, ADOPT A VOLUNTARY PROCUREMENT GOAL FOR LGBT BUSINESS ENTERPRISES, INCORPORATE PERSONS WITH DISABILITIES BUSINESS ENTERPRISES, AND OTHER UPDATES. Opening Comments, which shall not exceed 15 pages, are due on March 1, 2022. Reply Comments, which shall not exceed 5 pages, are due 5 days after the last days for filing Opening Comments."
+  },
+  "e49460a8c0f855d03d3a62daf73bc8fd": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M417/K418/417418094.PDF",
+    "title": "417418094",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "10/22/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=417418094",
+    "metadata": {
+      "file_size": "438775",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 22 Oct 2021 20:19:57 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:08.787026",
+      "timeout_used": 10
+    },
+    "filing_date": "10/22/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-MAIL RULING GRANTING MOTION FOR PARTY STATUS BY CALIFORNIA EFFICIENCY + DEMAND MANAGEMENT COUNCIL"
+  },
+  "07a4d69abf8e30004242836750f5c947": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M415/K875/415875258.PDF",
+    "title": "415875258",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "10/21/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=415875258",
+    "metadata": {
+      "file_size": "134402",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 21 Oct 2021 20:54:16 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:09.440218",
+      "timeout_used": 10
+    },
+    "filing_date": "10/21/2021",
+    "filed_by": "California Efficiency + Demand Management Council",
+    "description": "Motion for Party Status of California Efficiency + Demand Management Council. MFPS GRANTED via E-mail Ruling issued by ALJ DeAngelis on October 22, 2021"
+  },
+  "55f9e6ffe5fdd0c50b2f93be9925c4b1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M409/K159/409159216.PDF",
+    "title": "409159216",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "09/21/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=409159216",
+    "metadata": {
+      "file_size": "373989",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 21 Sep 2021 17:05:41 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:12.393316",
+      "timeout_used": 10
+    },
+    "filing_date": "09/21/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "ADMINISTRATIVE LAW JUDGE\u2019S RULING ON HISPANICS IN ENERGY\u2019S NOTICE OF INTENT TO CLAIM INTERVENOR COMPENSATION. The Notice of Intent to Claim Intervenor Compensation filed by Hispanics in Energy is rejected, as set forth above. Hispanics in Energy has not satisfied the eligibility requirements of Pub. Util. Code \u00a7 1804(a), as set forth above. Additional guidance is provided to Hispanics in Energy as set forth above. "
+  },
+  "0b8ba7f3421b6eec281d268da8f43d67": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M403/K446/403446826.PDF",
+    "title": "403446826",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "08/30/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=403446826",
+    "metadata": {
+      "file_size": "375560",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 30 Aug 2021 15:55:22 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:15.778560",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-MAIL RULING NOTICING WORKSHOP ON SEPTEMBER 14, 2021. This email ruling serves to notice a workshop by Staff of the California Public Utilities Commission (Commission) to be held remotely on September 14, 2021 at 9:00 am."
+  },
+  "2e471671f35d921caa426ee8a79bdd27": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M401/K087/401087803.PDF",
+    "title": "401087803",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=401087803",
+    "metadata": {
+      "file_size": "182950",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 18:25:18 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:18.870852",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "Great Oaks Water Company",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "d0c0b7f750c658038bf0448c91aeca95": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M401/K087/401087833.PDF",
+    "title": "401087833",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/20/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=401087833",
+    "metadata": {
+      "file_size": "210080",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 20 Aug 2021 20:57:58 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:19.020345",
+      "timeout_used": 10
+    },
+    "filing_date": "08/20/2021",
+    "filed_by": "Pacific Bell Telephone Company,AT&T Corp.,SBC Long Distance, LLC,AT&T Mobility Wireless Operations Holdings, Inc.,New Cingular Wireless PCS, LLC,Santa Barbara Cellular Systems, Ltd.",
+    "description": "Reply Comments on the Assigned Commissioner\u2019s Scoping Memo and Ruling and the Administrative Law Judge\u2019s Ruling"
+  },
+  "ad78eee184ec8f5a69db24c0a2387610": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K642/400642081.PDF",
+    "title": "400642081",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400642081",
+    "metadata": {
+      "file_size": "259111",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 18:36:33 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:22.627725",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "Comcast Phone of California, LLC",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "bf72f79c19309a1eb22ba1d24f4fcbbb": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K593/400593935.PDF",
+    "title": "400593935",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400593935",
+    "metadata": {
+      "file_size": "191224",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 18:17:39 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:25.616463",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "Pacific Gas and Electric Company",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "77b3a35dad09abaf14810f3675fcca40": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K897/400897605.PDF",
+    "title": "400897605",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400897605",
+    "metadata": {
+      "file_size": "305839",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 19:30:50 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:29.304973",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "CALIFORNIA WATER ASSOCIATION",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "605bfc17f318ae925ef8cf9ec548ffb7": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K897/400897600.PDF",
+    "title": "400897600",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400897600",
+    "metadata": {
+      "file_size": "223958",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 18:49:39 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:32.186620",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "Southern California Gas Company,San Diego Gas & Electric Company",
+    "description": "Reply Comments on Staff Proposal "
+  },
+  "d459c4223b6101139f46a849508e1710": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K580/400580064.PDF",
+    "title": "400580064",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400580064",
+    "metadata": {
+      "file_size": "200997",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 20:03:15 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:32.805890",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "c4e6cd609e566f3cccf12894cf87faab": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K897/400897606.PDF",
+    "title": "400897606",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400897606",
+    "metadata": {
+      "file_size": "293267",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 19:37:21 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:35.807161",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "National Diversity Coalition",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "26f5993596ad08b0d96488405fcc1b7a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K580/400580063.PDF",
+    "title": "400580063",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400580063",
+    "metadata": {
+      "file_size": "338602",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 19:25:14 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:36.121302",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "BuildOUT California",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "ea00bed392f646b17425db89c6b2c0c6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K534/397534902.PDF",
+    "title": "397534902",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "08/06/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397534902",
+    "metadata": {
+      "file_size": "332503",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 06 Aug 2021 18:21:01 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:39.329851",
+      "timeout_used": 10
+    },
+    "filing_date": "08/06/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-MAIL RULING GRANTING MOTION FOR PARTY STATUS FILED BY HISPANICS IN ENERGY"
+  },
+  "09cd451b63c188446f9a50613a98c91f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K262/397262242.PDF",
+    "title": "397262242",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397262242",
+    "metadata": {
+      "file_size": "276486",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 21:05:45 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:42.156443",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "Comments on Staff Proposal"
+  },
+  "c830bf6fdf6997c20999283d2e210446": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K495/397495986.PDF",
+    "title": "397495986",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397495986",
+    "metadata": {
+      "file_size": "242720",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 13:44:58 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:42.495896",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "National Diversity Coalition",
+    "description": "OPENING COMMENTS ON THE STAFF PROPOSAL"
+  },
+  "e6bb42dd746d8e9c8e13fb9931d04168": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K775/397775948.PDF",
+    "title": "397775948",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397775948",
+    "metadata": {
+      "file_size": "234571",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 22:55:09 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:45.419045",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "Comcast Phone of California, LLC",
+    "description": "Comments on the Assigned Commissioner\u2019s Scoping Memo and Ruling and the Administrative Law Judge\u2019s Ruling"
+  },
+  "9e21c0f6fa666ade990c6c64e3789b78": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K288/397288323.PDF",
+    "title": "397288323",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397288323",
+    "metadata": {
+      "file_size": "160569",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 21:31:02 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:45.899380",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "Shell Energy North America (US), L.P.,The Alliance for Retail Energy Markets",
+    "description": "Opening Comments on Staff Proposal"
+  },
+  "3276a1fc8d8cf6b8712564f6f003e812": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K775/397775955.PDF",
+    "title": "397775955",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397775955",
+    "metadata": {
+      "file_size": "378955",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 13:38:25 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:48.938043",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "COMMENTS ON STAFF PROPOSAL, WORKSHOP, AND ADDITIONAL QUESTIONS"
+  },
+  "85b051c5d5eadda8ba3aca429717a622": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K288/397288331.PDF",
+    "title": "397288331",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397288331",
+    "metadata": {
+      "file_size": "190617",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 23:03:04 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:49.292694",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "Sierra Telephone Company, Inc.",
+    "description": "Comments on the Assigned Commissioner\u2019s Scoping Memo and Ruling and the Administrative Law Judge\u2019s Ruling"
+  },
+  "299824b7bbb20689dca235609499647a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M396/K370/396370096.PDF",
+    "title": "396370096",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=396370096",
+    "metadata": {
+      "file_size": "338816",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 20:34:26 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:52.834377",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "California Choice Energy Authority",
+    "description": "Opening Comments on Staff Proposal"
+  },
+  "aa3950811fe19ab8de892534f16162a6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K262/397262247.PDF",
+    "title": "397262247",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397262247",
+    "metadata": {
+      "file_size": "217272",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 22:45:15 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:53.081635",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "Southern California Edison Company",
+    "description": "Comments on the Assigned Commissioner\u2019s Scoping Memo and Ruling and the Administrative Law Judge\u2019s Ruling"
+  },
+  "d2262f8065b6d0de45f601660f492d20": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K288/397288332.PDF",
+    "title": "397288332",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397288332",
+    "metadata": {
+      "file_size": "431525",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 23:07:46 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:56.308632",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "BuildOUT California",
+    "description": "Comments on the Assigned Commissioner\u2019s Scoping Memo and Ruling and the Administrative Law Judge\u2019s Ruling"
+  },
+  "6b77e6aa66176f3290d002c36945258c": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K288/397288340.PDF",
+    "title": "397288340",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397288340",
+    "metadata": {
+      "file_size": "250588",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 15:26:19 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:56.384042",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "Great Oaks Water Company",
+    "description": "Comments on Staff Proposal"
+  },
+  "e47e24af771dbff4e4f08fbfc029f370": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K312/397312150.PDF",
+    "title": "397312150",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397312150",
+    "metadata": {
+      "file_size": "240245",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 13:26:40 GMT",
+      "analysis_timestamp": "2025-07-28T05:31:59.557976",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "Southwest Gas Corporation",
+    "description": "COMMENTS ON THE STAFF PROPOSAL TO REVISE GENERAL ORDER 156 FOR THE SUPPLIER DIVERSITY PROGRAM, SUBSEQUENT WORKSHOP, AND QUESTIONS PRESENTED"
+  },
+  "cb44a9b839d3e758f27ae2d7796ad8b9": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K288/397288319.PDF",
+    "title": "397288319",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397288319",
+    "metadata": {
+      "file_size": "509568",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 20:29:05 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:00.001823",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "CALIFORNIA WATER ASSOCIATION",
+    "description": "Comments on Workshop, Staff Proposal, and Questions Presented"
+  },
+  "c2c89150645c0b710de0b72c0451d2d7": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K529/397529710.PDF",
+    "title": "397529710",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397529710",
+    "metadata": {
+      "file_size": "209141",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 20:39:30 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:03.274629",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "Center for Accessible Technology",
+    "description": "Comments on Staff Proposal"
+  },
+  "fc5d066d333ee8b07d983a8929d98d26": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K534/397534924.PDF",
+    "title": "397534924",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/09/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397534924",
+    "metadata": {
+      "file_size": "231381",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 09 Aug 2021 15:05:25 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:03.275632",
+      "timeout_used": 10
+    },
+    "filing_date": "08/09/2021",
+    "filed_by": "Charter Fiberlink CA-CCO, LLC,Time Warner Cable Information Services (California), LLC,Bright House Networks Information Services (California), LLC",
+    "description": "JOINT COMMENTS ON STAFF PROPOSAL"
+  },
+  "ea22a7e381060ce79818f08f52b8b3a1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M398/K929/398929659.PDF",
+    "title": "398929659",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "08/10/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=398929659",
+    "metadata": {
+      "file_size": "113351",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 10 Aug 2021 23:37:23 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:09.693875",
+      "timeout_used": 10
+    },
+    "filing_date": "08/10/2021",
+    "filed_by": "MCI Communications Services LLC,XO Communications Services,Cellco Partnership",
+    "description": "Motion for Party Status of MCI Communications Services LLC (U 5378 C), XOCommunications Services (U 5553 C), and Cellco Partnership (U 3001 C)"
+  },
+  "832402d88feacf41dbe7f325f70970cc": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M398/K225/398225100.PDF",
+    "title": "398225100",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "08/06/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=398225100",
+    "metadata": {
+      "file_size": "298299",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 06 Aug 2021 23:03:11 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:12.746925",
+      "timeout_used": 10
+    },
+    "filing_date": "08/06/2021",
+    "filed_by": "Hispanics In Energy",
+    "description": "of intent to claim intervenor compensation"
+  },
+  "e931143b12bc5bf074ce0b9276b94c10": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M396/K667/396667284.PDF",
+    "title": "396667284",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=396667284",
+    "metadata": {
+      "file_size": "192289",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 19:54:16 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:13.090775",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "Hispanics In Energy",
+    "description": "COMMENTS TO STAFF PROPOSAL TO REVISE GENERAL ORDER 156 FOR THE SUPPLIER DIVERSITY PROGRAM"
+  },
+  "0aa91969faa876a904f275f540f7f4f3": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K529/397529720.PDF",
+    "title": "397529720",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397529720",
+    "metadata": {
+      "file_size": "181317",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 15:02:13 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:16.206420",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "Hispanics In Energy",
+    "description": "Motion for Party Status of Hispanics In Energy"
+  },
+  "8006f11bd40f9867587211055ab8cc8c": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K775/397775954.PDF",
+    "title": "397775954",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397775954",
+    "metadata": {
+      "file_size": "209924",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 13:32:50 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:16.793921",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "San Diego Gas & Electric Company,Southern California Gas Company",
+    "description": "JOINT COMMENTS TO THE STAFF PROPOSAL TO REVISE GENERAL ORDER 156 FOR THE SUPPLIER DIVERSITY PROGRAM AND WORKSHOP"
+  },
+  "a7a94933460faf20b14a18206558df95": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K529/397529715.PDF",
+    "title": "397529715",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/04/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397529715",
+    "metadata": {
+      "file_size": "153535",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Aug 2021 23:10:35 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:19.762999",
+      "timeout_used": 10
+    },
+    "filing_date": "08/04/2021",
+    "filed_by": "Cox California Telcom, LLC",
+    "description": "Comments on the Assigned Commissioner\u2019s Scoping Memo and Ruling and the Administrative Law Judge\u2019s Ruling"
+  },
+  "cbc36f907f86b8a0a55d5fe409102950": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K312/397312114.PDF",
+    "title": "397312114",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "08/03/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397312114",
+    "metadata": {
+      "file_size": "179136",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 03 Aug 2021 16:21:59 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:20.131522",
+      "timeout_used": 10
+    },
+    "filing_date": "08/03/2021",
+    "filed_by": "Alliance for Retail Energy Markets",
+    "description": "Motion for Party Status of Alliance for Retail Energy Markets"
+  },
+  "0a85b2c314b6659b37029a9a8e08c278": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K534/397534845.PDF",
+    "title": "397534845",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "08/03/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397534845",
+    "metadata": {
+      "file_size": "490089",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 03 Aug 2021 23:09:09 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:23.099275",
+      "timeout_used": 10
+    },
+    "filing_date": "08/03/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-Mail Ruling granting Alliance for Retail Energy Markets motion for party status."
+  },
+  "6beafb91677fd20d65a4f9b9b1217fb5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M394/K797/394797024.PDF",
+    "title": "394797024",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "07/23/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=394797024",
+    "metadata": {
+      "file_size": "308315",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 23 Jul 2021 23:51:46 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:23.832015",
+      "timeout_used": 10
+    },
+    "filing_date": "07/23/2021",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "of intent to claim intervenor compensation"
+  },
+  "1953c5c9eaf24f3ddbbb0d79b12ff1bc": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M393/K925/393925632.PDF",
+    "title": "393925632",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "07/21/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=393925632",
+    "metadata": {
+      "file_size": "292184",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 21 Jul 2021 21:36:44 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:26.940310",
+      "timeout_used": 10
+    },
+    "filing_date": "07/21/2021",
+    "filed_by": "Center for Accessible Technology",
+    "description": "of intent to claim intervenor compensation"
+  },
+  "7a8efcffdfdc3a6131b5209e59135e81": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M393/K926/393926571.PDF",
+    "title": "393926571",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "07/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=393926571",
+    "metadata": {
+      "file_size": "218645",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 19 Jul 2021 17:05:42 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:27.649460",
+      "timeout_used": 10
+    },
+    "filing_date": "07/19/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "EMAIL RULING ISSUING STAFF PROPOSAL AND ENTERING THE STAFF PROPOSAL INTO THE RECORD"
+  },
+  "2464d9c3a2ac4319850126586ed10a22": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M392/K633/392633772.PDF",
+    "title": "392633772",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "07/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=392633772",
+    "metadata": {
+      "file_size": "218082",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Jul 2021 21:07:27 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:30.535968",
+      "timeout_used": 10
+    },
+    "filing_date": "07/12/2021",
+    "filed_by": "National Diversity Coalition",
+    "description": "of intent to claim intervenor compensation"
+  },
+  "a1438be56f2e96616a1b4f52eeb37f33": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M392/K633/392633769.PDF",
+    "title": "392633769",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "07/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=392633769",
+    "metadata": {
+      "file_size": "231804",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Jul 2021 20:03:58 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:31.179481",
+      "timeout_used": 10
+    },
+    "filing_date": "07/12/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-Mail Ruling noticing Public Workshop (Virtual) July 21, 2021."
+  },
+  "72843c1a85afc70aa22452b6ee6849c5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M390/K928/390928845.PDF",
+    "title": "390928845",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "07/08/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=390928845",
+    "metadata": {
+      "file_size": "135049",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 08 Jul 2021 12:37:25 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:34.138780",
+      "timeout_used": 10
+    },
+    "filing_date": "07/08/2021",
+    "filed_by": "National Diversity Coalition",
+    "description": "NOTICE OF SUBSTITUTION OF COUNSEL "
+  },
+  "112182538caed052fb608c958cdda199": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M389/K505/389505559.PDF",
+    "title": "389505559",
+    "document_type": "E-Filed: Scoping Ruling",
+    "pdf_creation_date": "06/25/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=389505559",
+    "metadata": {
+      "file_size": "301472",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 25 Jun 2021 20:01:11 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:34.593355",
+      "timeout_used": 10
+    },
+    "filing_date": "06/25/2021",
+    "filed_by": "CMMR/RECHTSCHAFFEN/CPUC",
+    "description": "ASSIGNED COMMISSIONER\u2019S SCOPING MEMO AND RULING. The scope of this proceeding is described above. The schedule of this proceeding is as set forth. Evidentiary Hearings are not needed. The category of the proceeding is quasi-legislative."
+  },
+  "977797b10d209554acae4248d6e9b787": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M379/K995/379995112.PDF",
+    "title": "379995112",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "04/26/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=379995112",
+    "metadata": {
+      "file_size": "236218",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 26 Apr 2021 21:43:10 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:37.692581",
+      "timeout_used": 10
+    },
+    "filing_date": "04/26/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-Mail Ruling granting motion for party status of Valley Business Alliance dba Los Angeles Gay and Lesbian Chamber of Commerce."
+  },
+  "e3e8a426556fe153ac4926eb64854a96": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M379/K733/379733936.PDF",
+    "title": "379733936",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/27/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=379733936",
+    "metadata": {
+      "file_size": "237837",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 27 Apr 2021 15:00:27 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:38.123086",
+      "timeout_used": 10
+    },
+    "filing_date": "04/27/2021",
+    "filed_by": "Southern California Gas Company,San Diego Gas & Electric Company",
+    "description": "JOINT REPLY COMMENTS TO THE ADMINISTRATIVE LAW JUDGE\u2019S RULING DIRECTING OPENING COMMENTS ON THE SUPPLIER DIVERSITY"
+  },
+  "ff830d4189b3a04d6b4508fbe0d16c0d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K729/377729012.PDF",
+    "title": "377729012",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/14/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377729012",
+    "metadata": {
+      "file_size": "175832",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 14 Apr 2021 16:41:00 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:41.206898",
+      "timeout_used": 10
+    },
+    "filing_date": "04/14/2021",
+    "filed_by": "National LGBT Chamber of Commerce",
+    "description": "Comments on Order Instituting Rulemaking. [ALJ DeAngelis granted the acceptance of this late filing via email sent on April 14, 2021]"
+  },
+  "cc815cd56d2bca45d3ddb2c121e617a2": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K556/377556997.PDF",
+    "title": "377556997",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "04/13/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377556997",
+    "metadata": {
+      "file_size": "272738",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Apr 2021 18:18:19 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:41.777140",
+      "timeout_used": 10
+    },
+    "filing_date": "04/13/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-Mail Ruling granting motion for party status by Disability:IN."
+  },
+  "40e138bd1d0da8205da86221479df9de": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K571/377571547.PDF",
+    "title": "377571547",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "04/13/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377571547",
+    "metadata": {
+      "file_size": "242515",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Apr 2021 17:07:08 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:44.796322",
+      "timeout_used": 10
+    },
+    "filing_date": "04/13/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "EMAIL RULING GRANTING MOTION FOR PARTY STATUS BY NATIONAL LGBT CHAMBER OF COMMERCE"
+  },
+  "36ea6505cece2561898fef52e76b21b1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K544/377544450.PDF",
+    "title": "377544450",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377544450",
+    "metadata": {
+      "file_size": "352627",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 21:24:15 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:45.415947",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "CALIFORNIA WATER ASSOCIATION",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "b5181fe5a95b33d26d04ffa0145b2af5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K556/377556977.PDF",
+    "title": "377556977",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377556977",
+    "metadata": {
+      "file_size": "181906",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 23:07:58 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:48.543437",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "Disability:IN",
+    "description": "Motion for Party Status of Disability:IN"
+  },
+  "200883fdca6e77463cf1290611ac891c": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K556/377556968.PDF",
+    "title": "377556968",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377556968",
+    "metadata": {
+      "file_size": "173503",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 22:17:54 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:48.800387",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "Shell Energy North America (US), L.P.",
+    "description": "Opening Comments on Order Instituting Rulemaking"
+  },
+  "8cc63e6619b292c2d23a6ca9bb7d5036": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K770/376770467.PDF",
+    "title": "376770467",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376770467",
+    "metadata": {
+      "file_size": "436595",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 21:03:07 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:52.165690",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "Center for Accessible Technology",
+    "description": "Opening Comments on Order Instituting Rulemaking"
+  },
+  "7d7921e990ed11a035ef5a29a9706014": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K556/377556988.PDF",
+    "title": "377556988",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/13/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377556988",
+    "metadata": {
+      "file_size": "1269005",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Apr 2021 15:10:59 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:55.101816",
+      "timeout_used": 10
+    },
+    "filing_date": "04/13/2021",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "56b0091073a673427a8613358d08b010": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K696/376696559.PDF",
+    "title": "376696559",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/13/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376696559",
+    "metadata": {
+      "file_size": "249657",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Apr 2021 14:53:04 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:55.867860",
+      "timeout_used": 10
+    },
+    "filing_date": "04/13/2021",
+    "filed_by": "Pacific Bell Telephone Company,AT&T Corp.,SBC Long Distance, LLC,AT&T Mobility Wireless Operations Holdings, Inc.,New Cingular Wireless PCS, LLC,Santa Barbara Cellular Systems, Ltd.,Frontier California Inc.,Citizens Telecommunications Company of California Inc.,Frontier Communications of the Southwest Inc.",
+    "description": "Joint Opening Comments on Order Instituting Rulemaking"
+  },
+  "10949aad50f44d2a49cd5c4d5ba10b32": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K556/377556973.PDF",
+    "title": "377556973",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377556973",
+    "metadata": {
+      "file_size": "189748",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 22:33:16 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:58.641412",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "Bear Valley Electric Service, Inc.,PacifiCorp,Liberty Utilities (CalPeco Electric) LLC,Southwest Gas Corporation",
+    "description": "Joint Comments on Order Instituting Rulemaking"
+  },
+  "b2382ed0a157149811b0e986a44d20a5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K391/377391018.PDF",
+    "title": "377391018",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377391018",
+    "metadata": {
+      "file_size": "199651",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 22:27:15 GMT",
+      "analysis_timestamp": "2025-07-28T05:32:59.653955",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "Southern California Edison Company",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "1e2b5441fe4f77c160d518d76bdb67b1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K498/376498674.PDF",
+    "title": "376498674",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376498674",
+    "metadata": {
+      "file_size": "231361",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 21:18:17 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:02.240710",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "San Diego Gas & Electric Company,Southern California Gas Company",
+    "description": "Opening Comments on Order Instituting Rulemaking"
+  },
+  "850fdafb8939d5a8b3b35676576e847e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K770/376770469.PDF",
+    "title": "376770469",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376770469",
+    "metadata": {
+      "file_size": "202985",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 21:11:01 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:02.953336",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "Sierra Telephone Company, Inc.",
+    "description": "Opening Comments on Order Instituting Rulemaking"
+  },
+  "2a3fecc6f563053044c54c23e6f277ea": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K391/377391005.PDF",
+    "title": "377391005",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377391005",
+    "metadata": {
+      "file_size": "422632",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 20:58:32 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:05.842738",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "National Diversity Coalition",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "c2208b28220d5708a66c5d04b4bed82a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K743/376743402.PDF",
+    "title": "376743402",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "04/10/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376743402",
+    "metadata": {
+      "file_size": "72321",
+      "content_type": "application/pdf",
+      "last_modified": "Sat, 10 Apr 2021 14:28:56 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:06.393760",
+      "timeout_used": 10
+    },
+    "filing_date": "04/10/2021",
+    "filed_by": "Valley Business Alliance",
+    "description": "Motion for Party Status of Valley Business Alliance"
+  },
+  "9c585e371628c7a96ecec14761373ab6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K501/376501708.PDF",
+    "title": "376501708",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376501708",
+    "metadata": {
+      "file_size": "160627",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 20:15:47 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:09.462856",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "National LGBT Chamber of Commerce",
+    "description": "Motion for Party Status of National LGBT Chamber of Commerce (NGLCC)"
+  },
+  "05131498a6248ca2b8c89a34f0bd3407": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K537/377537973.PDF",
+    "title": "377537973",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377537973",
+    "metadata": {
+      "file_size": "153537",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 18:53:32 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:09.869366",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "Pacific Gas and Electric Company",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "0006a1d4b3212b4c7f43f3e22cb89117": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K743/376743412.PDF",
+    "title": "376743412",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376743412",
+    "metadata": {
+      "file_size": "255111",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 15:42:16 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:12.985165",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "BuildOUT California",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "723bf8cfc494d52ce67fdfe5f22391a5": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K556/377556984.PDF",
+    "title": "377556984",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/13/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377556984",
+    "metadata": {
+      "file_size": "162927",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Apr 2021 15:01:28 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:13.257454",
+      "timeout_used": 10
+    },
+    "filing_date": "04/13/2021",
+    "filed_by": "Cox California Telcom, LLC",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "3380212d92543e109af9986596bdc62a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K538/377538000.PDF",
+    "title": "377538000",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/13/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377538000",
+    "metadata": {
+      "file_size": "163209",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Apr 2021 15:10:29 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:16.546758",
+      "timeout_used": 10
+    },
+    "filing_date": "04/13/2021",
+    "filed_by": "Charter Fiberlink CA-CCO, LLC,Time Warner Cable Information Services (California), LLC,Bright House Networks Information Services (California), LLC",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "10c44b27a5b519845eb2c5ca873b2f49": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M377/K391/377391019.PDF",
+    "title": "377391019",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/12/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=377391019",
+    "metadata": {
+      "file_size": "293696",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Apr 2021 22:34:57 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:16.935602",
+      "timeout_used": 10
+    },
+    "filing_date": "04/12/2021",
+    "filed_by": "California Choice Energy Authority,City of Baldwin Park,City of Lancaster,City of Pico Rivera,City of Palmdale,City of Pomona,City of Rancho Mirage,City of San Jacinto,City of Santa Barbara,Town of Apple Valley",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "fe2501f28e5ba966feb78d95d2fdfe59": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M379/K755/379755513.PDF",
+    "title": "379755513",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/23/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=379755513",
+    "metadata": {
+      "file_size": "233330",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 23 Apr 2021 19:34:49 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:20.141515",
+      "timeout_used": 10
+    },
+    "filing_date": "04/23/2021",
+    "filed_by": "Great Oaks Water Company",
+    "description": "Comments on Order Instituting Rulemaking and Preliminary Scoping Memo"
+  },
+  "0de9cb10d4e185a37994e1dcd2c3d65e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M376/K770/376770483.PDF",
+    "title": "376770483",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/13/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=376770483",
+    "metadata": {
+      "file_size": "258111",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 13 Apr 2021 15:04:34 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:20.480957",
+      "timeout_used": 10
+    },
+    "filing_date": "04/13/2021",
+    "filed_by": "Comcast Phone of California, LLC",
+    "description": "Comments on Order Instituting Rulemaking"
+  },
+  "9c14c3f639861874403a62e2056783cc": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M374/K628/374628590.PDF",
+    "title": "374628590",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "04/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=374628590",
+    "metadata": {
+      "file_size": "295072",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 05 Apr 2021 19:31:29 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:23.680274",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-mail Ruling Granting Motion of BuildOut California for Party Status."
+  },
+  "2f080bf3200a8fb9e4ee427d79c8058e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M373/K420/373420280.PDF",
+    "title": "373420280",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "03/24/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=373420280",
+    "metadata": {
+      "file_size": "128819",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 24 Mar 2021 19:22:38 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:23.934490",
+      "timeout_used": 10
+    },
+    "filing_date": "03/24/2021",
+    "filed_by": "CALJ/SIMON/CPUC",
+    "description": "NOTICE OF ASSIGNMENT. Rulemaking 21-03-010 is being assigned to Commissioner Clifford Rechtschaffen and Administrative Law Judge Regina DeAngelis."
+  },
+  "b99fd6779f98c16aa751baecea89c4dc": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M375/K483/375483755.PDF",
+    "title": "375483755",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "04/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=375483755",
+    "metadata": {
+      "file_size": "240433",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 05 Apr 2021 16:58:23 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:27.337948",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2021",
+    "filed_by": "BuildOUT California",
+    "description": "Motion for Party Status of BuildOUT California"
+  },
+  "56de407b9334614893831f0e24f360f8": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M373/K321/373321411.PDF",
+    "title": "373321411",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "03/23/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=373321411",
+    "metadata": {
+      "file_size": "1092506",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 23 Mar 2021 17:42:24 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:27.430751",
+      "timeout_used": 10
+    },
+    "filing_date": "03/23/2021",
+    "filed_by": "CPUC",
+    "description": "Order Instituting Rulemaking to Revise General Order 156 to Include Certain Electric Service Providers and Community Choice Aggregators and Encourage Voluntary Participation by Other Non-Utility Entities Pursuant to Senate Bill 255; Consider LGBT Business Enterprise Voluntary Target Procurement Percentage Goals; Incorporate Disabled Business Enterprises; Modify the Required Reports and Audits; and Update Other Related Matters."
+  },
+  "fb7ca95bc85a6d407ab8e3c7a52d989c": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M466/K763/466763057.pdf",
+    "title": "466763057",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "04/08/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.21-03-010",
+    "metadata": {
+      "file_size": "652871",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 08 Apr 2022 21:44:38 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:28.210811",
+      "timeout_used": 10
+    },
+    "search_query": "R.21-03-010"
+  },
+  "538cb189fc34957019eae7e452e20af2": {
+    "url": "https://www.cpuc.ca.gov/-/media/cpuc-website/divisions/news-and-outreach/documents/bco/go-156-d22-04-035.pdf",
+    "title": "go 156 d22 04 035",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "10/12/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.21-03-010",
+    "metadata": {
+      "file_size": "422415",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 12 Oct 2023 23:09:00 GMT",
+      "analysis_timestamp": "2025-07-28T05:33:30.099662",
+      "timeout_used": 10
+    },
+    "search_query": "R.21-03-010"
+  },
+  "d5d6c1e067fb4ebdb628864ec1224e5a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M566/K581/566581697.PDF",
+    "title": "566581697",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "05/27/2025",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=566581697",
+    "metadata": {
+      "file_size": "844743",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 27 May 2025 15:36:00 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:02.006207",
+      "timeout_used": 10
+    },
+    "filing_date": "05/27/2025",
+    "filed_by": NaN,
+    "description": "Decision D2505021 - Decision Granting Intervenor Compensation To Small Business Utility Advocates For Substantial Contribution To Decision 24-09-035."
+  },
+  "37f8894b10a434bbcfbc9464a671e61e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M547/K538/547538527.PDF",
+    "title": "547538527",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "11/27/2024",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=547538527",
+    "metadata": {
+      "file_size": "566889",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 27 Nov 2024 22:50:10 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:02.698962",
+      "timeout_used": 10
+    },
+    "filing_date": "11/27/2024",
+    "filed_by": "National Diversity Coalition",
+    "description": "for intervenor compensation for contribution to D24-09-035"
+  },
+  "96103dcd5c7164b055bcdb02ece7014e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M520/K557/520557659.PDF",
+    "title": "520557659",
+    "document_type": "Agenda Decision",
+    "pdf_creation_date": "10/17/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=520557659",
+    "metadata": {
+      "file_size": "719759",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 17 Oct 2023 01:36:51 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:05.378364",
+      "timeout_used": 10
+    },
+    "filing_date": "10/23/2023",
+    "filed_by": NaN,
+    "description": "Decision D2311037 - Decision Granting Compensation To The Center For Accessible Technology For Substantial Contribution To Decision 22-04-035."
+  },
+  "873e588163ef3e9b6076b608d31ba636": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K680/501680032.PDF",
+    "title": "501680032",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/31/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501680032",
+    "metadata": {
+      "file_size": "643514",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 31 Jan 2023 00:49:15 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:06.299064",
+      "timeout_used": 10
+    },
+    "filing_date": "01/30/2023",
+    "filed_by": "Alliance for Retail Energy Markets",
+    "description": "REPLY COMMENTS OF THE ALLIANCE FOR RETAIL ENERGY MARKETS IN RESPONSE TO ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "8437e5a66cc5b6b80f748ef3b926d72f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M501/K145/501145598.PDF",
+    "title": "501145598",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "01/17/2023",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=501145598",
+    "metadata": {
+      "file_size": "299003",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 17 Jan 2023 16:21:26 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:08.969747",
+      "timeout_used": 10
+    },
+    "filing_date": "01/17/2023",
+    "filed_by": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "CALIFORNIA COMMUNITY CHOICE ASSOCIATION\u2019S COMMENTS ON ADMINISTRATIVE LAW JUDGE\u2019S RULING REGARDING PHASE 2"
+  },
+  "55763ea51bb8d912e699770ff211d9f0": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M465/K574/465574402.PDF",
+    "title": "465574402",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "04/06/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=465574402",
+    "metadata": {
+      "file_size": "138634",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 06 Apr 2022 23:33:47 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:09.473303",
+      "timeout_used": 10
+    },
+    "filing_date": "04/06/2022",
+    "filed_by": "Shell Energy North America (US), L.P.",
+    "description": "NOTICE OF SUBSTITUTION OF COUNSEL "
+  },
+  "90be871f9dfe379cc01591ac57e98854": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M461/K182/461182795.PDF",
+    "title": "461182795",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "03/22/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=461182795",
+    "metadata": {
+      "file_size": "616558",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 22 Mar 2022 14:53:28 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:12.580294",
+      "timeout_used": 10
+    },
+    "filing_date": "03/22/2022",
+    "filed_by": "ALJ/DeANGELIS/CPUC",
+    "description": "E-MAIL RULING GRANTING REGENTS OF THE UNIVERSITY OF CALIFORNIA MOTION FOR PARTY STATUS AND ACCEPTING REPLY COMMENTS"
+  },
+  "b273a1fd88196217266f83637eb768ba": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M454/K982/454982020.PDF",
+    "title": "454982020",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/02/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=454982020",
+    "metadata": {
+      "file_size": "174086",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 02 Mar 2022 15:37:52 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:13.227003",
+      "timeout_used": 10
+    },
+    "filing_date": "03/02/2022",
+    "filed_by": "Comcast Phone of California, LLC",
+    "description": "Opening Comments on Proposed Decision"
+  },
+  "ae2f1e4e59d16c1687952b4d390bc1aa": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M451/K412/451412189.PDF",
+    "title": "451412189",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "02/15/2022",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=451412189",
+    "metadata": {
+      "file_size": "5739200",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 15 Feb 2022 14:34:05 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:16.340778",
+      "timeout_used": 10
+    },
+    "filing_date": "02/15/2022",
+    "filed_by": "Shell Energy North America (US), L.P.",
+    "description": "NOTICE OF CHANGE OF NAME"
+  },
+  "4de17894119aa1fb743c444d78bedb08": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M406/K286/406286657.PDF",
+    "title": "406286657",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "09/10/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=406286657",
+    "metadata": {
+      "file_size": "276572",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 10 Sep 2021 17:10:37 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:16.997078",
+      "timeout_used": 10
+    },
+    "filing_date": "09/10/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-MAIL RULING NOTICING WORKSHOP ON SEPTEMBER 22, 2021. This email ruling serves to notice a workshop in this proceeding by Staff of the California Public Utilities Commission (Commission) to be held remotely on September 22, 2021 at 9:00 a.m."
+  },
+  "d5417c723950e67e96bdc3ef6ed564ae": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M401/K076/401076596.PDF",
+    "title": "401076596",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=401076596",
+    "metadata": {
+      "file_size": "197330",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 18:30:20 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:21.208652",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "Southern California Edison Company",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "5ec61234808bcb955893c1d9e7f82524": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M400/K642/400642087.PDF",
+    "title": "400642087",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=400642087",
+    "metadata": {
+      "file_size": "220256",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 19:54:50 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:21.411166",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "California Choice Energy Authority",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "6ba2f129a09ed5aefd7ed54143fb99cd": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M399/K893/399893766.PDF",
+    "title": "399893766",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/19/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=399893766",
+    "metadata": {
+      "file_size": "175370",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Aug 2021 19:07:08 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:24.836673",
+      "timeout_used": 10
+    },
+    "filing_date": "08/19/2021",
+    "filed_by": "Center for Accessible Technology",
+    "description": "Reply Comments on Staff Proposal"
+  },
+  "d5f953a960bbeb24a3b935bccfd65fbc": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M399/K893/399893746.PDF",
+    "title": "399893746",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/18/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=399893746",
+    "metadata": {
+      "file_size": "214674",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 18 Aug 2021 14:01:43 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:25.052150",
+      "timeout_used": 10
+    },
+    "filing_date": "08/18/2021",
+    "filed_by": "Small Business Utility Advocates",
+    "description": "REPLY COMMENTS ON STAFF PROPOSAL TO REVISE GENERAL ORDER 156 FOR THE SUPPLIER DIVERSITY PROGRAM"
+  },
+  "cf5d7491340e33ff8cbc67d2d8b81f67": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M398/K052/398052766.PDF",
+    "title": "398052766",
+    "document_type": "E-Filed: Ruling",
+    "pdf_creation_date": "08/11/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=398052766",
+    "metadata": {
+      "file_size": "337018",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 11 Aug 2021 16:58:02 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:28.530250",
+      "timeout_used": 10
+    },
+    "filing_date": "08/11/2021",
+    "filed_by": "ALJ/DEANGELIS/CPUC",
+    "description": "E-MAIL RULING GRANTING MOTION FOR PARTY STATUS BY MCI COMMUNICATIONS SERVICES LLC, XO COMMUNICATIONS SERVICES AND CELLCO PARTNERSHIP"
+  },
+  "db376d03565e873ec925c30012603b98": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M397/K529/397529733.PDF",
+    "title": "397529733",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/05/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=397529733",
+    "metadata": {
+      "file_size": "220520",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Aug 2021 20:55:39 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:28.695716",
+      "timeout_used": 10
+    },
+    "filing_date": "08/05/2021",
+    "filed_by": "Pacific Bell Telephone Company,AT&T Corp.,SBC Long Distance, LLC,AT&T Mobility Wireless Operations Holdings, Inc.,New Cingular Wireless PCS, LLC,Santa Barbara Cellular Systems, Ltd.",
+    "description": "Comments on the Assigned Commissioner\u2019s Scoping Memo and Ruling and the Administrative Law Judge\u2019s Ruling"
+  },
+  "a7deb1d28a301f5290bfab93ba93cd70": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M398/K046/398046704.PDF",
+    "title": "398046704",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/11/2021",
+    "scrape_date": "07/28/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=398046704",
+    "metadata": {
+      "file_size": "115963",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 11 Aug 2021 17:23:07 GMT",
+      "analysis_timestamp": "2025-07-28T10:25:32.014319",
+      "timeout_used": 10
+    },
+    "filing_date": "08/11/2021",
+    "filed_by": "MCI Communications Services LLC,XO Communications Services,Cellco Partnership",
+    "description": "Joint Comments on Staff Proposal to revise General Order 156 \u2013 Supplier Diversity Program."
+  }
+}

@@ -162,7 +162,7 @@ Common Issues:
 File Locations:
 --------------
 - Scraped Data: cpuc_csvs/
-- Vector Store: local_chroma_db/
+- Vector Store: local_lance_db/
 - Logs: standalone_scraper.log (scraper), app logs in terminal
 
 6. TYPICAL WORKFLOWS
@@ -219,7 +219,7 @@ App Logs:
 
 File System Monitoring:
 - cpuc_csvs/ for scraped data
-- local_chroma_db/ for vector stores
+- local_lance_db/ for vector stores
 - Check file sizes and timestamps
 
 9. ADVANCED USAGE

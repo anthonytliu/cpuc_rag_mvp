@@ -25,13 +25,13 @@ def test_config_system():
         print(f"✅ {proc_id} -> {display_name}")
     
     # Test file paths
-    for proc_id in ['R2207005', 'R2108025']:
+    for proc_id in ['R1202009', 'R2207005']:
         paths = config.get_proceeding_file_paths(proc_id)
         print(f"✅ {proc_id} vector DB: {paths['vector_db']}")
     
     # Test URL generation
-    urls = config.get_proceeding_urls('R2207005')
-    print(f"✅ R2207005 CPUC URL: {urls['cpuc_apex']}")
+    urls = config.get_proceeding_urls('R1202009')
+    print(f"✅ R1202009 CPUC URL: {urls['cpuc_apex']}")
     
     print("✅ Configuration system tests passed!\n")
 
@@ -39,7 +39,7 @@ def test_rag_system():
     """Test RAG system initialization with different proceedings"""
     print("🧪 Testing RAG system initialization...")
     
-    for proceeding in ['R2207005', 'R2108025']:
+    for proceeding in ['R1202009', 'R2207005']:
         try:
             # Initialize without processing existing data
             system = CPUCRAGSystem(current_proceeding=proceeding)

@@ -22,6 +22,51 @@ from startup_manager import create_startup_manager
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
+def get_available_proceedings_from_db():
+    """Get available proceedings from local_lance_db folder structure."""
+    try:
+        project_root = Path(__file__).parent
+        proceedings = []
+        
+        # Check multiple possible locations for LanceDB data
+        possible_db_paths = [
+            project_root / "local_lance_db",
+            project_root / "local_lance_db" / "local_lance_db"  # Handle nested directory bug
+        ]
+        
+        for db_path in possible_db_paths:
+            if not db_path.exists():
+                continue
+                
+            for folder in db_path.iterdir():
+                if folder.is_dir() and folder.name.startswith('R'):
+                    # Check if the folder has actual LanceDB data with content
+                    has_populated_data = False
+                    try:
+                        import lancedb
+                        db = lancedb.connect(str(folder))
+                        table_name = f"{folder.name}_documents"
+                        if table_name in db.table_names():
+                            table = db.open_table(table_name)
+                            if len(table.to_pandas()) > 0:
+                                has_populated_data = True
+                    except Exception:
+                        # Fallback: check for basic structure
+                        has_populated_data = any(
+                            item.suffix == '.lance' or 
+                            (item.is_dir() and any(item.iterdir())) 
+                            for item in folder.iterdir()
+                        )
+                    
+                    if has_populated_data and folder.name not in proceedings:
+                        proceedings.append(folder.name)
+        
+        return sorted(proceedings)
+    except Exception as e:
+        logger.error(f"Failed to get available proceedings: {e}")
+        return []
+
 st.set_page_config(page_title="CPUC Regulatory RAG", page_icon="⚖️", layout="wide")
 
 st.markdown("""
@@ -115,67 +160,10 @@ def execute_enhanced_startup_sequence() -> Dict:
         }
 
 
-def initialize_rag_system(selected_proceeding: str = None):
-    """Initialize the RAG system with proper launch sequence following spec."""
-    try:
-        # Use selected proceeding or default
-        if selected_proceeding is None:
-            from config import DEFAULT_PROCEEDING
-            selected_proceeding = st.session_state.get('selected_proceeding', DEFAULT_PROCEEDING)
-        
-        with st.spinner(f"Initializing RAG System for {selected_proceeding}..."):
-            # Step 1: Initialize system (this will load existing DB if available)
-            system = CPUCRAGSystem(current_proceeding=selected_proceeding)
-            
-            # Step 2: Check if we have a working vector store
-            if system.vectordb is not None:
-                try:
-                    chunk_count = system.vectordb._collection.count()
-                    if chunk_count > 0:
-                        logger.info(f"✅ Loaded existing vector store with {chunk_count} chunks")
-                        st.success(f"✅ RAG System Initialized with {chunk_count} existing chunks")
-                        
-                        # Document discovery has been moved to standalone_scraper.py
-                        logger.info("Skipping launch PDF check - use standalone_scraper.py for document discovery")
-                        
-                        return system
-                    else:
-                        logger.info("Vector store exists but is empty")
-                        st.info("Vector store exists but is empty. Checking for documents...")
-                except Exception as e:
-                    logger.warning(f"Vector store validation failed: {e}")
-                    st.warning("Vector store validation failed. Will rebuild if needed.")
-            
-            # Step 4: If no working vector store, check for scraped PDF history
-            from config import get_proceeding_file_paths
-            proceeding_paths = get_proceeding_file_paths(selected_proceeding)
-            scraped_pdf_history_path = proceeding_paths['scraped_pdf_history']
-            vector_db_path = proceeding_paths['vector_db']
-            document_hashes_path = proceeding_paths['document_hashes']
-            
-            # Check if we have any existing data to work with
-            has_scraped_history = scraped_pdf_history_path.exists() and scraped_pdf_history_path.stat().st_size > 10
-            has_vector_db = vector_db_path.exists() and any(vector_db_path.iterdir()) if vector_db_path.exists() else False
-            has_document_hashes = document_hashes_path.exists() and document_hashes_path.stat().st_size > 10
-            
-            if has_scraped_history or has_vector_db or has_document_hashes:
-                st.info("Found scraped PDF history. Building vector store from existing URLs...")
-                logger.info("No working vector store found, but scraped PDF history exists. Building from URLs...")
-                # The system will auto-build from scraped PDF history
-            else:
-                # Auto-scraping has been moved to standalone process
-                st.warning("📋 No existing data found.")
-                st.info("💡 **To get started:** Run `python standalone_scraper.py` to discover documents, then restart the application.")
-                st.code("python standalone_scraper.py", language="bash")
-                logger.info("No data found. Use standalone_scraper.py to discover documents.")
-            
-        return system
-    except Exception as e:
-        logger.error(f"Fatal error during RAG system initialization: {e}", exc_info=True)
-        st.error(f"Could not initialize RAG System: {e}")
-        return None
+# initialize_rag_system function removed - RAG system initialization is now handled by startup_manager.py
 
 # auto_initialize_with_scraper function removed - use standalone_scraper.py for document discovery
+# initialize_rag_system function removed - RAG system initialization is now handled by startup_manager.py
 
 @st.cache_resource
 def initialize_pdf_scheduler(_rag_system):
@@ -357,13 +345,71 @@ def main():
         
         return  # Don't continue until startup is complete
     
-    # Proceeding selector (showing current proceeding from startup)
+    # Proceeding selector dropdown
+    available_proceedings = get_available_proceedings_from_db()
     current_proceeding = st.session_state.get('current_proceeding', config.DEFAULT_PROCEEDING)
-    st.success(f"📋 **Active Proceeding:** {config.get_proceeding_display_name(current_proceeding)}")
     
-    # Get RAG system from session state
+    if available_proceedings:
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            # Ensure current proceeding is in the list
+            if current_proceeding not in available_proceedings:
+                if available_proceedings:
+                    current_proceeding = available_proceedings[0]
+                    st.session_state['current_proceeding'] = current_proceeding
+            
+            selected_proceeding = st.selectbox(
+                "📋 Select Active Proceeding",
+                options=available_proceedings,
+                index=available_proceedings.index(current_proceeding) if current_proceeding in available_proceedings else 0,
+                help="Select from available proceedings in local_lance_db",
+                key="proceeding_selector"
+            )
+        
+        with col2:
+            st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
+            if st.button("🔄 Refresh", help="Refresh available proceedings"):
+                st.cache_resource.clear()
+                st.rerun()
+        
+        # Check if proceeding changed
+        if selected_proceeding != current_proceeding:
+            logger.info(f"Proceeding changed from {current_proceeding} to {selected_proceeding}")
+            st.session_state['current_proceeding'] = selected_proceeding
+            st.session_state['proceeding_changed'] = True
+            
+            # Clear RAG system cache to force re-initialization
+            st.cache_resource.clear()
+            
+            # Show switching message and rerun
+            st.info(f"🔄 Switching to {selected_proceeding}...")
+            st.rerun()
+            
+        current_proceeding = selected_proceeding
+    else:
+        st.warning("📋 No proceedings found in local_lance_db")
+        st.info("💡 Use standalone_scraper.py and standalone_data_processor.py to create proceeding data")
+        current_proceeding = config.DEFAULT_PROCEEDING
+    
+    # Get RAG system from session state and handle proceeding changes
     rag_system = st.session_state.get('rag_system')
     minimal_mode = st.session_state.get('minimal_mode', False)
+    proceeding_changed = st.session_state.get('proceeding_changed', False)
+    
+    # Reinitialize RAG system if proceeding changed
+    if proceeding_changed or (rag_system and getattr(rag_system, 'current_proceeding', None) != current_proceeding):
+        try:
+            with st.spinner(f"Loading RAG system for {current_proceeding}..."):
+                from rag_core import CPUCRAGSystem
+                rag_system = CPUCRAGSystem(current_proceeding=current_proceeding)
+                st.session_state['rag_system'] = rag_system
+                st.session_state['proceeding_changed'] = False
+                st.success(f"✅ RAG system loaded for {current_proceeding}")
+        except Exception as e:
+            logger.error(f"Failed to initialize RAG system for {current_proceeding}: {e}")
+            st.error(f"Failed to load RAG system for {current_proceeding}: {e}")
+            rag_system = None
     
     if not rag_system and not minimal_mode:
         st.error("❌ RAG system not available. Please restart the application.")

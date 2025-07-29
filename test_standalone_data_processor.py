@@ -3,23 +3,20 @@
 End-to-End Tests for Standalone Data Processor
 
 Tests the complete pipeline from scraped PDF data to embeddings using
-existing R2207005 and R1807006 data. These tests are designed to be
-non-destructive and verify the entire data processing workflow.
+existing R1202009 data (smallest proceeding with 75 PDFs). These tests 
+are designed to be non-destructive and verify the entire data processing workflow.
 
 Author: Claude Code
 """
 
-import unittest
-import tempfile
-import shutil
 import json
 import logging
-import sys
 import os
-from pathlib import Path
-from typing import Dict, List
-from unittest.mock import patch, MagicMock
+import sys
+import unittest
 from io import StringIO
+from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 # Setup test logging
 logging.basicConfig(level=logging.INFO)
@@ -34,8 +31,8 @@ class TestStandaloneDataProcessorIntegration(unittest.TestCase):
         self.current_dir = Path('.')
         self.cpuc_proceedings_dir = self.current_dir / 'cpuc_proceedings'
         
-        # Test proceedings that should exist
-        self.test_proceedings = ['R2207005', 'R1807006']
+        # Test proceedings that should exist - using R1202009 as primary test case (smallest)
+        self.test_proceedings = ['R1202009']
         
     def test_cpuc_proceedings_structure_exists(self):
         """Test that the cpuc_proceedings directory structure exists"""
@@ -124,7 +121,11 @@ class TestStandaloneDataProcessorIntegration(unittest.TestCase):
             self.assertTrue(paths['proceeding_dir'].exists(), "Proceeding directory should exist")
             self.assertTrue(paths['documents_dir'].exists(), "Documents directory should exist") 
             self.assertTrue(paths['embeddings_dir'].exists(), "Embeddings directory should exist")
-            self.assertTrue(paths['scraped_pdf_history'].exists(), "Scraped PDF history should exist")
+            
+            # Check for scraped PDF history (either naming convention)
+            scraped_history_exists = (paths['scraped_pdf_history'].exists() or 
+                                    paths['scraped_pdf_history_alt'].exists())
+            self.assertTrue(scraped_history_exists, "Scraped PDF history should exist")
             
             print(f"   ✅ All config paths verified for {proceeding}")
 
@@ -282,11 +283,11 @@ class TestStandaloneDataProcessorIntegration(unittest.TestCase):
             paths = config.get_proceeding_file_paths(proceeding)
             vector_db_path = paths['vector_db']
             
-            # Verify vector DB is in root local_chroma_db directory
-            expected_root_path = Path('.') / 'local_chroma_db' / proceeding
+            # Verify vector DB is in root local_lance_db directory
+            expected_root_path = Path('.') / 'local_lance_db' / proceeding
             
             self.assertEqual(vector_db_path.resolve(), expected_root_path.resolve(),
-                           f"Vector DB should be in root local_chroma_db directory")
+                           f"Vector DB should be in root local_lance_db directory")
             
             print(f"   ✅ {proceeding} vector DB: {vector_db_path}")
             
@@ -375,9 +376,7 @@ class TestImprovedLoggingAndConsoleOutput(unittest.TestCase):
         import config
         config.DEBUG = False
         config.VERBOSE_LOGGING = False
-        
-        from standalone_data_processor import process_proceeding_documents
-        
+
         # Capture stdout
         captured_output = StringIO()
         

@@ -1,0 +1,26 @@
+{
+  "309df54a93bd07db6fefe6a5c9ddcefcfe1ab433600a5aeb88765a8159d5480d": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K886/566886171.PDF",
+    "title": "566886171",
+    "last_processed": "2025-07-28T19:42:30.128914",
+    "chunk_count": 5,
+    "total_chunks_processed": 5,
+    "success_rate": "100.0%"
+  },
+  "d662764a348aa32744e6951fb22d0febe451ac6cc2dc148fe7d6993f263deb2e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M571/K985/571985189.PDF",
+    "title": "571985189",
+    "last_processed": "2025-07-28T19:42:30.330957",
+    "chunk_count": 17,
+    "total_chunks_processed": 17,
+    "success_rate": "100.0%"
+  },
+  "46bd66c60345158be7ba19975156cc629dcfc9a78e558579961cf855b00dc402": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K911/566911513.PDF",
+    "title": "566911513",
+    "last_processed": "2025-07-28T19:42:40.075518",
+    "chunk_count": 201,
+    "total_chunks_processed": 201,
+    "success_rate": "100.0%"
+  }
+}

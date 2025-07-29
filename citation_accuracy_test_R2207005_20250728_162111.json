@@ -1,0 +1,55 @@
+{
+  "test_results": [
+    {
+      "query": "What are the main objectives of proceeding R.22-07-005?",
+      "error": "'CPUCRAGSystem' object has no attribute 'get_response'",
+      "citations": [],
+      "validation_results": [],
+      "metrics": {},
+      "response_time": 0,
+      "test_query_info": {
+        "question": "What are the main objectives of proceeding R.22-07-005?",
+        "category": "factual",
+        "expected_doc_types": [
+          "DECISION",
+          "RULING"
+        ],
+        "complexity": "simple",
+        "description": "Basic factual query about proceeding objectives"
+      }
+    },
+    {
+      "query": "What are the specific rate design requirements for multi-family housing mentioned in the decisions?",
+      "error": "'CPUCRAGSystem' object has no attribute 'get_response'",
+      "citations": [],
+      "validation_results": [],
+      "metrics": {},
+      "response_time": 0,
+      "test_query_info": {
+        "question": "What are the specific rate design requirements for multi-family housing mentioned in the decisions?",
+        "category": "factual",
+        "expected_doc_types": [
+          "DECISION",
+          "COMPLIANCE FILING"
+        ],
+        "complexity": "medium",
+        "description": "Specific factual details about rate requirements"
+      }
+    }
+  ],
+  "overall_metrics": {
+    "total_responses": 2,
+    "responses_with_citations": 0,
+    "total_citations": 0,
+    "valid_citations": 0,
+    "accessible_pdfs": 0,
+    "content_matches": 0,
+    "citation_coverage": 0.0,
+    "citation_accuracy": 0,
+    "citation_precision": 0,
+    "false_citation_rate": 0
+  },
+  "report": "================================================================================\nCITATION ACCURACY TEST REPORT - PROCEEDING R2207005\n================================================================================\nGenerated: 2025-07-28 16:21:11\nTotal Test Time: 2.01 seconds\n\nOVERALL METRICS:\n----------------------------------------\nTotal Responses: 2\nResponses with Citations: 0\nTotal Citations: 0\nValid Citations: 0\nContent Matches: 0\n\nCitation Coverage: 0.0%\nCitation Accuracy: 0.0%\nCitation Precision: 0.0%\nFalse Citation Rate: 0.0%\n\nDETAILED RESULTS BY CATEGORY:\n----------------------------------------\n\nFACTUAL Questions:\n  \u274c Simple: N/A accuracy\n     Question: What are the main objectives of proceeding R.22-07-005?...\n     \u274c ERROR: 'CPUCRAGSystem' object has no attribute 'get_response'\n  \u274c Medium: N/A accuracy\n     Question: What are the specific rate design requirements for multi-family housing mentione...\n     \u274c ERROR: 'CPUCRAGSystem' object has no attribute 'get_response'\n\nFAILURE ANALYSIS:\n----------------------------------------\nNo citation validation failures detected.\n\nRECOMMENDATIONS:\n----------------------------------------\n\u2022 LOW CITATION COVERAGE: Consider updating prompts to encourage more citations\n\u2022 LOW CITATION ACCURACY: Review citation generation logic for hallucination issues\n\u2022 LOW CITATION PRECISION: Improve content matching between citations and sources\n================================================================================",
+  "total_test_time": 2.0062990188598633,
+  "total_queries": 2
+}

@@ -43,7 +43,7 @@ class IncrementalEmbedder:
         self.proceeding = proceeding
         self.progress_callback = progress_callback
         
-        # Initialize RAG system
+        # Initialize RAG system - this will handle proper vector store path detection
         self.rag_system = CPUCRAGSystem(current_proceeding=proceeding)
         
         # Set up paths
@@ -52,6 +52,11 @@ class IncrementalEmbedder:
         
         # Initialize embedding status tracking
         self.embedding_status = self._load_embedding_status()
+        
+        # Ensure we use the same vector store directory as the RAG system
+        # This ensures consistency between loading and adding documents
+        if hasattr(self.rag_system, 'db_dir') and self.rag_system.db_dir:
+            logger.info(f"Using vector store directory: {self.rag_system.db_dir}")
         
         logger.info(f"Incremental embedder initialized for {proceeding}")
     
@@ -113,16 +118,23 @@ class IncrementalEmbedder:
     def _load_scraped_metadata(self) -> Dict:
         """Load scraped PDF metadata from JSON file."""
         try:
-            history_file = self.proceeding_paths['scraped_pdf_history']
+            # Try both naming conventions
+            history_file = None
+            if self.proceeding_paths['scraped_pdf_history'].exists():
+                history_file = self.proceeding_paths['scraped_pdf_history']
+            elif self.proceeding_paths['scraped_pdf_history_alt'].exists():
+                history_file = self.proceeding_paths['scraped_pdf_history_alt']
             
-            if not history_file.exists():
-                logger.warning(f"No scraped metadata file found: {history_file}")
+            if history_file is None:
+                logger.warning(f"No scraped metadata file found")
+                logger.info(f"Checked paths: {self.proceeding_paths['scraped_pdf_history']}, "
+                          f"{self.proceeding_paths['scraped_pdf_history_alt']}")
                 return {}
             
             with open(history_file, 'r') as f:
                 metadata = json.load(f)
             
-            logger.info(f"Loaded metadata for {len(metadata)} documents")
+            logger.info(f"Loaded metadata for {len(metadata)} documents from {history_file.name}")
             return metadata
             
         except Exception as e:
@@ -184,122 +196,326 @@ class IncrementalEmbedder:
         return documents_to_process
     
     def _process_documents_incrementally(self, documents: List[Dict]) -> Dict:
-        """Process documents incrementally with error recovery."""
+        """Process documents incrementally with robust error recovery and batch management."""
         successful = []
         failed = []
+        schema_errors = []
+        retryable_failures = []
         
         total_docs = len(documents)
+        batch_size = getattr(config, 'EMBEDDING_BATCH_SIZE', 10)
+        max_retries = 3
+        retry_delay = 2.0
         
         # Create progress bar for current proceeding
         progress_bar = tqdm(
             documents, 
             desc=f"📄 Processing {self.proceeding}",
             unit="doc",
-            disable=config.DEBUG,  # Hide progress bar in debug mode
+            disable=config.DEBUG,
             bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]"
         )
         
-        for i, doc_metadata in enumerate(documents):
-            try:
+        # Process documents in batches for better error recovery
+        for batch_start in range(0, total_docs, batch_size):
+            batch_end = min(batch_start + batch_size, total_docs)
+            batch = documents[batch_start:batch_end]
+            
+            logger.info(f"Processing batch {batch_start//batch_size + 1}/{(total_docs + batch_size - 1)//batch_size} ({len(batch)} documents)")
+            
+            # Process each document in the batch with retry logic
+            for doc_metadata in batch:
                 doc_title = doc_metadata.get('title', 'Unknown')
+                doc_hash = doc_metadata['hash']
+                retry_count = 0
+                processing_success = False
                 
-                # Update progress bar
                 progress_bar.set_postfix_str(f"{doc_title[:30]}...")
                 
-                if config.VERBOSE_LOGGING:
-                    logger.debug(f"Processing document {i+1}/{total_docs}: {doc_title}")
-                
-                # Process single document
-                result = self._process_single_document(doc_metadata)
-                
-                if result['success']:
-                    successful.append({
-                        'hash': doc_metadata['hash'],
-                        'url': doc_metadata['url'],
-                        'title': doc_title,
-                        'processing_time': result.get('processing_time', 0)
-                    })
-                    if config.VERBOSE_LOGGING:
-                        logger.debug(f"✅ Successfully processed: {doc_title}")
-                else:
-                    failed.append({
-                        'hash': doc_metadata['hash'],
-                        'url': doc_metadata['url'],
-                        'error': result.get('error', 'Unknown error')
-                    })
-                    if config.VERBOSE_LOGGING:
-                        logger.warning(f"❌ Failed to process: {doc_title} - {result.get('error', 'Unknown error')}")
+                while retry_count <= max_retries and not processing_success:
+                    try:
+                        if config.VERBOSE_LOGGING and retry_count > 0:
+                            logger.debug(f"Retry {retry_count}/{max_retries} for: {doc_title}")
+                        
+                        # Process single document with timeout protection
+                        result = self._process_single_document_with_timeout(doc_metadata)
+                        
+                        if result['success']:
+                            chunks_added = result.get('chunks_added', 0)
+                            successful.append({
+                                'hash': doc_hash,
+                                'url': doc_metadata['url'],
+                                'title': doc_title,
+                                'processing_time': result.get('processing_time', 0),
+                                'chunks_added': chunks_added,
+                                'retry_count': retry_count
+                            })
+                            if config.VERBOSE_LOGGING:
+                                logger.debug(f"✅ Successfully processed: {doc_title} ({chunks_added} chunks)")
+                            processing_success = True
+                        else:
+                            error = result.get('error', 'Unknown error')
+                            
+                            # Check for schema errors (non-retryable)
+                            if result.get('schema_error', False):
+                                schema_errors.append({
+                                    'hash': doc_hash,
+                                    'url': doc_metadata['url'],
+                                    'title': doc_title,
+                                    'error': error
+                                })
+                                logger.error(f"🚨 Schema error for {doc_title}: {error}")
+                                processing_success = True  # Don't retry schema errors
+                            else:
+                                # Check if error is retryable
+                                if self._is_retryable_error(error) and retry_count < max_retries:
+                                    retry_count += 1
+                                    logger.warning(f"⚠️ Retryable error for {doc_title}, attempt {retry_count}: {error}")
+                                    time.sleep(retry_delay * retry_count)  # Exponential backoff
+                                else:
+                                    # Final failure
+                                    failed.append({
+                                        'hash': doc_hash,
+                                        'url': doc_metadata['url'],
+                                        'title': doc_title,
+                                        'error': error,
+                                        'retry_count': retry_count
+                                    })
+                                    if retry_count >= max_retries:
+                                        retryable_failures.append(doc_hash)
+                                    processing_success = True
+                                    
+                    except Exception as e:
+                        error_msg = f"Exception processing {doc_title}: {str(e)}"
+                        logger.error(error_msg)
+                        
+                        if retry_count < max_retries and self._is_retryable_error(str(e)):
+                            retry_count += 1
+                            time.sleep(retry_delay * retry_count)
+                        else:
+                            failed.append({
+                                'hash': doc_hash,
+                                'url': doc_metadata.get('url', 'Unknown'),
+                                'title': doc_title,
+                                'error': str(e),
+                                'retry_count': retry_count
+                            })
+                            processing_success = True
                 
                 progress_bar.update(1)
                 
-                # Small delay to prevent overwhelming the system
-                time.sleep(0.1)
-                
-            except Exception as e:
-                error_msg = f"Failed to process document {doc_metadata.get('url', 'Unknown')}: {e}"
-                if config.VERBOSE_LOGGING:
-                    logger.error(error_msg)
-                failed.append({
-                    'hash': doc_metadata['hash'],
-                    'url': doc_metadata.get('url', 'Unknown'),
-                    'error': str(e)
-                })
-                progress_bar.update(1)
+                # Brief pause between documents to prevent system overload
+                time.sleep(0.05)
+            
+            # Batch completion checkpoint - save progress
+            if successful:
+                try:
+                    self._checkpoint_progress(successful, failed, schema_errors)
+                except Exception as checkpoint_error:
+                    logger.warning(f"Failed to save checkpoint: {checkpoint_error}")
+            
+            # Brief pause between batches
+            time.sleep(0.2)
         
-        # Close progress bar
         progress_bar.close()
         
-        # Print clear completion message with line break
-        print(f"\n✅ {self.proceeding} completed: {len(successful)} successful, {len(failed)} failed\n" + "="*60)
+        # Calculate total chunks processed
+        total_chunks = sum(doc.get('chunks_added', 0) for doc in successful)
+        
+        # Enhanced completion report
+        print(f"\n✅ {self.proceeding} batch processing completed:")
+        print(f"   📊 Successful: {len(successful)} documents")
+        print(f"   ❌ Failed: {len(failed)} documents")
+        print(f"   🔄 Retryable failures: {len(retryable_failures)} documents")
+        print(f"   🚨 Schema errors: {len(schema_errors)} documents")
+        print(f"   📄 Total chunks: {total_chunks}")
+        print("=" * 60)
         
         return {
             'successful': successful,
             'failed': failed,
-            'total_processed': len(documents)
+            'schema_errors': schema_errors,
+            'retryable_failures': retryable_failures,
+            'total_processed': len(documents),
+            'total_chunks_added': total_chunks
         }
     
+    def _is_retryable_error(self, error_msg: str) -> bool:
+        """Determine if an error is retryable."""
+        retryable_patterns = [
+            "timeout", "connection", "network", "temporary", "rate limit",
+            "503", "502", "504", "429", "connection reset", "read timeout"
+        ]
+        error_lower = error_msg.lower()
+        return any(pattern in error_lower for pattern in retryable_patterns)
+    
+    def _checkpoint_progress(self, successful: List[Dict], failed: List[Dict], schema_errors: List[Dict]):
+        """Save progress checkpoint for recovery."""
+        try:
+            checkpoint_data = {
+                'timestamp': datetime.now().isoformat(),
+                'proceeding': self.proceeding,
+                'successful_count': len(successful),
+                'failed_count': len(failed),
+                'schema_errors_count': len(schema_errors),
+                'last_successful': successful[-5:] if successful else [],
+                'recent_failures': failed[-5:] if failed else []
+            }
+            
+            checkpoint_file = self.proceeding_paths['embeddings_dir'] / 'processing_checkpoint.json'
+            checkpoint_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(checkpoint_file, 'w') as f:
+                json.dump(checkpoint_data, f, indent=2)
+                
+        except Exception as e:
+            logger.warning(f"Failed to save checkpoint: {e}")
+    
+    def _process_single_document_with_timeout(self, doc_metadata: Dict) -> Dict:
+        """Process document with timeout protection."""
+        import signal
+        import threading
+        
+        result = {'success': False, 'error': 'Unknown error'}
+        timeout_seconds = getattr(config, 'URL_PROCESSING_TIMEOUT', 300)
+        
+        def timeout_handler():
+            return {
+                'success': False,
+                'error': f'Processing timeout after {timeout_seconds} seconds',
+                'processing_time': timeout_seconds
+            }
+        
+        def process_with_monitoring():
+            nonlocal result
+            try:
+                result = self._process_single_document(doc_metadata)
+            except Exception as e:
+                result = {
+                    'success': False,
+                    'error': str(e),
+                    'processing_time': 0
+                }
+        
+        # Create and start processing thread
+        process_thread = threading.Thread(target=process_with_monitoring)
+        process_thread.daemon = True
+        process_thread.start()
+        
+        # Wait for completion or timeout
+        process_thread.join(timeout=timeout_seconds)
+        
+        if process_thread.is_alive():
+            logger.warning(f"Document processing timed out after {timeout_seconds}s: {doc_metadata.get('title', 'Unknown')}")
+            return timeout_handler()
+        
+        return result
+    
     def _process_single_document(self, doc_metadata: Dict) -> Dict:
-        """Process a single document for embedding."""
+        """Process a single document for embedding using true incremental processing."""
         start_time = time.time()
         
         try:
             url = doc_metadata['url']
             title = doc_metadata.get('title', 'Unknown')
+            doc_hash = doc_metadata['hash']
             
             logger.debug(f"Processing document: {title} ({url})")
             
-            # Use RAG system to build vector store for this specific URL
-            # This is a simplified approach - in reality, you might want to download the PDF first
-            pdf_urls = [{
+            # Step 1: Extract chunks from the URL using the RAG system's single URL processor
+            url_data = {
                 'url': url,
-                'filename': f"{doc_metadata['hash']}.pdf"
-            }]
+                'title': title
+            }
             
-            success = self.rag_system.build_vector_store_from_urls(pdf_urls, force_rebuild=False, incremental_mode=True)
+            # Process the single URL to extract chunks
+            processing_result = self.rag_system._process_single_url(url_data)
+            
+            if not processing_result['success']:
+                processing_time = time.time() - start_time
+                return {
+                    'success': False,
+                    'error': f"Failed to extract chunks: {processing_result.get('error', 'Unknown error')}",
+                    'processing_time': processing_time
+                }
+            
+            chunks = processing_result.get('chunks', [])
+            if not chunks:
+                processing_time = time.time() - start_time
+                return {
+                    'success': False,
+                    'error': 'No chunks extracted from document',
+                    'processing_time': processing_time
+                }
+            
+            # Step 2: Add chunks incrementally to the vector store
+            success = self.rag_system.add_document_incrementally(
+                chunks=chunks,
+                url_hash=doc_hash,
+                url_data=url_data,
+                immediate_persist=True
+            )
             
             processing_time = time.time() - start_time
             
             if success:
-                logger.debug(f"Successfully processed {title} in {processing_time:.2f}s")
+                # Get the actual chunk count that was successfully added from doc_hashes
+                actual_chunks_added = 0
+                if doc_hash in self.rag_system.doc_hashes:
+                    actual_chunks_added = self.rag_system.doc_hashes[doc_hash].get('chunk_count', 0)
+                    success_rate_str = self.rag_system.doc_hashes[doc_hash].get('success_rate', '100%')
+                else:
+                    # Fallback to expected count if hash tracking failed
+                    actual_chunks_added = len(chunks)
+                    success_rate_str = '100%'
+                
+                logger.debug(f"Successfully processed {title} ({actual_chunks_added}/{len(chunks)} chunks added, {success_rate_str} success rate) in {processing_time:.2f}s")
                 return {
                     'success': True,
-                    'processing_time': processing_time
+                    'processing_time': processing_time,
+                    'chunks_added': actual_chunks_added,
+                    'total_chunks_processed': len(chunks),
+                    'success_rate': success_rate_str
                 }
             else:
+                # Get detailed error information if available
+                error_details = 'Failed to add chunks to vector store'
+                if doc_hash in self.rag_system.doc_hashes:
+                    chunk_count = self.rag_system.doc_hashes[doc_hash].get('chunk_count', 0)
+                    if chunk_count > 0:
+                        error_details = f'Partial failure: only {chunk_count}/{len(chunks)} chunks added to vector store'
+                
                 return {
                     'success': False,
-                    'error': 'Vector store building failed',
-                    'processing_time': processing_time
+                    'error': error_details,
+                    'processing_time': processing_time,
+                    'chunks_attempted': len(chunks)
                 }
                 
         except Exception as e:
             processing_time = time.time() - start_time
-            logger.error(f"Failed to process document: {e}")
-            return {
-                'success': False,
-                'error': str(e),
-                'processing_time': processing_time
-            }
+            error_msg = str(e)
+            
+            # Check for schema-related errors and provide helpful guidance
+            if ("cast from string to null" in error_msg or 
+                "Field" in error_msg and "not found in target schema" in error_msg):
+                logger.error("🚨 LanceDB Schema Compatibility Issue Detected!")
+                logger.error("The existing vector database has an incompatible schema.")
+                logger.error(f"💡 To fix this, run: python fix_lancedb_schema.py {self.proceeding}")
+                logger.error("This will rebuild the database with the correct schema.")
+                return {
+                    'success': False,
+                    'error': 'Schema compatibility issue - see fix_lancedb_schema.py',
+                    'processing_time': processing_time,
+                    'schema_error': True
+                }
+            else:
+                logger.error(f"Failed to process document: {e}")
+                return {
+                    'success': False,
+                    'error': str(e),
+                    'processing_time': processing_time
+                }
     
     def _update_embedding_status(self, processing_results: Dict):
         """Update embedding status with processing results."""

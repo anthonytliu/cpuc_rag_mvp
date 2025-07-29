@@ -6,7 +6,7 @@ This guide will help you migrate your entire CPUC RAG system from your laptop to
 ## Project Analysis
 Your project contains:
 - **Streamlit web application** (`app.py`)
-- **Document processing system** (Docling, ChromaDB)
+- **Document processing system** (Docling, LanceDB)
 - **PDF scraping tools** (Selenium-based)
 - **1,100+ processed documents** in vector database
 - **Authentication system** with OAuth
@@ -35,7 +35,7 @@ Your project contains:
 
 **Minimum Requirements for CPUC RAG:**
 - **CPU**: 4 cores (for Docling processing)
-- **RAM**: 8GB (for ChromaDB + ML models)
+- **RAM**: 8GB (for LanceDB + ML models)
 - **Storage**: 50GB SSD (for documents + vector DB)
 - **OS**: Ubuntu 22.04 LTS
 
@@ -286,7 +286,7 @@ DATE=$(date +%Y%m%d_%H%M%S)
 mkdir -p $BACKUP_DIR
 
 # Backup vector database
-tar -czf "$BACKUP_DIR/vector_db_$DATE.tar.gz" local_chroma_db/
+tar -czf "$BACKUP_DIR/vector_db_$DATE.tar.gz" local_lance_db/
 
 # Backup documents
 tar -czf "$BACKUP_DIR/documents_$DATE.tar.gz" cpuc_proceedings/

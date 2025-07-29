@@ -15,7 +15,8 @@ from langchain.docstore.document import Document
 from langchain.prompts import PromptTemplate
 from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain_community.tools import DuckDuckGoSearchResults
-from langchain_community.vectorstores import Chroma
+import lancedb
+from langchain_community.vectorstores import LanceDB
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -26,6 +27,8 @@ import config
 import data_processing
 import models
 import utils
+from response_agents import generate_multi_agent_response, AGENT_REGISTRY
+from multi_agent_system import MultiAgentSystem, MultiAgentResult
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +61,8 @@ class CPUCRAGSystem:
         self.search_tool = DuckDuckGoSearchResults()
 
         # --- State and Components ---
-        self.vectordb: Optional[Chroma] = None
+        self.vectordb: Optional[LanceDB] = None
+        self.lance_db = None
         self.retriever = None
         self.doc_hashes_file = self.proceeding_paths['document_hashes']
         self.doc_hashes = self._load_doc_hashes()
@@ -66,64 +70,44 @@ class CPUCRAGSystem:
         # --- Initial Setup ---
         self.db_dir.mkdir(exist_ok=True)
         
-        # Load existing vector store if it exists
-        self._load_existing_vector_store()
+        # Load existing LanceDB vector store if it exists
+        self._load_existing_lance_vector_store()
         
         logger.info(f"CPUCRAGSystem initialized. Processing mode: URL-based")
         if self.vectordb:
             try:
-                chunk_count = self.vectordb._collection.count()
-                logger.info(f"Loaded existing vector store with {chunk_count} chunks")
-                # Set up QA pipeline since we have a working vector store
-                if chunk_count > 0:
-                    self.setup_qa_pipeline()
-                else:
-                    logger.info("Vector store exists but is empty. QA pipeline not set up.")
-            except Exception as e:
-                logger.warning(f"Vector store loaded but chunk count failed: {e}")
-        else:
-            logger.info("No working vector store found - checking for data to process...")
-            
-            # Check if we have processed documents already
-            existing_doc_count = len(self.doc_hashes)
-            
-            # Auto-process from scraped PDF history if we have it but no working vector store
-            # Try both old and new naming conventions for backward compatibility
-            download_history_path = self.proceeding_paths['scraped_pdf_history']
-            if download_history_path.exists():
-                logger.info("Found download history - checking what needs processing...")
-                try:
-                    with open(download_history_path, 'r') as f:
-                        scraped_pdf_history = json.load(f)
-                    
-                    # Convert download history to URL format
-                    pdf_urls = []
-                    for hash_key, entry in scraped_pdf_history.items():
-                        if isinstance(entry, dict) and entry.get('url'):
-                            # Use title as filename if no filename field exists
-                            filename = entry.get('filename', f"{entry.get('title', hash_key)}.pdf")
-                            pdf_urls.append({
-                                'url': entry['url'],
-                                'filename': filename
-                            })
-                    
-                    if pdf_urls:
-                        logger.info(f"Found {len(pdf_urls)} URLs in download history")
-                        logger.info(f"Already processed: {existing_doc_count} documents")
-                        logger.info("Starting incremental processing (only new documents will be processed)")
-                        self.build_vector_store_from_urls(pdf_urls, force_rebuild=False)
-                    else:
-                        logger.warning("Download history exists but contains no valid URLs")
+                # For LanceDB, check if it has a working connection
+                if hasattr(self.vectordb, '_connection') and self.vectordb._connection is not None:
+                    try:
+                        # Try to get table info
+                        table_names = self.vectordb._connection.table_names()
+                        table_name = f"{self.current_proceeding}_documents"
                         
-                except Exception as e:
-                    logger.error(f"Failed to process download history: {e}")
-            else:
-                if existing_doc_count > 0:
-                    logger.info(f"Found {existing_doc_count} processed documents but no download history")
-                    logger.info("Vector store will be built when new URLs are provided")
+                        if table_name in table_names:
+                            table = self.vectordb._connection.open_table(table_name)
+                            chunk_count = len(table.to_pandas())
+                            logger.info(f"Loaded existing LanceDB vector store with {chunk_count} chunks")
+                            
+                            # Set up QA pipeline since we have a working vector store with data
+                            if chunk_count > 0:
+                                self.setup_qa_pipeline()
+                                logger.info("QA pipeline set up successfully with data")
+                            else:
+                                logger.warning("Vector store exists but is empty. QA pipeline not set up.")
+                                logger.warning("Use standalone_data_processor.py to process documents and populate the vector store.")
+                        else:
+                            logger.warning("LanceDB table not found")
+                            logger.warning("Use standalone_data_processor.py to create and populate the vector store.")
+                            
+                    except Exception as e:
+                        logger.warning(f"Could not access LanceDB table: {e}")
+                        logger.warning("Vector store may be corrupted or empty.")
                 else:
-                    logger.info("No download history or processed documents found")
-                    logger.info("Use build_vector_store_from_urls() to create vector store")
+                    logger.warning("LanceDB connection not properly initialized")
+            except Exception as e:
+                logger.warning(f"Vector store loaded but verification failed: {e}")
+        else:
+            logger.info("No working vector store found. Use standalone_data_processor.py to build vector store.")
 
 
     def query(self, question: str):
@@ -353,7 +337,7 @@ class CPUCRAGSystem:
             logger.error(f"Re-ranking failed: {e}. Returning original order.")
             return documents
 
-    def build_vector_store_from_urls(self, pdf_urls: List[Dict[str, str]], force_rebuild: bool = False, incremental_mode: bool = False):
+    def build_vector_store_from_urls(self, pdf_urls: List[Dict[str, str]], force_rebuild: bool = False, incremental_mode: bool = True):
         """
         Builds or incrementally updates the vector store using PDF URLs.
         
@@ -397,26 +381,32 @@ class CPUCRAGSystem:
                 logger.error(f"Failed to delete vector store during force rebuild: {e}")
                 return
                 
-        # Initialize vector store if needed
+        # Initialize LanceDB vector store if needed
         if self.vectordb is None:
-            if self.db_dir.exists() and any(self.db_dir.iterdir()):
-                logger.info("Loading existing vector store...")
-                try:
-                    self.vectordb = Chroma(persist_directory=str(self.db_dir), embedding_function=self.embedding_model)
+            try:
+                # Initialize LanceDB connection if not already done
+                if self.lance_db is None:
+                    self.lance_db = lancedb.connect(str(self.db_dir))
+                
+                table_name = f"{self.current_proceeding}_documents"
+                
+                # Check if table exists
+                existing_tables = self.lance_db.table_names()
+                if table_name in existing_tables:
+                    logger.info("Loading existing LanceDB table...")
+                    self.vectordb = LanceDB(
+                        connection=self.lance_db,
+                        embedding=self.embedding_model,
+                        table_name=table_name,
+                        mode="append"  # Fix: Use append mode instead of default overwrite
+                    )
+                    logger.info("LanceDB vector store loaded successfully.")
+                else:
+                    logger.info("No existing LanceDB table found. Will create when first documents are added.")
                     
-                    if self._validate_vector_store():
-                        logger.info("Vector store loaded successfully and passed health checks.")
-                    else:
-                        logger.warning("Vector store loaded but failed health checks. Rebuilding...")
-                        self._rebuild_corrupted_store()
-                        
-                except Exception as e:
-                    logger.error(f"Failed to load existing DB, it might be corrupt. Rebuilding. Error: {e}")
-                    self._rebuild_corrupted_store()
-                    
-            if self.vectordb is None:
-                logger.info("Initializing new vector store.")
-                self.vectordb = Chroma(embedding_function=self.embedding_model, persist_directory=str(self.db_dir))
+            except Exception as e:
+                logger.error(f"Failed to initialize LanceDB: {e}")
+                return
 
         # Process URLs - find new/updated ones
         current_url_hashes = {data_processing.get_url_hash(url_data['url']): url_data for url_data in pdf_urls}
@@ -669,6 +659,119 @@ class CPUCRAGSystem:
             logger.error(f"Failed to restore from checkpoint: {e}")
             return False
 
+    def _normalize_document_metadata(self, documents: List[Document]) -> List[Document]:
+        """
+        Normalize document metadata to ensure schema compatibility with existing LanceDB table.
+        
+        This function ensures all metadata fields are consistent and handle None values
+        that could cause PyArrow schema casting issues.
+        """
+        normalized_docs = []
+        
+        for doc_idx, doc in enumerate(documents):
+            try:
+                normalized_metadata = {}
+                
+                # Safely copy all metadata and ensure None values become appropriate defaults
+                for key, value in doc.metadata.items():
+                    try:
+                        if value is None:
+                            normalized_metadata[key] = ""
+                        elif isinstance(value, bool):
+                            normalized_metadata[key] = value
+                        elif isinstance(value, (int, float)):
+                            # Handle NaN and infinite values
+                            if str(value).lower() in ['nan', 'inf', '-inf']:
+                                normalized_metadata[key] = 0
+                            else:
+                                normalized_metadata[key] = value
+                        elif isinstance(value, str):
+                            # Clean up string values
+                            cleaned_value = value.strip()
+                            normalized_metadata[key] = cleaned_value if cleaned_value else ""
+                        else:
+                            # Convert other types to string
+                            normalized_metadata[key] = str(value)
+                    except Exception as field_exc:
+                        logger.warning(f"Failed to normalize field '{key}' in document {doc_idx}: {field_exc}")
+                        normalized_metadata[key] = ""  # Use safe default
+                
+                # Ensure all expected fields exist with correct types and default values
+                expected_fields = {
+                    'source_url': '',
+                    'source': '',
+                    'page': 0,
+                    'content_type': 'text',
+                    'chunk_id': '',
+                    'url_hash': '',
+                    'last_checked': '',
+                    'document_date': '',
+                    'publication_date': '',
+                    'proceeding_number': '',
+                    'document_type': 'unknown',
+                    'supersedes_priority': 0.5
+                }
+                
+                # Remove fields that are known to cause schema incompatibility
+                schema_incompatible_fields = [
+                    'file_path', 'last_modified', 'extraction_method', 
+                    'processing_status', 'chunking_strategy', 'file_size',
+                    'mime_type', 'error_message', 'retry_count'
+                ]
+                for field in schema_incompatible_fields:
+                    if field in normalized_metadata:
+                        del normalized_metadata[field]
+                
+                # Add missing expected fields with defaults
+                for field, default_value in expected_fields.items():
+                    if field not in normalized_metadata:
+                        normalized_metadata[field] = default_value
+                    elif normalized_metadata[field] is None or normalized_metadata[field] == '':
+                        if isinstance(default_value, (int, float)):
+                            normalized_metadata[field] = default_value
+                        else:
+                            normalized_metadata[field] = default_value
+                
+                # Validate page content
+                page_content = doc.page_content
+                if page_content is None:
+                    page_content = ""
+                elif not isinstance(page_content, str):
+                    page_content = str(page_content)
+                
+                # Ensure page content is not empty (LanceDB may reject empty content)
+                if not page_content.strip():
+                    page_content = "[Empty content]"
+                
+                normalized_docs.append(Document(
+                    page_content=page_content,
+                    metadata=normalized_metadata
+                ))
+                
+            except Exception as doc_exc:
+                logger.error(f"Failed to normalize document {doc_idx}: {doc_exc}")
+                # Create a minimal fallback document to prevent complete failure
+                fallback_doc = Document(
+                    page_content="[Error processing document]",
+                    metadata={
+                        'source_url': '',
+                        'source': f'error_doc_{doc_idx}',
+                        'page': 0,
+                        'content_type': 'text',
+                        'chunk_id': f'error_{doc_idx}',
+                        'url_hash': '',
+                        'last_checked': '',
+                        'document_date': '',
+                        'publication_date': '',
+                        'proceeding_number': '',
+                        'document_type': 'error',
+                        'supersedes_priority': 0.0
+                    }
+                )
+                normalized_docs.append(fallback_doc)
+        
+        return normalized_docs
+
     def add_document_incrementally(self, chunks: List[Document], url_hash: str, url_data: Dict[str, str], 
                                   immediate_persist: bool = True) -> bool:
         """
@@ -692,14 +795,16 @@ class CPUCRAGSystem:
             
         # Ensure vector store is initialized
         if self.vectordb is None:
-            logger.info("Initializing new vector store for incremental addition.")
+            logger.info("Initializing new LanceDB vector store for incremental addition.")
             try:
-                self.vectordb = Chroma(
-                    embedding_function=self.embedding_model, 
-                    persist_directory=str(self.db_dir)
-                )
+                # Initialize LanceDB connection if not already done
+                if self.lance_db is None:
+                    self.lance_db = lancedb.connect(str(self.db_dir))
+                
+                # Vector store will be created when first documents are added
+                logger.info("LanceDB connection ready for document addition.")
             except Exception as e:
-                logger.error(f"Failed to initialize vector store: {e}")
+                logger.error(f"Failed to initialize LanceDB connection: {e}")
                 return False
         
         try:
@@ -710,33 +815,118 @@ class CPUCRAGSystem:
             batch_size = min(config.VECTOR_STORE_BATCH_SIZE, len(chunks))
             success_count = 0
             
-            for i in range(0, len(chunks), batch_size):
-                batch = chunks[i:i + batch_size]
+            # Create LanceDB vector store if it doesn't exist
+            if self.vectordb is None and chunks:
                 try:
-                    self.vectordb.add_documents(documents=batch)
-                    success_count += len(batch)
-                    logger.debug(f"Successfully added batch {i//batch_size + 1}/{(len(chunks)-1)//batch_size + 1}")
-                except Exception as batch_exc:
-                    logger.error(f"Failed to add batch {i//batch_size + 1}: {batch_exc}")
-                    # Continue with remaining batches
-                    continue
-            
-            # Persist immediately if requested
-            if immediate_persist:
-                try:
-                    self.vectordb.persist()
-                    logger.info("Vector store persisted successfully")
-                except Exception as persist_exc:
-                    logger.error(f"Failed to persist vector store: {persist_exc}")
+                    # Let LangChain create the LanceDB table from documents
+                    logger.info(f"Creating new LanceDB vector store with {len(chunks)} documents")
+                    
+                    # Normalize metadata before creating vector store
+                    normalized_chunks = self._normalize_document_metadata(chunks)
+                    
+                    # Create vector store from documents
+                    self.vectordb = LanceDB.from_documents(
+                        documents=normalized_chunks,
+                        embedding=self.embedding_model,
+                        connection=self.lance_db,
+                        table_name=f"{self.current_proceeding}_documents",
+                        mode="append"  # Fix: Use append mode for future additions
+                    )
+                    
+                    success_count = len(chunks)
+                    logger.info(f"Created new LanceDB vector store with {len(chunks)} documents")
+                    
+                except Exception as create_exc:
+                    logger.error(f"Failed to create LanceDB vector store: {create_exc}")
                     return False
+            else:
+                # Add to existing vector store in batches with improved error handling
+                failed_batches = []
+                total_batches = (len(chunks) - 1) // batch_size + 1
+                
+                for i in range(0, len(chunks), batch_size):
+                    batch = chunks[i:i + batch_size]
+                    batch_num = i // batch_size + 1
+                    
+                    # Normalize metadata to ensure schema compatibility
+                    try:
+                        batch = self._normalize_document_metadata(batch)
+                    except Exception as norm_exc:
+                        logger.error(f"Failed to normalize batch {batch_num}: {norm_exc}")
+                        failed_batches.append({'batch': batch_num, 'error': 'normalization_failed', 'exception': str(norm_exc)})
+                        continue
+                    
+                    try:
+                        self.vectordb.add_documents(documents=batch)
+                        success_count += len(batch)
+                        logger.debug(f"Successfully added batch {batch_num}/{total_batches} ({len(batch)} chunks)")
+                    except Exception as batch_exc:
+                        error_msg = str(batch_exc)
+                        
+                        # Check for schema-related errors (critical failures)
+                        if ("cast from string to null" in error_msg or 
+                            "Field" in error_msg and "not found in target schema" in error_msg):
+                            logger.warning(f"Schema compatibility issue detected: {batch_exc}")
+                            logger.warning("The existing LanceDB table has an incompatible schema.")
+                            logger.info("🔄 Attempting automatic schema migration...")
+                            
+                            # Attempt automatic schema migration
+                            migration_success = self._attempt_schema_migration()
+                            
+                            if migration_success:
+                                logger.info("✅ Schema migration successful, retrying batch addition...")
+                                # Retry the failed batch after migration
+                                try:
+                                    self.vector_store.add_documents(batch, ids=batch_ids)
+                                    successful_batches.append(batch_num)
+                                    logger.info(f"✅ Successfully added batch {batch_num}/{total_batches} after migration")
+                                    continue
+                                except Exception as retry_exc:
+                                    logger.error(f"❌ Batch addition failed even after migration: {retry_exc}")
+                                    failed_batches.append({'batch': batch_num, 'error': 'migration_retry_failed', 'exception': str(retry_exc)})
+                                    continue
+                            else:
+                                logger.error("❌ Schema migration failed. Manual intervention required.")
+                                logger.error("To fix this manually, delete the existing table directory and rebuild:")
+                                logger.error(f"rm -rf {self.db_dir}")
+                                logger.error("Then run the data processor again to rebuild with correct schema.")
+                                return False
+                        else:
+                            # Record non-critical failure and continue
+                            logger.error(f"Failed to add batch {batch_num}/{total_batches}: {batch_exc}")
+                            failed_batches.append({'batch': batch_num, 'error': 'add_failed', 'exception': str(batch_exc)})
+                            continue
+                
+                # Report detailed results
+                if failed_batches:
+                    logger.warning(f"Failed to add {len(failed_batches)}/{total_batches} batches:")
+                    for failure in failed_batches:
+                        logger.warning(f"  Batch {failure['batch']}: {failure['error']} - {failure['exception']}")
+                
+                # Check if we had significant failures
+                failure_rate = len(failed_batches) / total_batches
+                if failure_rate > 0.5:  # More than 50% failed
+                    logger.error(f"High failure rate: {len(failed_batches)}/{total_batches} batches failed ({failure_rate:.1%})")
+                    logger.error("This indicates a systematic issue with the vector store or data processing")
             
-            # Update document hashes only after successful DB operations
-            if success_count > 0:
+            # For LanceDB, data is persisted automatically (no explicit persist needed)
+            
+            # Update document hashes and report results based on success/failure analysis
+            total_chunks = len(chunks)
+            success_rate = success_count / total_chunks if total_chunks > 0 else 0
+            
+            # Determine if operation was successful enough to continue
+            operation_successful = success_count > 0 and success_rate >= 0.5  # At least 50% success rate
+            
+            if operation_successful:
+                # Update document hashes with actual success count
                 self.doc_hashes[url_hash] = {
                     'url': url_data['url'],
                     'title': url_data.get('title', ''),
                     'last_processed': datetime.now().isoformat(),
-                    'chunk_count': success_count
+                    'chunk_count': success_count,
+                    'total_chunks_processed': total_chunks,
+                    'success_rate': f"{success_rate:.1%}"
                 }
                 
                 # Save hashes immediately
@@ -745,12 +935,21 @@ class CPUCRAGSystem:
                     logger.info(f"Document hashes updated for {url_data.get('title', url_data['url'])}")
                 except Exception as hash_exc:
                     logger.error(f"Failed to save document hashes: {hash_exc}")
-                    # Don't fail the entire operation for this
+                    # Don't fail the entire operation for hash save failure
                 
-                logger.info(f"✅ Successfully added {success_count}/{len(chunks)} chunks incrementally")
+                if success_rate == 1.0:
+                    logger.info(f"✅ Successfully added all {success_count}/{total_chunks} chunks")
+                else:
+                    logger.warning(f"⚠️ Partially successful: added {success_count}/{total_chunks} chunks ({success_rate:.1%} success rate)")
+                
                 return True
             else:
-                logger.error("No chunks were successfully added")
+                if success_count == 0:
+                    logger.error(f"❌ No chunks were successfully added (0/{total_chunks})")
+                else:
+                    logger.error(f"❌ Operation failed: only {success_count}/{total_chunks} chunks added ({success_rate:.1%} success rate)")
+                    logger.error("This indicates systematic issues with vector store operations")
+                
                 return False
                 
         except Exception as e:
@@ -775,7 +974,7 @@ class CPUCRAGSystem:
         title = url_data.get('title', '')
         
         try:
-            doc_chunks = data_processing.extract_and_chunk_with_docling_url(pdf_url, title)
+            doc_chunks = data_processing.extract_and_chunk_with_docling_url(pdf_url, title, self.current_proceeding)
             return {
                 'chunks': doc_chunks,
                 'url': pdf_url,
@@ -869,39 +1068,50 @@ class CPUCRAGSystem:
 
     def setup_qa_pipeline(self):
         """
-        Sets up an advanced retrieval pipeline using a Self-Querying Retriever.
-        This allows the LLM to write its own filters based on the user's query.
+        Sets up a retrieval pipeline. Falls back to basic retriever if SelfQueryRetriever fails.
         """
         if self.vectordb is None:
             logger.error("Vector DB is not available. Cannot setup QA pipeline.")
             return
 
-        # --- Define the metadata fields that the LLM can use to filter ---
-        metadata_field_info = [
-            AttributeInfo(
-                name="source",
-                description="The filename of the document, e.g., 'D.24-05-015 Decision.pdf'",
-                type="string",
-            ),
-            AttributeInfo(
-                name="page",
-                description="The page number within the document.",
-                type="integer",
-            ),
-            # You could add more, like 'content_type' if you wanted to query only tables.
-        ]
-        document_content_description = "Regulatory text from CPUC documents."
+        try:
+            # --- Define the metadata fields that the LLM can use to filter ---
+            metadata_field_info = [
+                AttributeInfo(
+                    name="source",
+                    description="The filename of the document, e.g., 'D.24-05-015 Decision.pdf'",
+                    type="string",
+                ),
+                AttributeInfo(
+                    name="page",
+                    description="The page number within the document.",
+                    type="integer",
+                ),
+                # You could add more, like 'content_type' if you wanted to query only tables.
+            ]
+            document_content_description = "Regulatory text from CPUC documents."
 
-        # --- Set up the Self-Querying Retriever ---
-        # It uses the LLM to translate a user's question into a structured query
-        self.retriever = SelfQueryRetriever.from_llm(
-            self.llm,
-            self.vectordb,
-            document_content_description,
-            metadata_field_info,
-            verbose=True,  # Set to True for great debugging logs
-        )
-        logger.info("Advanced Self-Querying QA pipeline is ready.")
+            # --- Try to set up the Self-Querying Retriever ---
+            self.retriever = SelfQueryRetriever.from_llm(
+                self.llm,
+                self.vectordb,
+                document_content_description,
+                metadata_field_info,
+                verbose=True,  # Set to True for great debugging logs
+            )
+            logger.info("Advanced Self-Querying QA pipeline is ready.")
+            
+        except Exception as e:
+            logger.warning(f"SelfQueryRetriever setup failed: {e}")
+            logger.info("Falling back to basic retriever...")
+            
+            # Fall back to basic retriever
+            try:
+                self.retriever = self.vectordb.as_retriever(search_kwargs={"k": config.TOP_K_DOCS})
+                logger.info("Basic retriever QA pipeline is ready.")
+            except Exception as fallback_e:
+                logger.error(f"Even basic retriever setup failed: {fallback_e}")
+                self.retriever = None
 
 
     def _validate_vector_store(self) -> bool:
@@ -1031,56 +1241,55 @@ class CPUCRAGSystem:
         self.doc_hashes_file.parent.mkdir(parents=True, exist_ok=True)
         with open(self.doc_hashes_file, 'w') as f: json.dump(self.doc_hashes, f, indent=2)
 
-    def _load_existing_vector_store(self):
+    def _load_existing_lance_vector_store(self):
         """
-        Load existing vector store during initialization with proper condition checking.
+        Load existing LanceDB vector store during initialization.
         
-        This method implements the proper vector store loading logic:
-        1. Check if local_chroma_db folder exists and create if needed
+        This method implements the proper LanceDB vector store loading logic:
+        1. Check if lance_db folder exists and create if needed
         2. Check parity between scraped_pdf_history.json and document_hashes.json
         3. Load if parity exists, otherwise mark for rebuild
         """
-        # Step 1: Ensure DB directory exists
+        # Use the db_dir that was already correctly set in __init__ from config
+        # No need to recalculate - it's already set to the correct standard location
+        logger.info(f"Using standard LanceDB location: {self.db_dir}")
+        
         try:
             self.db_dir.mkdir(parents=True, exist_ok=True)
-            logger.info(f"Vector store directory ensured: {self.db_dir}")
+            logger.info(f"LanceDB directory ensured: {self.db_dir}")
         except Exception as e:
-            logger.error(f"Failed to create vector store directory: {e}")
+            logger.error(f"Failed to create LanceDB directory: {e}")
             return
 
-        # Check if directory is empty (no existing store)
-        if not any(self.db_dir.iterdir()):
-            logger.info("No existing vector store found. Will create new one when needed.")
-            return
-            
-        logger.info("Found existing vector store directory. Checking data parity...")
-        
-        # Step 2: Check parity between scraped_pdf_history and document_hashes
-        parity_check = self._check_vector_store_parity()
-        
-        if not parity_check['has_parity']:
-            logger.warning(f"Vector store parity check failed: {parity_check['reason']}")
-            logger.info(f"Missing files: {len(parity_check['missing_files'])}")
-            logger.info(f"Extra files: {len(parity_check['extra_files'])}")
-            
-            if parity_check['missing_files']:
-                logger.info("Sample missing files:")
-                for i, missing_file in enumerate(parity_check['missing_files'][:5]):  # Show first 5
-                    logger.info(f"  - {missing_file}")
-                if len(parity_check['missing_files']) > 5:
-                    logger.info(f"  ... and {len(parity_check['missing_files']) - 5} more")
-            
-            # Don't load the vector store - it needs to be rebuilt
-            self.vectordb = None
-            return
-        
-        # Step 3: Load vector store if parity exists
+        # Step 2: Initialize LanceDB connection
         try:
-            # Try to load the existing vector store
-            self.vectordb = Chroma(
-                persist_directory=str(self.db_dir), 
-                embedding_function=self.embedding_model
+            self.lance_db = lancedb.connect(str(self.db_dir))
+            logger.info(f"Connected to LanceDB at {self.db_dir}")
+        except Exception as e:
+            logger.error(f"Failed to connect to LanceDB: {e}")
+            return
+
+        # Check if we have an existing table
+        table_name = f"{self.current_proceeding}_documents"
+        try:
+            existing_tables = self.lance_db.table_names()
+            if table_name not in existing_tables:
+                logger.info("No existing LanceDB table found. Will create new one when needed.")
+                return
+            
+            # Create LangChain LanceDB wrapper for existing table
+            self.vectordb = LanceDB(
+                connection=self.lance_db,
+                embedding=self.embedding_model,
+                table_name=table_name,
+                mode="append"  # Fix: Use append mode instead of default overwrite
             )
+            
+            logger.info(f"Loaded existing LanceDB table: {table_name}")
+            
+        except Exception as e:
+            logger.warning(f"Failed to load existing LanceDB table: {e}")
+            self.vectordb = None
             
             # Validate the loaded store
             if self._validate_vector_store():
@@ -1165,11 +1374,74 @@ class CPUCRAGSystem:
 
 
     def _process_sources(self, documents: List[Document]) -> List[Dict]:
-        return [{
-            "rank": i + 1, "document": doc.metadata.get("source", "Unknown"),
-            "proceeding": doc.metadata.get("proceeding", "Unknown"), "page": doc.metadata.get("page", "Unknown"),
-            "excerpt": doc.page_content[:400] + "...", "relevance_score": doc.metadata.get("relevance_score", "N/A")
-        } for i, doc in enumerate(documents)]
+        sources = []
+        for i, doc in enumerate(documents):
+            source = {
+                "rank": i + 1, 
+                "document": doc.metadata.get("source", "Unknown"),
+                "proceeding": doc.metadata.get("proceeding", "Unknown"), 
+                "page": doc.metadata.get("page", "Unknown"),
+                "excerpt": doc.page_content[:400] + "...", 
+                "relevance_score": doc.metadata.get("relevance_score", "N/A")
+            }
+            
+            # Include enhanced citation metadata if available
+            enhanced_fields = ['char_start', 'char_end', 'char_length', 'line_number', 
+                             'line_range_end', 'text_snippet', 'token_count', 'chunk_level']
+            
+            for field in enhanced_fields:
+                if field in doc.metadata:
+                    source[field] = doc.metadata[field]
+            
+            sources.append(source)
+            
+        return sources
+
+    def _attempt_schema_migration(self) -> bool:
+        """
+        Attempt to migrate the LanceDB schema to support enhanced citation metadata.
+        
+        Returns:
+            bool: True if migration successful, False otherwise
+        """
+        try:
+            logger.info("🔄 Starting schema migration for enhanced citation support...")
+            
+            # Step 1: Backup existing vector store
+            import shutil
+            from datetime import datetime
+            
+            backup_path = self.db_dir.parent / f"{self.db_dir.name}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            logger.info(f"📦 Creating backup at: {backup_path}")
+            
+            if self.db_dir.exists():
+                shutil.copytree(self.db_dir, backup_path)
+                logger.info("✅ Backup created successfully")
+            
+            # Step 2: Remove the incompatible table
+            table_path = self.db_dir / f"{self.current_proceeding}_documents.lance"
+            if table_path.exists():
+                logger.info(f"🗑️ Removing incompatible table: {table_path}")
+                shutil.rmtree(table_path)
+            
+            # Step 3: Reinitialize vector store with new schema
+            logger.info("🔄 Reinitializing vector store with enhanced schema...")
+            self.vector_store = None
+            self._load_existing_lance_vector_store()
+            
+            if self.vector_store:
+                logger.info("✅ Schema migration completed successfully")
+                logger.info(f"📂 Backup preserved at: {backup_path}")
+                return True
+            else:
+                logger.error("❌ Failed to reinitialize vector store after migration")
+                return False
+                
+        except Exception as e:
+            logger.error(f"💥 Schema migration failed: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return False
 
     def _assess_confidence(self, documents: List[Document], answer: str, question: str) -> Dict:
         num_sources = len(documents)
@@ -1232,16 +1504,29 @@ class CPUCRAGSystem:
                 "files_not_hashed": 0  # No longer applicable
             })
         
-        # Vector store statistics
+        # Vector store statistics (LanceDB)
         if self.vectordb:
             try:
-                chunk_count = self.vectordb._collection.count()
-                stats["total_chunks"] = chunk_count
-                stats["vector_store_status"] = "loaded"
+                # For LanceDB, get chunk count from table
+                if hasattr(self.vectordb, '_connection') and self.vectordb._connection is not None:
+                    table_name = f"{self.current_proceeding}_documents"
+                    table_names = self.vectordb._connection.table_names()
+                    
+                    if table_name in table_names:
+                        table = self.vectordb._connection.open_table(table_name)
+                        chunk_count = len(table.to_pandas())
+                        stats["total_chunks"] = chunk_count
+                        stats["vector_store_status"] = "loaded"
+                    else:
+                        stats["total_chunks"] = 0
+                        stats["vector_store_status"] = "table_not_found"
+                else:
+                    stats["total_chunks"] = 0
+                    stats["vector_store_status"] = "connection_error"
                 
                 # Calculate processing efficiency
-                if len(self.doc_hashes) > 0:
-                    stats["avg_chunks_per_document"] = chunk_count / len(self.doc_hashes)
+                if len(self.doc_hashes) > 0 and stats["total_chunks"] > 0:
+                    stats["avg_chunks_per_document"] = stats["total_chunks"] / len(self.doc_hashes)
                 else:
                     stats["avg_chunks_per_document"] = 0
                     

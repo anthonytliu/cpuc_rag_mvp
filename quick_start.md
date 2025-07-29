@@ -70,7 +70,7 @@ python -m unittest test_cpuc_scraper.TestStandaloneScraperIntegration -v
 
 - `cpuc_csvs/R2207005_resultCSV.csv` - Official CPUC document data
 - `cpuc_csvs/R2207005_scraped_pdf_history.json` - Complete PDF metadata
-- `local_chroma_db/` - Vector embeddings database
+- `local_lance_db/` - Vector embeddings database
 - `standalone_scraper.log` - Scraper execution logs
 
 ## ⚡ Quick Workflow
