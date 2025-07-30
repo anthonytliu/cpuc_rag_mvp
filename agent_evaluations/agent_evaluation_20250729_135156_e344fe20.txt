@@ -1,0 +1,43 @@
+AGENT EVALUATION LOG
+================================================================================
+Timestamp: 2025-07-29T13:51:56.874155
+Document URL: https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M551/K172/551172131.PDF
+Document Title: 551172131
+Detection Score: 0.000
+
+PROCESSING RESULTS COMPARISON:
+----------------------------------------
+
+DOCLING RESULTS:
+- Success: True
+- Processing Time: 5.84s
+- Chunks Extracted: 46
+- Content Length: 6889 characters
+- Content Types: ['text', 'section_header', 'footnote', 'list_item']
+- Tables Found: 0
+- Error: None
+
+CHONKIE RESULTS:
+- Success: True
+- Processing Time: 2.38s
+- Chunks Extracted: 8
+- Content Length: 7051 characters
+- Strategy Used: recursive
+- Text Quality: 0.816
+- Error: None
+
+AGENT DECISION:
+----------------------------------------
+Chosen Method: CHONKIE
+
+AGENT REASONING:
+----------------------------------------
+Agent evaluation failed, defaulting to Chonkie for low detection score (0.000)
+
+PERFORMANCE METRICS:
+----------------------------------------
+Speed Advantage: 2.5x (Docling vs Chonkie)
+Content Volume: Docling=6889, Chonkie=7051
+Reliability: Docling=Success, Chonkie=Success
+
+================================================================================
