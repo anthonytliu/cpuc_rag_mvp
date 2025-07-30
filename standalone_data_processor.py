@@ -37,8 +37,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import hashlib
 
-# Import config for DEBUG setting
-import config
+# Add src to path and import config
+sys.path.insert(0, str(Path(__file__).parent / 'src'))
+from core import config
 
 # Setup logging for standalone operation - level depends on DEBUG flag
 log_level = logging.DEBUG if config.DEBUG else logging.INFO
@@ -128,9 +129,22 @@ def get_config_proceedings() -> List[str]:
 
 def discover_available_proceedings() -> List[str]:
     """Discover all available proceedings in cpuc_proceedings directory."""
-    cpuc_proceedings_dir = Path('cpuc_proceedings')
-    if not cpuc_proceedings_dir.exists():
-        logger.warning("cpuc_proceedings directory not found")
+    # Try multiple possible locations for cpuc_proceedings
+    possible_paths = [
+        Path('data/proceedings/cpuc_proceedings'),  # New organized structure
+        Path('cpuc_proceedings'),                    # Original location
+        Path('data/cpuc_proceedings')                # Alternative location
+    ]
+    
+    cpuc_proceedings_dir = None
+    for path in possible_paths:
+        if path.exists():
+            cpuc_proceedings_dir = path
+            logger.info(f"Found cpuc_proceedings directory at: {path}")
+            break
+    
+    if cpuc_proceedings_dir is None:
+        logger.warning("cpuc_proceedings directory not found in any expected location")
         return []
     
     proceedings = []
@@ -148,7 +162,6 @@ def discover_available_proceedings() -> List[str]:
 def get_proceeding_status(proceeding: str) -> Dict:
     """Get processing status for a proceeding."""
     try:
-        import config
         paths = config.get_proceeding_file_paths(proceeding)
         
         status = {
@@ -163,11 +176,17 @@ def get_proceeding_status(proceeding: str) -> Dict:
             'errors': []
         }
         
-        # Check scraped data
+        # Check scraped data - try both naming conventions
+        scraped_file = None
         if paths['scraped_pdf_history'].exists():
+            scraped_file = paths['scraped_pdf_history']
+        elif paths['scraped_pdf_history_alt'].exists():
+            scraped_file = paths['scraped_pdf_history_alt']
+        
+        if scraped_file:
             status['scraped_data_exists'] = True
             try:
-                with open(paths['scraped_pdf_history'], 'r') as f:
+                with open(scraped_file, 'r') as f:
                     scraped_data = json.load(f)
                 status['total_scraped_pdfs'] = len(scraped_data)
             except Exception as e:
@@ -263,7 +282,6 @@ def list_proceedings_status() -> None:
 def setup_proceeding_directories(proceeding: str) -> bool:
     """Setup the embeddings directory structure for a proceeding."""
     try:
-        import config
         paths = config.get_proceeding_file_paths(proceeding)
         
         # Create embeddings directory
@@ -283,7 +301,6 @@ def setup_proceeding_directories(proceeding: str) -> bool:
 def load_scraped_pdf_data(proceeding: str) -> Optional[Dict]:
     """Load scraped PDF data for a proceeding."""
     try:
-        import config
         paths = config.get_proceeding_file_paths(proceeding)
         
         # Try the standard path first (scraped_pdf_history.json)
@@ -346,8 +363,9 @@ def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_re
         if not config.DEBUG:
             print(f"📄 Found {len(scraped_data)} scraped PDFs for {proceeding}")
         
-        # Initialize incremental embedder
-        from incremental_embedder import IncrementalEmbedder
+        # Initialize incremental embedder  
+        sys.path.insert(0, str(Path(__file__).parent / 'src'))
+        from data_processing.incremental_embedder import IncrementalEmbedder
         
         def progress_callback(message: str, progress: int):
             if config.VERBOSE_LOGGING:
@@ -359,17 +377,24 @@ def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_re
         results = embedder.process_incremental_embeddings()
         
         # Log results with clean formatting
-        if results['status'] == 'completed':
+        if results['status'] in ['completed', 'up_to_date']:
             if not config.DEBUG:
-                print(f"✅ Processing completed for {proceeding}")
-                print(f"   Documents processed: {results['documents_processed']}")
-                print(f"   Successful: {results['successful']}")
-                print(f"   Failed: {results['failed']}")
+                if results['status'] == 'up_to_date':
+                    print(f"✅ All documents up to date for {proceeding}")
+                    print(f"   No new documents to process")
+                else:
+                    print(f"✅ Processing completed for {proceeding}")
+                    print(f"   Documents processed: {results['documents_processed']}")
+                    print(f"   Successful: {results['successful']}")
+                    print(f"   Failed: {results['failed']}")
             else:
-                logger.info(f"✅ Processing completed for {proceeding}")
-                logger.info(f"   Documents processed: {results['documents_processed']}")
-                logger.info(f"   Successful: {results['successful']}")
-                logger.info(f"   Failed: {results['failed']}")
+                if results['status'] == 'up_to_date':
+                    logger.info(f"✅ All documents up to date for {proceeding}")
+                else:
+                    logger.info(f"✅ Processing completed for {proceeding}")
+                    logger.info(f"   Documents processed: {results['documents_processed']}")
+                    logger.info(f"   Successful: {results['successful']}")
+                    logger.info(f"   Failed: {results['failed']}")
         else:
             if not config.DEBUG:
                 print(f"⚠️ Processing status for {proceeding}: {results['status']}")
@@ -379,6 +404,10 @@ def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_re
                 logger.warning(f"⚠️ Processing status for {proceeding}: {results['status']}")
                 if 'error' in results:
                     logger.error(f"   Error: {results['error']}")
+        
+        # Normalize status for consistency
+        if results['status'] == 'up_to_date':
+            results['status'] = 'completed'
         
         return results
         

@@ -49,7 +49,9 @@ logger = logging.getLogger(__name__)
 def _get_csv_cleaner():
     """Import and return the CSV cleaning function from cpuc_scraper"""
     try:
-        from cpuc_scraper import CPUCSimplifiedScraper
+        # Add src to path and import cpuc_scraper
+        sys.path.insert(0, str(Path(__file__).parent / 'src'))
+        from scrapers.cpuc_scraper import CPUCSimplifiedScraper
         # Create temporary instance to access the cleaning method
         temp_scraper = CPUCSimplifiedScraper()
         return temp_scraper._clean_csv_document_types
@@ -124,7 +126,9 @@ CSV Cleaning:
 def get_scraper_proceedings() -> list:
     """Get list of proceedings to scrape from config."""
     try:
-        import config
+        # Add src to path and import config
+        sys.path.insert(0, str(Path(__file__).parent / 'src'))
+        from core import config
         proceedings = getattr(config, 'SCRAPER_PROCEEDINGS', ['R2207005'])
         logger.info(f"Loaded {len(proceedings)} proceedings from config: {proceedings}")
         return proceedings
