@@ -1,0 +1,43 @@
+AGENT EVALUATION LOG
+================================================================================
+Timestamp: 2025-07-28T22:13:53.479162
+Document URL: http://docs.cpuc.ca.gov/word_pdf/agenda_decision/118189.pdf
+Document Title: 118189
+Detection Score: 0.400
+
+PROCESSING RESULTS COMPARISON:
+----------------------------------------
+
+DOCLING RESULTS:
+- Success: True
+- Processing Time: 9.18s
+- Chunks Extracted: 164
+- Content Length: 41291 characters
+- Content Types: ['section_header', 'text', 'footnote', 'list_item']
+- Tables Found: 0
+- Error: None
+
+CHONKIE RESULTS:
+- Success: True
+- Processing Time: 32.47s
+- Chunks Extracted: 45
+- Content Length: 42584 characters
+- Strategy Used: recursive
+- Text Quality: 0.806
+- Error: None
+
+AGENT DECISION:
+----------------------------------------
+Chosen Method: CHONKIE
+
+AGENT REASONING:
+----------------------------------------
+Agent evaluation failed, defaulting to Chonkie for low detection score (0.400)
+
+PERFORMANCE METRICS:
+----------------------------------------
+Speed Advantage: 0.3x (Docling vs Chonkie)
+Content Volume: Docling=41291, Chonkie=42584
+Reliability: Docling=Success, Chonkie=Success
+
+================================================================================

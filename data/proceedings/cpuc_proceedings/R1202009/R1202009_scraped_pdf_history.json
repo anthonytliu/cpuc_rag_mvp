@@ -1,0 +1,1520 @@
+{
+  "3b48cd5bfceec8284aa3259155f1a6e3": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M560/K138/560138254.PDF",
+    "title": "560138254",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "03/28/2025",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=560138254",
+    "metadata": {
+      "file_size": "109010",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 28 Mar 2025 22:40:27 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:13.445517",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2025",
+    "filed_by": "CALJ/COOKE/CPUC",
+    "description": "Notice of Reassignment."
+  },
+  "b1ce62a565905415ef7d87cc89b62e46": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M516/K269/516269894.PDF",
+    "title": "516269894",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "08/08/2023",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=516269894",
+    "metadata": {
+      "file_size": "148526",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 08 Aug 2023 16:46:13 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:14.232823",
+      "timeout_used": 10
+    },
+    "filing_date": "08/08/2023",
+    "filed_by": "CALJ/Cooke/CPUC",
+    "description": "NOTICE OF REASSIGNMENT"
+  },
+  "b48eb959000c206f39d5ab8bb5a2f35e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M511/K023/511023335.PDF",
+    "title": "511023335",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "06/12/2023",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=511023335",
+    "metadata": {
+      "file_size": "147598",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 12 Jun 2023 23:12:51 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:16.841654",
+      "timeout_used": 10
+    },
+    "filing_date": "06/12/2023",
+    "filed_by": "CALJ/COOKE/CPUC",
+    "description": "Notice of Reassignment."
+  },
+  "a16f381c67e1d951021846daef6f4193": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M480/K218/480218807.PDF",
+    "title": "480218807",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "05/26/2022",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=480218807",
+    "metadata": {
+      "file_size": "132318",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 26 May 2022 21:49:21 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:17.521947",
+      "timeout_used": 10
+    },
+    "filing_date": "05/31/2022",
+    "filed_by": "CALJ/Simon/CPUC",
+    "description": "NOTICE OF REASSIGNMENT. Rulemaking 12-02-009 is being Reassigned from President Marybel Batjer to Commissioner John R.D. Reynolds."
+  },
+  "33d21b391b07dec0fd0b4df6c1c522ae": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M405/K097/405097767.PDF",
+    "title": "405097767",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "09/08/2021",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=405097767",
+    "metadata": {
+      "file_size": "187902",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 08 Sep 2021 13:10:16 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:20.204541",
+      "timeout_used": 10
+    },
+    "filing_date": "09/08/2021",
+    "filed_by": "Southern California Edison Company,Pacific Gas and Electric Company,San Diego Gas & Electric Company",
+    "description": "JOINT RESPONSE TO JOINT COMMUNITY CHOICE AGGREGATORS\u2019 PETITION FOR MODIFICATION OF DECISION 12-12-036"
+  },
+  "57dcc22cb4a05edda3764a4612f25973": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M398/K046/398046664.PDF",
+    "title": "398046664",
+    "document_type": "E-Filed: Petition for Modification",
+    "pdf_creation_date": "08/09/2021",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=398046664",
+    "metadata": {
+      "file_size": "378100",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 09 Aug 2021 18:34:57 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:20.706386",
+      "timeout_used": 10
+    },
+    "filing_date": "08/09/2021",
+    "filed_by": "City of Baldwin Park,City of Lancaster,City of Pico Rivera,City of Pomona,City of Rancho Mirage,City of San Jacinto,San Jos\u00e9, administrator for San Jos\u00e9 Clean Energy,City and County of San Francisco,Central Coast Community Energy,Clean Energy Alliance,Clean Power Alliance,East Bay Community Energy,Marin Clean Energy,Pioneer Community Energy,Redwood Coast Energy Authority,San Diego Community Power,Sonoma Clean Power,Town of Apple Valley",
+    "description": "JOINT PETITION FOR MODIFICATION OF DECISION 12-12-036"
+  },
+  "1251d5f1666fd8a2ce0cd659b028147a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M328/K686/328686337.PDF",
+    "title": "328686337",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "03/04/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=328686337",
+    "metadata": {
+      "file_size": "128257",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 04 Mar 2020 22:21:05 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:23.418814",
+      "timeout_used": 10
+    },
+    "filing_date": "03/04/2020",
+    "filed_by": "CALJ/SIMON/CPUC",
+    "description": "Notice of Co-Assignment."
+  },
+  "f9cfb25e5e009e509b84a56a7cc8356e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M325/K526/325526292.PDF",
+    "title": "325526292",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "01/29/2020",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=325526292",
+    "metadata": {
+      "file_size": "116413",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 29 Jan 2020 23:32:58 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:24.007422",
+      "timeout_used": 10
+    },
+    "filing_date": "01/29/2020",
+    "filed_by": "CALJ/SIMON/CPUC",
+    "description": "Notice of Reassignment."
+  },
+  "148ea785167006fa90a867e447a811b1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K763/212763078.PDF",
+    "title": "212763078",
+    "document_type": "E-Filed: Reply",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212763078",
+    "metadata": {
+      "file_size": "5128154",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 16:45:16 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:27.158274",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "Southern California Edison Company,San Diego Gas & Electric Company,Pacific Gas and Electric Company",
+    "description": "Reply Of Pacific Gas And Electric Company (U 39-E), San Diego Gas & Electric Company (U 902-E) And Southern California Edison Company (U 338-E) In Support Of Petition For Modification Of Decision 12-12-036."
+  },
+  "9a6fb9b7e72f68b3e217710e01319b27": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M211/K889/211889224.PDF",
+    "title": "211889224",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "03/07/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=211889224",
+    "metadata": {
+      "file_size": "121927",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 07 Mar 2018 23:43:06 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:29.471138",
+      "timeout_used": 10
+    },
+    "filing_date": "03/07/2018",
+    "filed_by": "ACTING CALJ/ SIMON/ CPUC",
+    "description": "NOTICE OF REASSIGNMENT"
+  },
+  "25404a784439ea68c411b757ff428d55": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M213/K120/213120477.PDF",
+    "title": "213120477",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/18/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=213120477",
+    "metadata": {
+      "file_size": "209327",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 18 Apr 2018 20:33:05 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:30.472913",
+      "timeout_used": 10
+    },
+    "filing_date": "04/18/2018",
+    "filed_by": "Western Riverside Council of Governments,Desert Community Energy,Los Angeles Community Choice Energy",
+    "description": "Joint response to the Joint Utilities\u2019 Petition for Modification of Decision 12-12-036 (late-filed authorized by ALJ Kim per e-mail of 4/18/2018)."
+  },
+  "e45e5df822ca9d0a851fef01d3974e76": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K597/212597958.PDF",
+    "title": "212597958",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212597958",
+    "metadata": {
+      "file_size": "405466",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 17:33:14 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:36.976272",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "THE CALIFORNIA COMMUNITY CHOICE ASSOCIATION",
+    "description": "Response to the Petition for Modification of Decision 12-12-036."
+  },
+  "292e569c50d4419b914fe6a914218c12": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K762/212762791.PDF",
+    "title": "212762791",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212762791",
+    "metadata": {
+      "file_size": "338029",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 18:17:13 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:37.117035",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "City and County of San Francisco",
+    "description": "Response to Petition for Modification of Decision 12-12-036."
+  },
+  "9e3fe6d08c3a68294512617ab7fdae77": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K596/212596850.PDF",
+    "title": "212596850",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212596850",
+    "metadata": {
+      "file_size": "19213356",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 20:18:50 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:40.324418",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "City of Solana Beach",
+    "description": "Response to the Petition for Modification of Decision 12-12-036."
+  },
+  "46c235d50a3d4a0382c9dbc25f905787": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K643/212643602.PDF",
+    "title": "212643602",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212643602",
+    "metadata": {
+      "file_size": "558950",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 17:56:19 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:40.467048",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "Shell Energy North America (US), L.P.",
+    "description": "Response to Petition for Modification of Decision 12-12-036."
+  },
+  "25c1a6c11c1e15f311ca69dbdad43626": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K596/212596830.PDF",
+    "title": "212596830",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212596830",
+    "metadata": {
+      "file_size": "166287",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 16:43:10 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:43.592437",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "ORA/HOOK/CPUC",
+    "description": "Response to the Petition for Modification of Decision 12-12-036."
+  },
+  "f23115fc97b802cbfa9d9162690386df": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K763/212763073.PDF",
+    "title": "212763073",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212763073",
+    "metadata": {
+      "file_size": "233325",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 16:25:39 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:43.778197",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "Coalition of California Utility Employees",
+    "description": "Response to the Petition for Modification of Decision 12-12-036."
+  },
+  "cd243d8b4f6ae3296531747e08e8cfca": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K762/212762800.PDF",
+    "title": "212762800",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212762800",
+    "metadata": {
+      "file_size": "290395",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 21:23:36 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:47.018069",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "Alliance for Retail Energy Market,Direct Access Customer Coalition",
+    "description": "Response opposing Petition for Modification of Decision 12-12-036."
+  },
+  "1bdcdc561e765f2be49a59922af69c34": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K597/212597969.PDF",
+    "title": "212597969",
+    "document_type": "E-Filed: Response",
+    "pdf_creation_date": "04/05/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=212597969",
+    "metadata": {
+      "file_size": "795441",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 05 Apr 2018 21:28:46 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:47.108544",
+      "timeout_used": 10
+    },
+    "filing_date": "04/05/2018",
+    "filed_by": "City of San Diego",
+    "description": "Response to Joint Electrical Corporations' Petition to Modify D.12-12-036."
+  },
+  "f7efb4a67c2d2f90fd18e98dc97bf0ad": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M080/K742/80742036.PDF",
+    "title": "80742036",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "11/01/2013",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=80742036",
+    "metadata": {
+      "file_size": "549536",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 01 Nov 2013 17:24:10 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:50.359585",
+      "timeout_used": 10
+    },
+    "filing_date": "11/01/2013",
+    "filed_by": NaN,
+    "description": "Decision D1310069 - grants Intervenor Compensation to Women's Energy Matters for Substantial Contribution to D.12-12-036"
+  },
+  "fde115b014fa8bd56f4ab0cc1d080ee1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M207/K544/207544639.PDF",
+    "title": "207544639",
+    "document_type": "E-Filed: Petition for Modification",
+    "pdf_creation_date": "02/01/2018",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=207544639",
+    "metadata": {
+      "file_size": "6653750",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 01 Feb 2018 18:57:54 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:50.471464",
+      "timeout_used": 10
+    },
+    "filing_date": "02/01/2018",
+    "filed_by": "Southern California Edison Company,San Diego Gas & Electric Company,Pacific Gas and Electric Company",
+    "description": "PETITION FOR MODIFICATION OF DECISION 12-12-036 OF"
+  },
+  "72e44aa463a3f94bc4b547f0e335c18a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M040/K674/40674712.PDF",
+    "title": "40674712",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "12/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=40674712",
+    "metadata": {
+      "file_size": "712515",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 28 Dec 2012 18:00:10 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:53.479130",
+      "timeout_used": 10
+    },
+    "filing_date": "12/28/2012",
+    "filed_by": NaN,
+    "description": "Decision D1212036 - Adopts a Code of Conduct and Enforcement Mechanisms Related to Utility Interactions with Community Choice Aggregators, Pursuant to Senate Bill 790, and closes proceeding."
+  },
+  "498569b295646b2adc23a3953f40a81a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M065/K714/65714582.PDF",
+    "title": "65714582",
+    "document_type": "E-Filed: Request",
+    "pdf_creation_date": "05/30/2013",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=65714582",
+    "metadata": {
+      "file_size": "278859",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 May 2013 18:25:05 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:53.602742",
+      "timeout_used": 10
+    },
+    "filing_date": "05/30/2013",
+    "filed_by": "Women's Energy Matters",
+    "description": "Intervenor compensation claim for contribution to Decision 12-12-036."
+  },
+  "2f004fd7915b0baa19d93b1bd1b48844": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K601/39601096.PDF",
+    "title": "39601096",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/19/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39601096",
+    "metadata": {
+      "file_size": "132343",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 19 Dec 2012 22:40:14 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:56.869854",
+      "timeout_used": 10
+    },
+    "filing_date": "12/19/2012",
+    "filed_by": "Southern California Edison Company",
+    "description": "Reply; to the 11/20/12 Proposed Decision"
+  },
+  "8b2fc8963aa2993195541149f90707a8": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K600/39600871.PDF",
+    "title": "39600871",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/19/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39600871",
+    "metadata": {
+      "file_size": "435918",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 19 Dec 2012 23:05:54 GMT",
+      "analysis_timestamp": "2025-07-24T14:41:59.536472",
+      "timeout_used": 10
+    },
+    "filing_date": "12/19/2012",
+    "filed_by": "City and County of San Francisco",
+    "description": "Reply; to the 11/20/12 Proposed Decision"
+  },
+  "45081b068231a165d5f4aaeaab446c84": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K597/39597256.PDF",
+    "title": "39597256",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/19/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39597256",
+    "metadata": {
+      "file_size": "290962",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 19 Dec 2012 22:49:27 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:00.191183",
+      "timeout_used": 10
+    },
+    "filing_date": "12/19/2012",
+    "filed_by": "PACIFIC GAS AND ELECTRIC COMPANY",
+    "description": "Reply; to the 11/20/12 Proposed Decision"
+  },
+  "b9e256c56619fdbc944f644644bcc189": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K598/39598680.PDF",
+    "title": "39598680",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/20/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39598680",
+    "metadata": {
+      "file_size": "475428",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 20 Dec 2012 21:29:07 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:02.910383",
+      "timeout_used": 10
+    },
+    "filing_date": "12/20/2012",
+    "filed_by": "Coalition of California Utility Employees",
+    "description": "Reply; to the 11/20/12 Proposed Decision"
+  },
+  "f98d4e95e687cd8959673aad8fa07919": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K600/39600552.PDF",
+    "title": "39600552",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/20/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39600552",
+    "metadata": {
+      "file_size": "532929",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 20 Dec 2012 16:37:39 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:03.651775",
+      "timeout_used": 10
+    },
+    "filing_date": "12/20/2012",
+    "filed_by": "Marin Energy Authority,CCA ALLIANCE",
+    "description": "Reply; on the 11/20/12 Proposed Decision"
+  },
+  "f76f7af2addc76c0cd82a0930f9392c1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K599/39599013.PDF",
+    "title": "39599013",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/19/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39599013",
+    "metadata": {
+      "file_size": "530136",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 19 Dec 2012 23:12:24 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:06.301334",
+      "timeout_used": 10
+    },
+    "filing_date": "12/19/2012",
+    "filed_by": "San Diego Gas & Electric Company",
+    "description": "Reply; to the 11/20/12 Proposed Decision"
+  },
+  "f2bf331fd496b28b1d13a7b86bd33c7b": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K601/39601414.PDF",
+    "title": "39601414",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/12/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39601414",
+    "metadata": {
+      "file_size": "299191",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 12 Dec 2012 19:16:37 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:07.034204",
+      "timeout_used": 10
+    },
+    "filing_date": "12/12/2012",
+    "filed_by": "PACIFIC GAS AND ELECTRIC COMPANY",
+    "description": "Opening; on Proposed Decision of President Peevey Adopting Rules for Electrical Corporations Relative to Community Choice Aggregation Programs"
+  },
+  "f64da153f63386d63652f56e6bb54d7b": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K597/39597232.PDF",
+    "title": "39597232",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/12/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39597232",
+    "metadata": {
+      "file_size": "456883",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 12 Dec 2012 19:28:41 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:09.594803",
+      "timeout_used": 10
+    },
+    "filing_date": "12/12/2012",
+    "filed_by": "Coalition of California Utility Employees",
+    "description": "Opening; on the Assigned Commissioner's Proposed Decision"
+  },
+  "15be3ff77c594c26fae3f52ab04d2476": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K599/39599211.PDF",
+    "title": "39599211",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/12/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39599211",
+    "metadata": {
+      "file_size": "147416",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 12 Dec 2012 18:59:10 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:10.281166",
+      "timeout_used": 10
+    },
+    "filing_date": "12/12/2012",
+    "filed_by": "Southern California Edison Company",
+    "description": "Opening; on the (Proposed) Decision Adopting a Code of Conduct and Enforcement Mechanisms Related to Utility Interactions with Community Choice Aggregators, Pursuant to Senate Bill 790"
+  },
+  "d54da5f23e00faacdfd8ea0996df701f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K599/39599983.PDF",
+    "title": "39599983",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/12/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39599983",
+    "metadata": {
+      "file_size": "475045",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 12 Dec 2012 18:48:36 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:12.914399",
+      "timeout_used": 10
+    },
+    "filing_date": "12/12/2012",
+    "filed_by": "Marin Energy Authority",
+    "description": "on the Proposed Decision Adopting a Code of Conduct and Enforcement Mechanisms Related to Utility Interactions with Community Choice Aggregators, Pursuant to Senate Bill 790"
+  },
+  "88031576c1bd370796a2a873aabb0fdf": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K597/39597780.PDF",
+    "title": "39597780",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/12/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39597780",
+    "metadata": {
+      "file_size": "528258",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 12 Dec 2012 19:32:19 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:16.469630",
+      "timeout_used": 10
+    },
+    "filing_date": "12/12/2012",
+    "filed_by": "San Diego Gas & Electric Company",
+    "description": "Opening; on (Proposed) Decision Adopting a Code of Conduct and Enforcement Mechanisms Related to Utility Interactions with Community Choice Aggregators, Pursuant to Senate Bill 790"
+  },
+  "5cb8bbe7824d84ae704ff2d66eb38661": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K722/31722741.PDF",
+    "title": "31722741",
+    "document_type": "E-Filed: Proposed Decision",
+    "pdf_creation_date": "11/20/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=31722741",
+    "metadata": {
+      "file_size": "336150",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 20 Nov 2012 17:48:19 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:18.955273",
+      "timeout_used": 10
+    },
+    "filing_date": "11/20/2012",
+    "filed_by": "CMMR/PEEVEY/CPUC",
+    "description": "Decision Adopting a Code of Conduct and Enforcement Mechanisms Related to Utility Interactions with Community Choice Aggregators, Pursuant to Senate Bill 790. Opening comments, which shall not exceed 15 pages, are due no later than December 10, 2012. Reply comments, which shall not exceed 5 pages, are due no later than five days after the last day for filing comments."
+  },
+  "c80fec35081de825bd894753f3b941c7": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M027/K798/27798804.PDF",
+    "title": "27798804",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/13/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=27798804",
+    "metadata": {
+      "file_size": "543385",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 13 Sep 2012 17:20:11 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:19.720658",
+      "timeout_used": 10
+    },
+    "filing_date": "09/13/2012",
+    "filed_by": "San Diego Gas & Electric Company",
+    "description": "Reply comments on Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling."
+  },
+  "87ab69c3ebc19e61e52dccfa52984c73": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M027/K381/27381137.PDF",
+    "title": "27381137",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/11/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=27381137",
+    "metadata": {
+      "file_size": "582552",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 11 Sep 2012 16:58:19 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:22.055854",
+      "timeout_used": 10
+    },
+    "filing_date": "09/11/2012",
+    "filed_by": "Marin Energy Authority,San Joaquin Valley Power Authority,South San Joaquin Irrigation District,City of Santa Cruz,The Climate Protection Campaign,Direct Access Customer Coalition,Direct Energy, LLC,Alliance for Retail Energy Markets",
+    "description": "Reply comments on the Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling."
+  },
+  "9abd44f0ca9f976513a6b037dd7515e8": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M064/K660/64660212.PDF",
+    "title": "64660212",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/14/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=64660212",
+    "metadata": {
+      "file_size": "148081",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 14 Sep 2012 16:19:06 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:22.991277",
+      "timeout_used": 10
+    },
+    "filing_date": "05/08/2013",
+    "filed_by": "Women's Energy Matters",
+    "description": "Reply comments on the proposed code of conduct."
+  },
+  "df1e0cf79924b1d9fec6b3d7861ff487": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M027/K382/27382560.PDF",
+    "title": "27382560",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/11/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=27382560",
+    "metadata": {
+      "file_size": "228156",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 11 Sep 2012 16:48:24 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:25.267296",
+      "timeout_used": 10
+    },
+    "filing_date": "09/11/2012",
+    "filed_by": "PACIFIC GAS AND ELECTRIC COMPANY",
+    "description": "Reply comments on updated draft rules for electrical corporations relative to Community Choice Aggregation Programs."
+  },
+  "3f51e20917b423bc81fece6e419ea1f4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M027/K380/27380150.PDF",
+    "title": "27380150",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/11/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=27380150",
+    "metadata": {
+      "file_size": "203228",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 11 Sep 2012 16:46:53 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:26.170769",
+      "timeout_used": 10
+    },
+    "filing_date": "09/11/2012",
+    "filed_by": "City and County of San Francisco",
+    "description": "Reply comments regarding rulemaking pursuant to Senate Bill No.790 to consider and adopt a code of conduct, rules and enforcement procedures governing the conduct of electrical corporations relative to the consideration, formation and implementation of Community Choice Aggregation Programs."
+  },
+  "16bca557cc4050e8089cbcf77d0ef702": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M027/K802/27802369.PDF",
+    "title": "27802369",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/14/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=27802369",
+    "metadata": {
+      "file_size": "148312",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 14 Sep 2012 16:09:45 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:28.472333",
+      "timeout_used": 10
+    },
+    "filing_date": "09/14/2012",
+    "filed_by": "Southern California Edison Company",
+    "description": "Reply comments to parties' comments on the Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling."
+  },
+  "3c6e0dead3efc4abb7f18a0d5154027e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M027/K379/27379821.PDF",
+    "title": "27379821",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "09/11/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=27379821",
+    "metadata": {
+      "file_size": "499376",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 11 Sep 2012 16:44:17 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:29.472618",
+      "timeout_used": 10
+    },
+    "filing_date": "09/11/2012",
+    "filed_by": "Coalition of California Utility Employees",
+    "description": "Reply comments on the Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling."
+  },
+  "d1ce5a9b6cca17a80afaa4ddd404dfd1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K525/26525195.PDF",
+    "title": "26525195",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/30/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26525195",
+    "metadata": {
+      "file_size": "296565",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 Aug 2012 16:47:31 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:32.652445",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2012",
+    "filed_by": "Pacific Gas and Electric Company",
+    "description": "Opening comments on updated draft rules for electrical corporations relative to Community Choice Aggregation programs."
+  },
+  "15ef21bc585e97e1e489aa3da4ceaa96": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K469/26469491.PDF",
+    "title": "26469491",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/30/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26469491",
+    "metadata": {
+      "file_size": "160374",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 Aug 2012 17:15:41 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:34.499822",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2012",
+    "filed_by": "Southern California Edison Company",
+    "description": "Opening comments on the Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling."
+  },
+  "b4d82e81daf889fe5f38bf059ab52e41": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K466/26466322.PDF",
+    "title": "26466322",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/30/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26466322",
+    "metadata": {
+      "file_size": "535263",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 Aug 2012 17:12:47 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:35.855283",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2012",
+    "filed_by": "San Diego Gas & Electric Company",
+    "description": "Opening;"
+  },
+  "41705888a29bcd5406238c88a86102e7": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K469/26469057.PDF",
+    "title": "26469057",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/30/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26469057",
+    "metadata": {
+      "file_size": "612547",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 Aug 2012 17:09:42 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:37.677596",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2012",
+    "filed_by": "Marin Energy Authority,San Joaquin Valley Power Authority,South San Joaquin Irrigation District,City of Santa Cruz,The Climate Protection Campaign,Direct Access Customer Coalition,Direct Energy, LLC,Alliance for Retail Energy Markets",
+    "description": "Opening; "
+  },
+  "70b2017c3c2b4ea54f2c6c11d379ae14": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K470/26470586.PDF",
+    "title": "26470586",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/30/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26470586",
+    "metadata": {
+      "file_size": "463011",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 Aug 2012 16:38:52 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:39.092676",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2012",
+    "filed_by": "Coalition of California Utility Employees",
+    "description": "Opening comments on the Scoping Memo and Ruling."
+  },
+  "9bf16360ea948a75e4465c4ea6d2cd3e": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K471/26471457.PDF",
+    "title": "26471457",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/30/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26471457",
+    "metadata": {
+      "file_size": "116589",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 Aug 2012 16:27:34 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:40.901348",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2012",
+    "filed_by": "Gas and Power Technologies, Inc.",
+    "description": "Comments on Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling."
+  },
+  "48beadb5a9e89029d345edc1094a1b3b": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K467/26467293.PDF",
+    "title": "26467293",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "08/27/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26467293",
+    "metadata": {
+      "file_size": "115329",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 27 Aug 2012 22:50:38 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:42.519017",
+      "timeout_used": 10
+    },
+    "filing_date": "08/27/2012",
+    "filed_by": "Gas and Power Technologies, Inc.",
+    "description": "to Become a Party"
+  },
+  "4ca94521cc4b93b98df0d0df8d6e8c60": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULC/172560.PDF",
+    "title": "172560",
+    "document_type": "E-Filed: Scoping Ruling",
+    "pdf_creation_date": "08/09/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=64649",
+    "metadata": {
+      "file_size": "224093",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 09 Aug 2012 22:19:37 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:44.236201",
+      "timeout_used": 10
+    },
+    "filing_date": "08/09/2012",
+    "filed_by": "CMMR/PEEVEY/CPUC,ALJ/HECHT/CPUC",
+    "description": "Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling. The preliminary categorization of this proceeding as quasi-legislative and preliminary determination that hearings will not be needed are confirmed.  The scope of this proceeding and the issues to be addressed are as set forth in the body of this ruling.  Michael R. Peevey is the assigned Commissioner and Presiding Officer for this proceeding.  Pursuant to Rule 8.2(a), ex parte communications will be allowed in this quasi-legislative proceeding without restriction or reporting requirements. Opening comments on Attachment 1 to this ruling shall be filed and served by August 24, 2012, with reply comments due by September 7, 2012."
+  },
+  "bf99ff70294a4564fc708833238c6a94": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/168884.PDF",
+    "title": "168884",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "06/15/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=61928",
+    "metadata": {
+      "file_size": "85897",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 15 Jun 2012 18:40:15 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:45.831600",
+      "timeout_used": 10
+    },
+    "filing_date": "06/15/2012",
+    "filed_by": "Women's Energy Matters",
+    "description": "Motion for Acceptance of Late-Filed NOI.  "
+  },
+  "0deec70a6d17c6a4fca10036ec624b7f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/171139.PDF",
+    "title": "171139",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "07/19/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=63596",
+    "metadata": {
+      "file_size": "215468",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 19 Jul 2012 21:01:57 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:47.449804",
+      "timeout_used": 10
+    },
+    "filing_date": "07/19/2012",
+    "filed_by": "Women's Energy Matters",
+    "description": "of Intent to Claim Inervenor Compensation. (Late-File approved by ALJ Hecht Email dated 6/15/2012.)"
+  },
+  "25d8b44389aa3e930efec020b4e63970": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/164940.PDF",
+    "title": "164940",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/24/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=59096",
+    "metadata": {
+      "file_size": "112019",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 24 Apr 2012 23:12:28 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:49.030251",
+      "timeout_used": 10
+    },
+    "filing_date": "04/24/2012",
+    "filed_by": "City and County of San Francisco",
+    "description": "Reply comments regarding rulemaking pursuant to Senate Bill No.790 to consider and adopt a code of conduct, rules and enforcement procedures governing the conduct of electrical corporations relative to the consideration, formation and implementation of Community Choice Aggregation Programs."
+  },
+  "1806f85055c117e00098f27b41f2f9d1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/165021.PDF",
+    "title": "165021",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/26/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=59159",
+    "metadata": {
+      "file_size": "664985",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 26 Apr 2012 15:55:49 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:50.752165",
+      "timeout_used": 10
+    },
+    "filing_date": "04/26/2012",
+    "filed_by": "Marin Energy Authority,San Joaquin Valley Power Authority,South San Joaquin Irrigation District,City of Santa Cruz,The Climate Protection Campaign,Sierra Club California,Direct Energy, LLC,Noble Americas Energy Solutions LLC,Constellation NewEnergy, Inc.,Alliance for Retail Energy Markets,Direct Access Customer Coalition",
+    "description": "Reply; regarding the Rulemaking Issued Pursuant to Senate Bill 790"
+  },
+  "3f58d9e7da6f8eedc67d68c20277f6ae": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/165007.PDF",
+    "title": "165007",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/25/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=59151",
+    "metadata": {
+      "file_size": "169369",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 25 Apr 2012 22:18:04 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:52.200764",
+      "timeout_used": 10
+    },
+    "filing_date": "04/25/2012",
+    "filed_by": "Southern California Edison Company",
+    "description": "Reply; on the Order Instituting Rulemaking Pursuant to Senate Bill No. 790 to Consider and Adopt a Code of Conduct, Rules and Enforcement Procedures Governing the Conduct of Electrical Corporations Relative to the Consideration, Formation and Implementation of Community Choice Aggregation Programs"
+  },
+  "e6d5cffd9e11e559f6204de73c507155": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/164936.PDF",
+    "title": "164936",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/24/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=59092",
+    "metadata": {
+      "file_size": "138074",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 24 Apr 2012 23:00:12 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:54.135672",
+      "timeout_used": 10
+    },
+    "filing_date": "04/24/2012",
+    "filed_by": "PACIFIC GAS AND ELECTRIC COMPANY",
+    "description": "Reply comments on the OIR."
+  },
+  "4cbdf2e92d43cc1aa297bc4f61727330": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/164995.PDF",
+    "title": "164995",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/25/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=59143",
+    "metadata": {
+      "file_size": "557018",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 25 Apr 2012 17:52:09 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:55.373639",
+      "timeout_used": 10
+    },
+    "filing_date": "04/25/2012",
+    "filed_by": "San Diego Gas & Electric Company",
+    "description": "Reply;"
+  },
+  "e5f8a6bc5a78687c0b3d56005855168a": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/164934.PDF",
+    "title": "164934",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/24/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=59090",
+    "metadata": {
+      "file_size": "472372",
+      "content_type": "application/pdf",
+      "last_modified": "Tue, 24 Apr 2012 22:49:42 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:57.398456",
+      "timeout_used": 10
+    },
+    "filing_date": "04/24/2012",
+    "filed_by": "COALITION OF CALIFORNIA UTILITY EMPLOYEES",
+    "description": "Reply comments on the OIR pursuant to Senate Bill 790."
+  },
+  "acd971398114af2a021ec9d3c487c024": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/162906.PDF",
+    "title": "162906",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57608",
+    "metadata": {
+      "file_size": "82505",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 21:12:53 GMT",
+      "analysis_timestamp": "2025-07-24T14:42:58.531514",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "Women's Energy Matters",
+    "description": "FOR HEARINGS"
+  },
+  "dcc816a395de9f86b44bddb358e2a47b": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162838.PDF",
+    "title": "162838",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57542",
+    "metadata": {
+      "file_size": "129154",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 15:59:11 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:00.631992",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "Shell Energy North America (US), L.P.",
+    "description": "Opening;"
+  },
+  "10d74ea77defd7fc628e7bd9835e0de4": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/163628.PDF",
+    "title": "163628",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "04/09/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=58193",
+    "metadata": {
+      "file_size": "128964",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 09 Apr 2012 20:47:08 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:01.723895",
+      "timeout_used": 10
+    },
+    "filing_date": "04/09/2012",
+    "filed_by": "Local Power",
+    "description": "Opening comments on the Order Instituting Rulemaking pursuant to Senate Bill 790."
+  },
+  "75f3d2a1eb73e946836d307494c627ba": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162880.PDF",
+    "title": "162880",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57582",
+    "metadata": {
+      "file_size": "137191",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 20:19:17 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:03.923429",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "Women's Energy Matters",
+    "description": "OPENING; ON THE OIR"
+  },
+  "6f117043d639bd942d0f593236ef6c1b": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162834.PDF",
+    "title": "162834",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57538",
+    "metadata": {
+      "file_size": "320867",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 15:48:57 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:04.950033",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "PACIFIC GAS AND ELECTRIC COMPANY",
+    "description": "Opening;"
+  },
+  "981f56e6d56d386bad3638c64ce5507f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162925.PDF",
+    "title": "162925",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57627",
+    "metadata": {
+      "file_size": "210698",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 22:48:51 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:07.181354",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "City and County of San Francisco",
+    "description": "Opening; regarding Rulemaking Pursuant to Senate Bill No. 790 to Consider and Adopt a Code of Conduct, Rules and Enforcement Procedures Governing the Conduct of Electrical Corporations Relative to the Consideration, Formation and Implementation of Community Choice Aggregation Programs"
+  },
+  "43cd19a3f641b9aad91b4e7b4aa85a07": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162836.PDF",
+    "title": "162836",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57540",
+    "metadata": {
+      "file_size": "553533",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 15:52:34 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:08.268630",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "San Diego Gas & Electric Company",
+    "description": "Opening;"
+  },
+  "039619934e953435cdd74010ffed8af3": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162930.PDF",
+    "title": "162930",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57630",
+    "metadata": {
+      "file_size": "157849",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 23:04:48 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:10.335457",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "Southern California Edison Company",
+    "description": "Opening; on the Order Instituting Rulemaking Pursuant to Senate Bill No. 790 to Consider and Adopt a Code of Conduct, Rules and Enforcement Procedures Governing the Conduct of Electrical Corporations Relative to the Consideration, Formation and Implementation of Community Choice Aggregation Programs"
+  },
+  "c630b9d166fc2756deeee3f045755847": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162841.PDF",
+    "title": "162841",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "03/28/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=57544",
+    "metadata": {
+      "file_size": "837423",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 28 Mar 2012 16:10:59 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:11.571521",
+      "timeout_used": 10
+    },
+    "filing_date": "03/28/2012",
+    "filed_by": "Marin Energy Authority,Alliance for Retail Energy Markets,San Joaquin Valley Power Authority,South San Joaquin Irrigation District,City of Santa Cruz,The Climate Protection Campaign,Direct Energy, LLC,Noble Americas Energy Solutions LLC,Constellation NewEnergy, Inc.,Direct Access Customer Coalition",
+    "description": "OPENING; REGARDING THE RULEMAKING ISSUED PURSUANT TO SENATE BILL 790"
+  },
+  "89b90cf96907e18e47b58d071540f465": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/163626.PDF",
+    "title": "163626",
+    "document_type": "E-Filed: Motion",
+    "pdf_creation_date": "04/09/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=58191",
+    "metadata": {
+      "file_size": "225600",
+      "content_type": "application/pdf",
+      "last_modified": "Mon, 09 Apr 2012 20:45:15 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:13.542182",
+      "timeout_used": 10
+    },
+    "filing_date": "04/09/2012",
+    "filed_by": "Local Power",
+    "description": "Motion to become a party."
+  },
+  "c268873c3114d6b15636dc55e42f9ba1": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/160196.PDF",
+    "title": "160196",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "02/23/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=55654",
+    "metadata": {
+      "file_size": "57164",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 23 Feb 2012 18:01:07 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:14.867683",
+      "timeout_used": 10
+    },
+    "filing_date": "02/23/2012",
+    "filed_by": "CALJ/CLOPTON/CPUC",
+    "description": "OF ASSIGNMENT"
+  },
+  "43fb42ffd6b547198340e43468e9c5c6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/160206.PDF",
+    "title": "160206",
+    "document_type": "Final Decision",
+    "pdf_creation_date": "02/23/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=575262",
+    "metadata": {
+      "file_size": "136290",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 23 Feb 2012 19:21:37 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:16.847975",
+      "timeout_used": 10
+    },
+    "filing_date": "02/23/2012",
+    "filed_by": "CPUC",
+    "description": "Order Instituting Rulemaking Pursuant to Senate Bill No. 790 to Consider and Adopt a Code of Conduct, Rules and Enforcement Procedures Governing the Conduct of Electrical Corporations Relative to the Consideration, Formation and Implementation of Community Choice Aggregation Programs.\n\nOpening Comments on the Proposed Rules are due by March 26, 2012;\nReply Comments on the Proposed Rules are due by April 16, 2012;\nMotions for Hearing are due by April 23. 2012;\nResponses to Motions for Hearing are due by April 30. 2012."
+  },
+  "d7755ada9719267afeb656e6aaeca2d6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M561/K437/561437967.PDF",
+    "title": "561437967",
+    "document_type": "Google Search Result",
+    "pdf_creation_date": "03/28/2025",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "google search",
+    "parent_url": "Google Search: R.12-02-009",
+    "metadata": {
+      "file_size": "363682",
+      "content_type": "application/pdf",
+      "last_modified": "Fri, 28 Mar 2025 22:40:27 GMT",
+      "analysis_timestamp": "2025-07-24T14:43:18.578363",
+      "timeout_used": 10
+    },
+    "search_query": "R.12-02-009"
+  },
+  "011d9417b189a585844cdffbc553906f": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M254/K771/254771282.PDF",
+    "title": "254771282",
+    "document_type": "E-Filed: Notice",
+    "pdf_creation_date": "01/05/2019",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=254771282",
+    "metadata": {
+      "file_size": "566346",
+      "content_type": "application/pdf",
+      "last_modified": "Sat, 05 Jan 2019 01:49:42 GMT",
+      "analysis_timestamp": "2025-07-24T14:53:18.773404",
+      "timeout_used": 10
+    },
+    "filing_date": "01/04/2019",
+    "filed_by": "Los Angeles Community Choice Energy",
+    "description": "NOTICE OF CHANGE OF NAME"
+  },
+  "1d5a4e5c4615ef555051a2c22185d798": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M064/K893/64893049.PDF",
+    "title": "64893049",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/19/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=64893049",
+    "metadata": {
+      "file_size": "166459",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 19 Dec 2012 22:54:05 GMT",
+      "analysis_timestamp": "2025-07-24T14:53:18.806799",
+      "timeout_used": 10
+    },
+    "filing_date": "05/08/2013",
+    "filed_by": "Women's Energy Matters",
+    "description": "Reply; to the 11/20/12 Proposed Decision"
+  },
+  "666f8e147c252096bc539a918cce5812": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K601/39601632.PDF",
+    "title": "39601632",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/12/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39601632",
+    "metadata": {
+      "file_size": "145779",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 12 Dec 2012 21:29:48 GMT",
+      "analysis_timestamp": "2025-07-24T14:53:23.772247",
+      "timeout_used": 10
+    },
+    "filing_date": "12/13/2012",
+    "filed_by": "Women's Energy Matters",
+    "description": "Opening; on Proposed Decision Adopting a CCA Code of Conduct"
+  },
+  "5f4ce77817d0c0cae6654e02ea4db8f6": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M039/K601/39601193.PDF",
+    "title": "39601193",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "12/12/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=39601193",
+    "metadata": {
+      "file_size": "418451",
+      "content_type": "application/pdf",
+      "last_modified": "Wed, 12 Dec 2012 18:54:44 GMT",
+      "analysis_timestamp": "2025-07-24T14:53:24.699205",
+      "timeout_used": 10
+    },
+    "filing_date": "12/12/2012",
+    "filed_by": "City and County of San Francisco",
+    "description": "on the November 20 Proposed Decision of Commissioner Peevey regarding a code of conduct, rules and enforcement procedures governing the conduct of electrical corporations relative to the consideration, formation and implementation of community choice aggregation programs"
+  },
+  "f34f977db25a3aca678be2fd7da84079": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M026/K470/26470480.PDF",
+    "title": "26470480",
+    "document_type": "E-Filed: Comments",
+    "pdf_creation_date": "08/30/2012",
+    "scrape_date": "07/24/2025",
+    "status": "discovered",
+    "source": "csv",
+    "parent_url": "https://docs.cpuc.ca.gov/SearchRes.aspx?DocFormat=ALL&DocID=26470480",
+    "metadata": {
+      "file_size": "173392",
+      "content_type": "application/pdf",
+      "last_modified": "Thu, 30 Aug 2012 16:53:15 GMT",
+      "analysis_timestamp": "2025-07-24T14:53:28.680362",
+      "timeout_used": 10
+    },
+    "filing_date": "08/30/2012",
+    "filed_by": "City and County of San Francisco",
+    "description": "Comments on the Assigned Commissioner's and Administrative Law Judge's Scoping Memo and Ruling."
+  }
+}

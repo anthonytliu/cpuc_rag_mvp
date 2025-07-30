@@ -1,0 +1,43 @@
+AGENT EVALUATION LOG
+================================================================================
+Timestamp: 2025-07-29T06:04:36.449344
+Document URL: https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M167/K737/167737642.PDF
+Document Title: 167737642
+Detection Score: 0.542
+
+PROCESSING RESULTS COMPARISON:
+----------------------------------------
+
+DOCLING RESULTS:
+- Success: True
+- Processing Time: 82.75s
+- Chunks Extracted: 421
+- Content Length: 217857 characters
+- Content Types: ['section_header', 'text', 'footnote', 'document_index', 'table', 'list_item', 'caption']
+- Tables Found: 31
+- Error: None
+
+CHONKIE RESULTS:
+- Success: True
+- Processing Time: 3.89s
+- Chunks Extracted: 144
+- Content Length: 137604 characters
+- Strategy Used: recursive
+- Text Quality: 0.762
+- Error: None
+
+AGENT DECISION:
+----------------------------------------
+Chosen Method: DOCLING
+
+AGENT REASONING:
+----------------------------------------
+Agent evaluation failed, defaulting to Docling for high detection score (0.542)
+
+PERFORMANCE METRICS:
+----------------------------------------
+Speed Advantage: 21.3x (Docling vs Chonkie)
+Content Volume: Docling=217857, Chonkie=137604
+Reliability: Docling=Success, Chonkie=Success
+
+================================================================================

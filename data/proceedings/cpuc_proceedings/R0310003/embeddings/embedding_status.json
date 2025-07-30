@@ -1,0 +1,1448 @@
+{
+  "last_updated": "2025-07-28T22:13:54.398681",
+  "embedded_documents": {
+    "38b37fd17bd67d5b72f7f61d1d1499af": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M215/K726/215726275.PDF",
+      "title": "215726275",
+      "embedding_date": "2025-07-28T22:13:54.398080",
+      "processing_time": 2.9228570461273193
+    },
+    "70902f8bc5c7e13e57b6cc852544f817": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M215/K367/215367147.PDF",
+      "title": "215367147",
+      "embedding_date": "2025-07-28T22:13:54.398092",
+      "processing_time": 2.836303949356079
+    },
+    "748a29a6130efb31dcbe59fd46aba026": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M213/K824/213824007.PDF",
+      "title": "213824007",
+      "embedding_date": "2025-07-28T22:13:54.398095",
+      "processing_time": 1.6026701927185059
+    },
+    "2c5a9a645391274b57bbfc66e17449fd": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M215/K367/215367252.PDF",
+      "title": "215367252",
+      "embedding_date": "2025-07-28T22:13:54.398097",
+      "processing_time": 1.5910389423370361
+    },
+    "087782450e919be7e7292b8967a90eea": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M254/K771/254771445.PDF",
+      "title": "254771445",
+      "embedding_date": "2025-07-28T22:13:54.398100",
+      "processing_time": 35.16617488861084
+    },
+    "ea342056fcdda0a49912eefad0707c21": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M215/K367/215367134.PDF",
+      "title": "215367134",
+      "embedding_date": "2025-07-28T22:13:54.398102",
+      "processing_time": 4.142416954040527
+    },
+    "d48186cd64bae3ed1f11f8b43f56b7e2": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K867/212867967.PDF",
+      "title": "212867967",
+      "embedding_date": "2025-07-28T22:13:54.398108",
+      "processing_time": 2.847261905670166
+    },
+    "ee405f0c6e03c6d5949e3d4b667a7403": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K200/212200474.PDF",
+      "title": "212200474",
+      "embedding_date": "2025-07-28T22:13:54.398111",
+      "processing_time": 2.230135917663574
+    },
+    "43caa0f2748ce31996337836974ca6b4": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M216/K500/216500726.PDF",
+      "title": "216500726",
+      "embedding_date": "2025-07-28T22:13:54.398114",
+      "processing_time": 1.9796459674835205
+    },
+    "6622d1fab4a1a62b944739f1011e5e4f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M213/K823/213823868.PDF",
+      "title": "213823868",
+      "embedding_date": "2025-07-28T22:13:54.398117",
+      "processing_time": 3.325428009033203
+    },
+    "c73b70ec37b6c3384878d5c9e3abf47d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M199/K554/199554043.PDF",
+      "title": "199554043",
+      "embedding_date": "2025-07-28T22:13:54.398119",
+      "processing_time": 3.094749927520752
+    },
+    "01d34235ea0cc087ac22000280f679dc": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M215/K366/215366918.PDF",
+      "title": "215366918",
+      "embedding_date": "2025-07-28T22:13:54.398122",
+      "processing_time": 4.756618022918701
+    },
+    "f45ff3549f22ffe896fccaf49702293e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M215/K365/215365355.PDF",
+      "title": "215365355",
+      "embedding_date": "2025-07-28T22:13:54.398124",
+      "processing_time": 5.912353038787842
+    },
+    "1ae9a8ddb15d761d6488830394a0ede0": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M206/K676/206676970.PDF",
+      "title": "206676970",
+      "embedding_date": "2025-07-28T22:13:54.398127",
+      "processing_time": 7.216051340103149
+    },
+    "01408bf94cf4f5266a640a7cb362ec97": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M211/K794/211794856.PDF",
+      "title": "211794856",
+      "embedding_date": "2025-07-28T22:13:54.398130",
+      "processing_time": 5.34229302406311
+    },
+    "f0316add66033f16b090414228f11bf8": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M197/K542/197542149.PDF",
+      "title": "197542149",
+      "embedding_date": "2025-07-28T22:13:54.398132",
+      "processing_time": 2.9084463119506836
+    },
+    "4c27a6c3a325a2eec01efcd4025fcab0": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M197/K542/197542146.PDF",
+      "title": "197542146",
+      "embedding_date": "2025-07-28T22:13:54.398135",
+      "processing_time": 2.7381742000579834
+    },
+    "9566ab1eea85ac3dc58b95dc589717ed": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M198/K354/198354488.PDF",
+      "title": "198354488",
+      "embedding_date": "2025-07-28T22:13:54.398137",
+      "processing_time": 1.8976430892944336
+    },
+    "6773f289cc51ed3b97ffd0b6faa529aa": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K596/212596783.PDF",
+      "title": "212596783",
+      "embedding_date": "2025-07-28T22:13:54.398140",
+      "processing_time": 8.790817022323608
+    },
+    "a640fe40aaf2eaa82a0efb757da9651c": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M195/K911/195911043.PDF",
+      "title": "195911043",
+      "embedding_date": "2025-07-28T22:13:54.398142",
+      "processing_time": 1.81424880027771
+    },
+    "4f57f87f30522c3752b82b27c9d8a798": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M195/K910/195910538.PDF",
+      "title": "195910538",
+      "embedding_date": "2025-07-28T22:13:54.398144",
+      "processing_time": 2.0140631198883057
+    },
+    "6c00c0d27aa25ad936f21df6c8755b76": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M195/K910/195910730.PDF",
+      "title": "195910730",
+      "embedding_date": "2025-07-28T22:13:54.398146",
+      "processing_time": 2.481689929962158
+    },
+    "60e307424fa9e2c90c605cc07da96cf1": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M195/K586/195586749.PDF",
+      "title": "195586749",
+      "embedding_date": "2025-07-28T22:13:54.398151",
+      "processing_time": 1.7788307666778564
+    },
+    "403be5d9da4d5a38b0729747b1cc7b35": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M195/K146/195146338.PDF",
+      "title": "195146338",
+      "embedding_date": "2025-07-28T22:13:54.398153",
+      "processing_time": 1.7470858097076416
+    },
+    "a9f8617aa32df1a4a086f64e28c6be8e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M193/K573/193573185.PDF",
+      "title": "193573185",
+      "embedding_date": "2025-07-28T22:13:54.398155",
+      "processing_time": 2.8947370052337646
+    },
+    "8b52b9e7b1208405fb8e677f07b336de": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M190/K624/190624263.PDF",
+      "title": "190624263",
+      "embedding_date": "2025-07-28T22:13:54.398158",
+      "processing_time": 1.501418113708496
+    },
+    "9ec67018f3d0d01feeba5781ca93fe08": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M195/K910/195910489.PDF",
+      "title": "195910489",
+      "embedding_date": "2025-07-28T22:13:54.398160",
+      "processing_time": 5.108312129974365
+    },
+    "def1c13e7dddfd963777c88f36a20cdf": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M185/K576/185576271.PDF",
+      "title": "185576271",
+      "embedding_date": "2025-07-28T22:13:54.398163",
+      "processing_time": 6.2112438678741455
+    },
+    "3a801d8b35e3a1803d25b433083d74e4": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M186/K437/186437648.PDF",
+      "title": "186437648",
+      "embedding_date": "2025-07-28T22:13:54.398166",
+      "processing_time": 3.604511022567749
+    },
+    "7541b5d11b2291570624033efa9f00b1": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M186/K437/186437652.PDF",
+      "title": "186437652",
+      "embedding_date": "2025-07-28T22:13:54.398169",
+      "processing_time": 3.7688748836517334
+    },
+    "c60f51a48ce2bb278342c55a4f6858f4": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M183/K389/183389140.PDF",
+      "title": "183389140",
+      "embedding_date": "2025-07-28T22:13:54.398171",
+      "processing_time": 1.7619919776916504
+    },
+    "a1fd977b050ab0e14e6580118745a0cc": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M182/K363/182363310.PDF",
+      "title": "182363310",
+      "embedding_date": "2025-07-28T22:13:54.398173",
+      "processing_time": 1.7073290348052979
+    },
+    "ae33ef8ebaea0e101958f788c242f278": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M510/K287/510287202.PDF",
+      "title": "510287202",
+      "embedding_date": "2025-07-28T22:13:54.398176",
+      "processing_time": 1.6609878540039062
+    },
+    "792ced3f7e4d6d758019ce193a05038b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M176/K948/176948604.PDF",
+      "title": "176948604",
+      "embedding_date": "2025-07-28T22:13:54.398178",
+      "processing_time": 2.3425910472869873
+    },
+    "19cb43f7fd9524568715832f3fb48baf": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M183/K388/183388329.PDF",
+      "title": "183388329",
+      "embedding_date": "2025-07-28T22:13:54.398181",
+      "processing_time": 2.74762225151062
+    },
+    "53cd7c517e7c1ed4ed7ed38544169f30": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M176/K949/176949042.PDF",
+      "title": "176949042",
+      "embedding_date": "2025-07-28T22:13:54.398183",
+      "processing_time": 2.3576159477233887
+    },
+    "d9a4bdff82c44e1fc0505d660e8cbac6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M176/K948/176948615.PDF",
+      "title": "176948615",
+      "embedding_date": "2025-07-28T22:13:54.398186",
+      "processing_time": 4.260385036468506
+    },
+    "a7c06e0db92102103f58e9fbb9540332": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M176/K948/176948828.PDF",
+      "title": "176948828",
+      "embedding_date": "2025-07-28T22:13:54.398189",
+      "processing_time": 3.7583329677581787
+    },
+    "1a66ff154b4456fa50613115b5725bfe": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M184/K627/184627846.PDF",
+      "title": "184627846",
+      "embedding_date": "2025-07-28T22:13:54.398191",
+      "processing_time": 1.5107688903808594
+    },
+    "fc0aaec314693a88a0a05aa62003cd91": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M176/K948/176948424.PDF",
+      "title": "176948424",
+      "embedding_date": "2025-07-28T22:13:54.398194",
+      "processing_time": 1.930858850479126
+    },
+    "094cf97e7a7807fd6b4c2b19d3bfd663": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M187/K574/187574018.PDF",
+      "title": "187574018",
+      "embedding_date": "2025-07-28T22:13:54.398197",
+      "processing_time": 1.6583349704742432
+    },
+    "7be77899b603d36a9e6007b6e428e8d9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M175/K632/175632732.PDF",
+      "title": "175632732",
+      "embedding_date": "2025-07-28T22:13:54.398199",
+      "processing_time": 1.4237749576568604
+    },
+    "b2a598b3ccf7e2cdf1b085a012dad819": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M175/K252/175252544.PDF",
+      "title": "175252544",
+      "embedding_date": "2025-07-28T22:13:54.398201",
+      "processing_time": 1.5638232231140137
+    },
+    "84e056bd91aa211c4d291de2798a8163": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M173/K118/173118975.PDF",
+      "title": "173118975",
+      "embedding_date": "2025-07-28T22:13:54.398205",
+      "processing_time": 1.7348060607910156
+    },
+    "735a3b487f6773f6d6f20e4ceb863d0d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M175/K252/175252576.PDF",
+      "title": "175252576",
+      "embedding_date": "2025-07-28T22:13:54.398207",
+      "processing_time": 4.646880149841309
+    },
+    "ec0cf9e82e1d688c3605a1ff1ae77201": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M172/K519/172519259.PDF",
+      "title": "172519259",
+      "embedding_date": "2025-07-28T22:13:54.398210",
+      "processing_time": 2.0455591678619385
+    },
+    "0f05998c870a9c697181ecacb68da5c2": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M172/K519/172519037.PDF",
+      "title": "172519037",
+      "embedding_date": "2025-07-28T22:13:54.398212",
+      "processing_time": 2.5226948261260986
+    },
+    "18326f40da55a296989b509ea9ea8b71": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M171/K806/171806205.PDF",
+      "title": "171806205",
+      "embedding_date": "2025-07-28T22:13:54.398214",
+      "processing_time": 1.6080420017242432
+    },
+    "a4e209be9fd9085c7c25dd6d29654c8b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M171/K806/171806120.PDF",
+      "title": "171806120",
+      "embedding_date": "2025-07-28T22:13:54.398216",
+      "processing_time": 1.1289160251617432
+    },
+    "9d57c5eb8ca6e6a79c34ef4b89e1d6c2": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M171/K502/171502034.PDF",
+      "title": "171502034",
+      "embedding_date": "2025-07-28T22:13:54.398219",
+      "processing_time": 2.2140121459960938
+    },
+    "9b11efeb8e4fc826a10c3828e8d60f01": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M171/K508/171508797.PDF",
+      "title": "171508797",
+      "embedding_date": "2025-07-28T22:13:54.398221",
+      "processing_time": 1.169903039932251
+    },
+    "19e56ac8e8fd5c4dbdf335657e028a48": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M170/K043/170043750.PDF",
+      "title": "170043750",
+      "embedding_date": "2025-07-28T22:13:54.398223",
+      "processing_time": 1.2500698566436768
+    },
+    "569ea67f97e3186ff8ae5a021231c4ee": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M169/K669/169669233.PDF",
+      "title": "169669233",
+      "embedding_date": "2025-07-28T22:13:54.398225",
+      "processing_time": 1.6119089126586914
+    },
+    "292e9a8965be35723970a236b0097edd": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M169/K668/169668700.PDF",
+      "title": "169668700",
+      "embedding_date": "2025-07-28T22:13:54.398228",
+      "processing_time": 1.7296578884124756
+    },
+    "0f8f2069eec43ac85fbb63a318851031": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M164/K302/164302744.PDF",
+      "title": "164302744",
+      "embedding_date": "2025-07-28T22:13:54.398230",
+      "processing_time": 2.5215840339660645
+    },
+    "ebbb49803c805ccd9d8382ced43f0238": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M103/K390/103390357.PDF",
+      "title": "103390357",
+      "embedding_date": "2025-07-28T22:13:54.398232",
+      "processing_time": 1.6489551067352295
+    },
+    "9b909be0647ec9c5d15354e16b1de180": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M049/K309/49309741.PDF",
+      "title": "49309741",
+      "embedding_date": "2025-07-28T22:13:54.398235",
+      "processing_time": 1.8640251159667969
+    },
+    "33e5ea0a7dac9253e63e56d1ccdad767": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M042/K155/42155621.PDF",
+      "title": "42155621",
+      "embedding_date": "2025-07-28T22:13:54.398237",
+      "processing_time": 1.8148348331451416
+    },
+    "f03d16e571c2a106fbad6f222f139b77": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K722/31722739.PDF",
+      "title": "31722739",
+      "embedding_date": "2025-07-28T22:13:54.398239",
+      "processing_time": 1.999680757522583
+    },
+    "2097f878bbd1d5f292eca294b37569cd": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K735/31735220.PDF",
+      "title": "31735220",
+      "embedding_date": "2025-07-28T22:13:54.398241",
+      "processing_time": 1.6048450469970703
+    },
+    "431eb45ce78d7e0295e9d14b68afa6c5": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K722/31722959.PDF",
+      "title": "31722959",
+      "embedding_date": "2025-07-28T22:13:54.398243",
+      "processing_time": 2.071693181991577
+    },
+    "676156f800088aee7cab29c2f69cfd89": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K722/31722950.PDF",
+      "title": "31722950",
+      "embedding_date": "2025-07-28T22:13:54.398246",
+      "processing_time": 1.718498706817627
+    },
+    "ccbf42efc87e89dcf4fc18934692ea46": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K735/31735974.PDF",
+      "title": "31735974",
+      "embedding_date": "2025-07-28T22:13:54.398248",
+      "processing_time": 1.7478621006011963
+    },
+    "023b9e7aaa0ac5abee2c26a2570e9524": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K744/31744334.PDF",
+      "title": "31744334",
+      "embedding_date": "2025-07-28T22:13:54.398250",
+      "processing_time": 2.5422849655151367
+    },
+    "715e625ca41d014855667f0a2b3a7bb7": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K735/31735194.PDF",
+      "title": "31735194",
+      "embedding_date": "2025-07-28T22:13:54.398252",
+      "processing_time": 2.576266050338745
+    },
+    "38f73698b1f2a52fa3360db479c7a26d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K743/31743559.PDF",
+      "title": "31743559",
+      "embedding_date": "2025-07-28T22:13:54.398255",
+      "processing_time": 1.1539740562438965
+    },
+    "538e356f0fac6aa2357bcc609845a8d1": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K736/31736058.PDF",
+      "title": "31736058",
+      "embedding_date": "2025-07-28T22:13:54.398257",
+      "processing_time": 2.602592945098877
+    },
+    "d51ffeead7803f1dd005fdc797dfa999": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/170668.PDF",
+      "title": "170668",
+      "embedding_date": "2025-07-28T22:13:54.398259",
+      "processing_time": 2.9970810413360596
+    },
+    "9c9f5a63cddd42db45030904b6a794eb": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/153523.PDF",
+      "title": "153523",
+      "embedding_date": "2025-07-28T22:13:54.398261",
+      "processing_time": 2.80610728263855
+    },
+    "b05707f9f9b4352e9e8318290eebaf93": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/144567.PDF",
+      "title": "144567",
+      "embedding_date": "2025-07-28T22:13:54.398264",
+      "processing_time": 6.055801868438721
+    },
+    "933f552b8c8c89a08b6c6b78e4fc664c": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/143947.PDF",
+      "title": "143947",
+      "embedding_date": "2025-07-28T22:13:54.398266",
+      "processing_time": 4.258363246917725
+    },
+    "d421a5c3a734e92ae58746a795dd22ed": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/146964.PDF",
+      "title": "146964",
+      "embedding_date": "2025-07-28T22:13:54.398269",
+      "processing_time": 2.4547300338745117
+    },
+    "5a9caee8fa27fa0e1a877acc60abe41a": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/146967.PDF",
+      "title": "146967",
+      "embedding_date": "2025-07-28T22:13:54.398271",
+      "processing_time": 2.63832688331604
+    },
+    "1f71ffd69cda1d77b85ac8e500e29d34": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/143218.PDF",
+      "title": "143218",
+      "embedding_date": "2025-07-28T22:13:54.398274",
+      "processing_time": 1.707916021347046
+    },
+    "38346df7521832d248782c4ed7c8ea5c": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/132494.PDF",
+      "title": "132494",
+      "embedding_date": "2025-07-28T22:13:54.398276",
+      "processing_time": 1.5908308029174805
+    },
+    "e4baeb0d91a25c64668e7234b5f0af3a": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/132519.PDF",
+      "title": "132519",
+      "embedding_date": "2025-07-28T22:13:54.398279",
+      "processing_time": 2.915543794631958
+    },
+    "edaf4d80885f457f6330e4b195d00a44": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/132507.PDF",
+      "title": "132507",
+      "embedding_date": "2025-07-28T22:13:54.398282",
+      "processing_time": 2.0410048961639404
+    },
+    "778d51f998fef5f7532c5275472825ef": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/132503.PDF",
+      "title": "132503",
+      "embedding_date": "2025-07-28T22:13:54.398284",
+      "processing_time": 6.5749289989471436
+    },
+    "651e769fe0bc744968939c093cdb7833": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/132501.PDF",
+      "title": "132501",
+      "embedding_date": "2025-07-28T22:13:54.398287",
+      "processing_time": 1.6065690517425537
+    },
+    "697b975ff2ce4845271a295dda266009": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131565.PDF",
+      "title": "131565",
+      "embedding_date": "2025-07-28T22:13:54.398289",
+      "processing_time": 4.0831968784332275
+    },
+    "6fe26974c6766f82a17aba46f6567085": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131564.PDF",
+      "title": "131564",
+      "embedding_date": "2025-07-28T22:13:54.398291",
+      "processing_time": 4.286480188369751
+    },
+    "85885d13503d719d75e20b581946a082": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131003.PDF",
+      "title": "131003",
+      "embedding_date": "2025-07-28T22:13:54.398293",
+      "processing_time": 3.004683017730713
+    },
+    "4d99f781e7e137222d84b2c2bcdd3332": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131011.PDF",
+      "title": "131011",
+      "embedding_date": "2025-07-28T22:13:54.398296",
+      "processing_time": 2.3198740482330322
+    },
+    "0073aeb3c226e20ea2ffa6e37c465a3d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131008.PDF",
+      "title": "131008",
+      "embedding_date": "2025-07-28T22:13:54.398298",
+      "processing_time": 6.3549230098724365
+    },
+    "e1b00835b57bf435ccc42ede418456a9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130999.PDF",
+      "title": "130999",
+      "embedding_date": "2025-07-28T22:13:54.398301",
+      "processing_time": 2.390639066696167
+    },
+    "a69d173b0a75562db71e59d65438e7c6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131103.PDF",
+      "title": "131103",
+      "embedding_date": "2025-07-28T22:13:54.398303",
+      "processing_time": 2.2841227054595947
+    },
+    "df0c4260762be0e8a1c0715a3b118307": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131005.PDF",
+      "title": "131005",
+      "embedding_date": "2025-07-28T22:13:54.398307",
+      "processing_time": 1.9254519939422607
+    },
+    "9c4362cf92ca7402a8b3649d1e6ff5bd": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130663.PDF",
+      "title": "130663",
+      "embedding_date": "2025-07-28T22:13:54.398309",
+      "processing_time": 5.663569927215576
+    },
+    "938b105a76a1a5c6a82f1dfb45e88128": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/130128.PDF",
+      "title": "130128",
+      "embedding_date": "2025-07-28T22:13:54.398312",
+      "processing_time": 2.393864154815674
+    },
+    "0b92dec88026582ecbde347f439e1225": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130387.PDF",
+      "title": "130387",
+      "embedding_date": "2025-07-28T22:13:54.398314",
+      "processing_time": 2.387829065322876
+    },
+    "689f0adc242e3562dceccbd041fdddd7": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130327.PDF",
+      "title": "130327",
+      "embedding_date": "2025-07-28T22:13:54.398317",
+      "processing_time": 2.37322998046875
+    },
+    "3059b51027cdeacd828edf7905c7a3b0": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130325.PDF",
+      "title": "130325",
+      "embedding_date": "2025-07-28T22:13:54.398319",
+      "processing_time": 5.5856969356536865
+    },
+    "db381d554e8cecdeff4c1b727b4627e3": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130358.PDF",
+      "title": "130358",
+      "embedding_date": "2025-07-28T22:13:54.398322",
+      "processing_time": 1.6364638805389404
+    },
+    "32c70544a83b56adb5c85087035555fd": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130397.PDF",
+      "title": "130397",
+      "embedding_date": "2025-07-28T22:13:54.398325",
+      "processing_time": 1.5438101291656494
+    },
+    "673f43a48e87b321b58a5df97c0a261d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130350.PDF",
+      "title": "130350",
+      "embedding_date": "2025-07-28T22:13:54.398328",
+      "processing_time": 2.3899738788604736
+    },
+    "b3548810bffb0bf7afccd0bb321c80c8": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/130352.PDF",
+      "title": "130352",
+      "embedding_date": "2025-07-28T22:13:54.398330",
+      "processing_time": 2.452160120010376
+    },
+    "4497c3f3cfdcd816b916d9b672d369c5": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULC/129591.PDF",
+      "title": "129591",
+      "embedding_date": "2025-07-28T22:13:54.398333",
+      "processing_time": 1.8860762119293213
+    },
+    "c5b7bf84375cee874d595a8cd7430d94": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/129125.PDF",
+      "title": "129125",
+      "embedding_date": "2025-07-28T22:13:54.398335",
+      "processing_time": 2.346287965774536
+    },
+    "e02165e33d71a693cd73aa40c90ecdc6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/128720.PDF",
+      "title": "128720",
+      "embedding_date": "2025-07-28T22:13:54.398337",
+      "processing_time": 3.7772581577301025
+    },
+    "1b15022165303ba25d05aa43f9a64d9a": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/128600.PDF",
+      "title": "128600",
+      "embedding_date": "2025-07-28T22:13:54.398340",
+      "processing_time": 2.4090709686279297
+    },
+    "2dfb3329e271e69b4553463970f6deb8": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/128136.PDF",
+      "title": "128136",
+      "embedding_date": "2025-07-28T22:13:54.398342",
+      "processing_time": 2.67466402053833
+    },
+    "5901159bbdc43196d393eaca1990fabf": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/128510.PDF",
+      "title": "128510",
+      "embedding_date": "2025-07-28T22:13:54.398345",
+      "processing_time": 3.599674940109253
+    },
+    "45f1475c136508990de0a6fef0b9bcf6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/128129.PDF",
+      "title": "128129",
+      "embedding_date": "2025-07-28T22:13:54.398347",
+      "processing_time": 3.5036590099334717
+    },
+    "925a383a766f54156b7e5a26f23ceb87": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/128323.PDF",
+      "title": "128323",
+      "embedding_date": "2025-07-28T22:13:54.398349",
+      "processing_time": 3.0627238750457764
+    },
+    "3a37bc11931f3a9e7bf964e14db0ce0f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/124376.PDF",
+      "title": "124376",
+      "embedding_date": "2025-07-28T22:13:54.398352",
+      "processing_time": 3.1717429161071777
+    },
+    "a44e9d3e6a135b0d56288296e60e2319": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/128740.PDF",
+      "title": "128740",
+      "embedding_date": "2025-07-28T22:13:54.398354",
+      "processing_time": 3.407712936401367
+    },
+    "67f06d6e8c810cb9acbc025f6d35f845": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/121528.PDF",
+      "title": "121528",
+      "embedding_date": "2025-07-28T22:13:54.398358",
+      "processing_time": 1.5953516960144043
+    },
+    "1fe7e8ef5c396410a2dfe450a86573f5": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/PD/123202.PDF",
+      "title": "123202",
+      "embedding_date": "2025-07-28T22:13:54.398360",
+      "processing_time": 4.362166881561279
+    },
+    "63bdcc669207fdefd8f02a08dd3f7a46": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/120583.PDF",
+      "title": "120583",
+      "embedding_date": "2025-07-28T22:13:54.398362",
+      "processing_time": 3.12604022026062
+    },
+    "d56a6c9e4ee51d2f17563de55084b629": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/121113.PDF",
+      "title": "121113",
+      "embedding_date": "2025-07-28T22:13:54.398365",
+      "processing_time": 2.0961389541625977
+    },
+    "0cd8a13e8070ac4433ea7027153b2ea6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/R/119852.PDF",
+      "title": "119852",
+      "embedding_date": "2025-07-28T22:13:54.398367",
+      "processing_time": 4.231586217880249
+    },
+    "b0aa9afeb310cb366fa613fdbc26cf79": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/R/119753.PDF",
+      "title": "119753",
+      "embedding_date": "2025-07-28T22:13:54.398369",
+      "processing_time": 4.755291938781738
+    },
+    "2983853136e7e6f64971d0c316d684a6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/118462.PDF",
+      "title": "118462",
+      "embedding_date": "2025-07-28T22:13:54.398372",
+      "processing_time": 2.542562961578369
+    },
+    "7ab67667cd4d5b26b3013fc9b06314a1": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/118255.PDF",
+      "title": "118255",
+      "embedding_date": "2025-07-28T22:13:54.398374",
+      "processing_time": 3.1664037704467773
+    },
+    "abf83b82bf80b258ce1876ed9cd20924": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/118226.PDF",
+      "title": "118226",
+      "embedding_date": "2025-07-28T22:13:54.398376",
+      "processing_time": 1.5142228603363037
+    },
+    "1a11505fb89762f8b6911566ed18b4be": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/118266.PDF",
+      "title": "118266",
+      "embedding_date": "2025-07-28T22:13:54.398378",
+      "processing_time": 4.2215399742126465
+    },
+    "8babec4a95401ad966b4a38a87cb1ec7": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/118262.PDF",
+      "title": "118262",
+      "embedding_date": "2025-07-28T22:13:54.398381",
+      "processing_time": 2.809436082839966
+    },
+    "b0ae25167da2a2ad71b5ba702ea2e652": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/117643.PDF",
+      "title": "117643",
+      "embedding_date": "2025-07-28T22:13:54.398383",
+      "processing_time": 0.9876599311828613
+    },
+    "e057c6dbe58f9f968b840b9c806a8f8e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/PD/117347.PDF",
+      "title": "117347",
+      "embedding_date": "2025-07-28T22:13:54.398385",
+      "processing_time": 4.6678383350372314
+    },
+    "4c448b72b96d5d582f13e2da7bbfa29a": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/114551.PDF",
+      "title": "114551",
+      "embedding_date": "2025-07-28T22:13:54.398388",
+      "processing_time": 1.3845810890197754
+    },
+    "9cfb7f38bf53db59ee9dce27638ef344": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/114441.PDF",
+      "title": "114441",
+      "embedding_date": "2025-07-28T22:13:54.398390",
+      "processing_time": 11.083006858825684
+    },
+    "0523e15528cfa6b5ce569d1f62a6e17f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/REP/114044.PDF",
+      "title": "114044",
+      "embedding_date": "2025-07-28T22:13:54.398392",
+      "processing_time": 188.5704870223999
+    },
+    "ffdb677107e3db7c1889a8af8f53bd26": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/113723.PDF",
+      "title": "113723",
+      "embedding_date": "2025-07-28T22:13:54.398394",
+      "processing_time": 3.9053890705108643
+    },
+    "aa213c4a2b2be60e56e448ccf7dbb27b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/113727.PDF",
+      "title": "113727",
+      "embedding_date": "2025-07-28T22:13:54.398397",
+      "processing_time": 1.30869460105896
+    },
+    "c7d106f7c89b30dc7ed8d127097e8382": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/113724.PDF",
+      "title": "113724",
+      "embedding_date": "2025-07-28T22:13:54.398399",
+      "processing_time": 1.6457219123840332
+    },
+    "13679c47ee0b2bbe13e1f38d94c57413": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/113717.PDF",
+      "title": "113717",
+      "embedding_date": "2025-07-28T22:13:54.398401",
+      "processing_time": 4.844584941864014
+    },
+    "cb736e697e23652be1d97d525f6ec60d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/113726.PDF",
+      "title": "113726",
+      "embedding_date": "2025-07-28T22:13:54.398403",
+      "processing_time": 3.270556926727295
+    },
+    "1cc709260f746d326d806451af91cb1b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/113865.PDF",
+      "title": "113865",
+      "embedding_date": "2025-07-28T22:13:54.398406",
+      "processing_time": 14.022370100021362
+    },
+    "173c7914aeef6e95cc7923ee6f21ef7f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/113725.PDF",
+      "title": "113725",
+      "embedding_date": "2025-07-28T22:13:54.398408",
+      "processing_time": 4.348925828933716
+    },
+    "0ded688398a55e33bbbe6abe4ca3945f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/113167.PDF",
+      "title": "113167",
+      "embedding_date": "2025-07-28T22:13:54.398410",
+      "processing_time": 0.7871301174163818
+    },
+    "64089afeeec9b0ef29807e89ced7a360": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/113184.PDF",
+      "title": "113184",
+      "embedding_date": "2025-07-28T22:13:54.398413",
+      "processing_time": 0.8473360538482666
+    },
+    "e79b297b33783263f13c98e5db9670ea": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/PM/112330.PDF",
+      "title": "112330",
+      "embedding_date": "2025-07-28T22:13:54.398415",
+      "processing_time": 5.001009941101074
+    },
+    "6229de3b8f14bd0412b188ee04ff39b8": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/111399.PDF",
+      "title": "111399",
+      "embedding_date": "2025-07-28T22:13:54.398417",
+      "processing_time": 5.5800621509552
+    },
+    "94576720bdff155818f48fde85877538": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/REP/108366.PDF",
+      "title": "108366",
+      "embedding_date": "2025-07-28T22:13:54.398419",
+      "processing_time": 1.94736909866333
+    },
+    "6dffde0ed0d869ff86615dc8f667a56f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/108384.PDF",
+      "title": "108384",
+      "embedding_date": "2025-07-28T22:13:54.398423",
+      "processing_time": 1.0700368881225586
+    },
+    "35cf1835e29470e3beb3189c0cee4a6d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/107575.PDF",
+      "title": "107575",
+      "embedding_date": "2025-07-28T22:13:54.398425",
+      "processing_time": 6.544884920120239
+    },
+    "1801e89f97df3798a02a0c792d42ef5b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/106114.PDF",
+      "title": "106114",
+      "embedding_date": "2025-07-28T22:13:54.398427",
+      "processing_time": 0.9487528800964355
+    },
+    "2258613d9637a5352c6da5b1c843d429": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/105731.PDF",
+      "title": "105731",
+      "embedding_date": "2025-07-28T22:13:54.398429",
+      "processing_time": 2.917776346206665
+    },
+    "ab788cdb227d4ca9908d4a65041fed33": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/105463.PDF",
+      "title": "105463",
+      "embedding_date": "2025-07-28T22:13:54.398432",
+      "processing_time": 2.375577688217163
+    },
+    "280ae7a5551e151dcc0ecc076dfc54b8": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/105483.PDF",
+      "title": "105483",
+      "embedding_date": "2025-07-28T22:13:54.398434",
+      "processing_time": 4.119895935058594
+    },
+    "4a31942fd4e76aa5f76849923098ae63": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/104986.PDF",
+      "title": "104986",
+      "embedding_date": "2025-07-28T22:13:54.398438",
+      "processing_time": 5.4534828662872314
+    },
+    "8ffd842e4a3762547a71df006cf82040": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/104990.PDF",
+      "title": "104990",
+      "embedding_date": "2025-07-28T22:13:54.398441",
+      "processing_time": 4.009994029998779
+    },
+    "6e9ef1b6c5cf75be196ae89468c2dbde": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/104987.PDF",
+      "title": "104987",
+      "embedding_date": "2025-07-28T22:13:54.398443",
+      "processing_time": 2.3492579460144043
+    },
+    "e21eeb8fbaf4fa349e8da9ff8e0f4c02": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/103108.PDF",
+      "title": "103108",
+      "embedding_date": "2025-07-28T22:13:54.398445",
+      "processing_time": 2.7216849327087402
+    },
+    "f65ed48e007432c830f6a336ea9053fb": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/103067.PDF",
+      "title": "103067",
+      "embedding_date": "2025-07-28T22:13:54.398447",
+      "processing_time": 9.94811487197876
+    },
+    "f65d82ac7f2058f6e9fb36214da9d515": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/96692.PDF",
+      "title": "96692",
+      "embedding_date": "2025-07-28T22:13:54.398449",
+      "processing_time": 3.274247884750366
+    },
+    "57043ba9e8b84c4ff5aa4799ac4e45c6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/95069.PDF",
+      "title": "95069",
+      "embedding_date": "2025-07-28T22:13:54.398451",
+      "processing_time": 2.43776273727417
+    },
+    "22750fe76b136baab6ab53b6ec2c328f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/94949.PDF",
+      "title": "94949",
+      "embedding_date": "2025-07-28T22:13:54.398453",
+      "processing_time": 2.7005388736724854
+    },
+    "f188f98c6a0a671206d45a560ea6570f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/94948.PDF",
+      "title": "94948",
+      "embedding_date": "2025-07-28T22:13:54.398455",
+      "processing_time": 2.286837100982666
+    },
+    "9837b8c78e1dde61eed344b09f3c9072": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/94951.PDF",
+      "title": "94951",
+      "embedding_date": "2025-07-28T22:13:54.398458",
+      "processing_time": 18.990527153015137
+    },
+    "24f026ca368ad9649471817f0aef1c93": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/REQUEST/94312.PDF",
+      "title": "94312",
+      "embedding_date": "2025-07-28T22:13:54.398464",
+      "processing_time": 3.741710662841797
+    },
+    "d28265c2b9407618fb193b57cf424a41": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/94270.PDF",
+      "title": "94270",
+      "embedding_date": "2025-07-28T22:13:54.398467",
+      "processing_time": 2.61873197555542
+    },
+    "b769f23e8f055ce5ecf2b4f82bc199e5": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/93804.PDF",
+      "title": "93804",
+      "embedding_date": "2025-07-28T22:13:54.398469",
+      "processing_time": 7.00280499458313
+    },
+    "feb8925188d8e67ef997f4379459123b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/93750.PDF",
+      "title": "93750",
+      "embedding_date": "2025-07-28T22:13:54.398471",
+      "processing_time": 5.3339149951934814
+    },
+    "315504fb6691a13646c43956eb008146": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/93732.PDF",
+      "title": "93732",
+      "embedding_date": "2025-07-28T22:13:54.398473",
+      "processing_time": 3.2198572158813477
+    },
+    "7ef3ccbd8eb3dadb44ed0d98daec70af": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/93798.PDF",
+      "title": "93798",
+      "embedding_date": "2025-07-28T22:13:54.398475",
+      "processing_time": 1.735733985900879
+    },
+    "1526513e47cf9ac5693b5ae96df7e7b0": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/93797.PDF",
+      "title": "93797",
+      "embedding_date": "2025-07-28T22:13:54.398477",
+      "processing_time": 6.717666149139404
+    },
+    "18f6d8885df3a3b1af23762fde81e221": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/93442.PDF",
+      "title": "93442",
+      "embedding_date": "2025-07-28T22:13:54.398479",
+      "processing_time": 3.6711368560791016
+    },
+    "6c728240ace86833a0a0d373ba81928f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/91369.PDF",
+      "title": "91369",
+      "embedding_date": "2025-07-28T22:13:54.398481",
+      "processing_time": 2.9029970169067383
+    },
+    "79e00bf7dda9c2cc38bab8e0ca26a78b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULC/91944.PDF",
+      "title": "91944",
+      "embedding_date": "2025-07-28T22:13:54.398484",
+      "processing_time": 2.2680160999298096
+    },
+    "d008110083515c710746be6b0d5407dd": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/ST/91297.PDF",
+      "title": "91297",
+      "embedding_date": "2025-07-28T22:13:54.398486",
+      "processing_time": 3.3411059379577637
+    },
+    "6992bda03eaa4023baf35d8fa077d801": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/EXP/91185.PDF",
+      "title": "91185",
+      "embedding_date": "2025-07-28T22:13:54.398488",
+      "processing_time": 2.7802040576934814
+    },
+    "13313a2cd4df6536c118f34c3f93a43d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/86305.PDF",
+      "title": "86305",
+      "embedding_date": "2025-07-28T22:13:54.398490",
+      "processing_time": 1.7601299285888672
+    },
+    "2b70a616375fec4ff5314e86cd663bf9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85967.PDF",
+      "title": "85967",
+      "embedding_date": "2025-07-28T22:13:54.398492",
+      "processing_time": 2.185717821121216
+    },
+    "fa69287c9a0f780053df68abed1f14de": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85932.PDF",
+      "title": "85932",
+      "embedding_date": "2025-07-28T22:13:54.398494",
+      "processing_time": 3.8813817501068115
+    },
+    "92b741749309e5844eafeb8785ed1d0d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85490.PDF",
+      "title": "85490",
+      "embedding_date": "2025-07-28T22:13:54.398497",
+      "processing_time": 7.687259912490845
+    },
+    "e95d458c4d91c98730720dc899c5e2ad": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85475.PDF",
+      "title": "85475",
+      "embedding_date": "2025-07-28T22:13:54.398499",
+      "processing_time": 5.933439016342163
+    },
+    "c20f3095bf234f9143817feffa1b1c0e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85459.PDF",
+      "title": "85459",
+      "embedding_date": "2025-07-28T22:13:54.398501",
+      "processing_time": 6.873242139816284
+    },
+    "15cbb7d56b6dcee16bc3bfb297aecd86": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/83335.PDF",
+      "title": "83335",
+      "embedding_date": "2025-07-28T22:13:54.398503",
+      "processing_time": 3.4164769649505615
+    },
+    "1f45ebdf9144a98b3f14a8211e4b2984": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/REP/82577.PDF",
+      "title": "82577",
+      "embedding_date": "2025-07-28T22:13:54.398506",
+      "processing_time": 3.528353691101074
+    },
+    "38c0c6c54bcdd6a7e18a2e114e2f580a": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/82300.PDF",
+      "title": "82300",
+      "embedding_date": "2025-07-28T22:13:54.398508",
+      "processing_time": 3.1751151084899902
+    },
+    "4ae179a1c9d867bcbd8b91da452699e0": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/REP/82311.PDF",
+      "title": "82311",
+      "embedding_date": "2025-07-28T22:13:54.398515",
+      "processing_time": 3.3404879570007324
+    },
+    "af9ccb45764471013936067129ea4e0a": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/REP/82284.PDF",
+      "title": "82284",
+      "embedding_date": "2025-07-28T22:13:54.398517",
+      "processing_time": 3.3199658393859863
+    },
+    "57042f2a4fa8d6a26d779cddff4c75f4": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/81486.PDF",
+      "title": "81486",
+      "embedding_date": "2025-07-28T22:13:54.398520",
+      "processing_time": 1.0403351783752441
+    },
+    "0d17f086efca39b800a1674e676fa67f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/81529.PDF",
+      "title": "81529",
+      "embedding_date": "2025-07-28T22:13:54.398522",
+      "processing_time": 2.4732329845428467
+    },
+    "547db15236d8d8e67f93427764cc6bcd": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/81590.PDF",
+      "title": "81590",
+      "embedding_date": "2025-07-28T22:13:54.398524",
+      "processing_time": 4.009099960327148
+    },
+    "2e20180e8c375c842f9bc28afbb3f67b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/PM/80094.PDF",
+      "title": "80094",
+      "embedding_date": "2025-07-28T22:13:54.398527",
+      "processing_time": 4.780538082122803
+    },
+    "e5bbb5f1930adf86241282d223768764": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/80088.PDF",
+      "title": "80088",
+      "embedding_date": "2025-07-28T22:13:54.398529",
+      "processing_time": 3.5324950218200684
+    },
+    "cab4a4fe59367ca435296457adcd1086": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/79498.PDF",
+      "title": "79498",
+      "embedding_date": "2025-07-28T22:13:54.398531",
+      "processing_time": 2.0205559730529785
+    },
+    "cac622acc7e428140e019c58809a83c1": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/78556.PDF",
+      "title": "78556",
+      "embedding_date": "2025-07-28T22:13:54.398533",
+      "processing_time": 2.2998061180114746
+    },
+    "cf46674316638b8b927ddd5a4e63ea6c": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/78515.PDF",
+      "title": "78515",
+      "embedding_date": "2025-07-28T22:13:54.398536",
+      "processing_time": 3.608621120452881
+    },
+    "6e8b14e149f4618e7c892897e72293ec": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/78512.PDF",
+      "title": "78512",
+      "embedding_date": "2025-07-28T22:13:54.398538",
+      "processing_time": 10.52634596824646
+    },
+    "5baa1732be107798865967f5dc0b471d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/PD/77749.PDF",
+      "title": "77749",
+      "embedding_date": "2025-07-28T22:13:54.398540",
+      "processing_time": 4.274029016494751
+    },
+    "1b0be41487c1b5105a442a56560613bb": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/77177.PDF",
+      "title": "77177",
+      "embedding_date": "2025-07-28T22:13:54.398542",
+      "processing_time": 3.6064648628234863
+    },
+    "2243753d1d749e229bf5530f36cc424b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/77219.PDF",
+      "title": "77219",
+      "embedding_date": "2025-07-28T22:13:54.398544",
+      "processing_time": 2.1706008911132812
+    },
+    "786c2199f36d062d33b12efb218e411f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/77210.PDF",
+      "title": "77210",
+      "embedding_date": "2025-07-28T22:13:54.398546",
+      "processing_time": 2.0529510974884033
+    },
+    "426416f1f768c6d9c4276cf54962bca7": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/77213.PDF",
+      "title": "77213",
+      "embedding_date": "2025-07-28T22:13:54.398548",
+      "processing_time": 4.72608494758606
+    },
+    "ff7fa8bd172ace0ec40d83d58663cbf3": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/77122.PDF",
+      "title": "77122",
+      "embedding_date": "2025-07-28T22:13:54.398551",
+      "processing_time": 4.6343019008636475
+    },
+    "e8bf2c2571effbe1f578eb3463598ad2": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/71652.PDF",
+      "title": "71652",
+      "embedding_date": "2025-07-28T22:13:54.398554",
+      "processing_time": 3.6488149166107178
+    },
+    "5d4c46bf3e2bcb73100ca23e5cdd018f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/71653.PDF",
+      "title": "71653",
+      "embedding_date": "2025-07-28T22:13:54.398556",
+      "processing_time": 2.671869993209839
+    },
+    "49b71cb7b9a1b635a9f3040917c15a72": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/70100.PDF",
+      "title": "70100",
+      "embedding_date": "2025-07-28T22:13:54.398558",
+      "processing_time": 2.0745577812194824
+    },
+    "027dbff7e81389bb0028d063a676ad69": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/70979.PDF",
+      "title": "70979",
+      "embedding_date": "2025-07-28T22:13:54.398560",
+      "processing_time": 2.095233917236328
+    },
+    "1d9eca013f25bc89f8a17f090d03d071": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/66714.PDF",
+      "title": "66714",
+      "embedding_date": "2025-07-28T22:13:54.398563",
+      "processing_time": 1.0043041706085205
+    },
+    "8bf8da685b1a698f903ed6e0ce8950f4": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/65970.PDF",
+      "title": "65970",
+      "embedding_date": "2025-07-28T22:13:54.398565",
+      "processing_time": 2.873339891433716
+    },
+    "5ae1bca79e554390eec398146b5b3f37": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/65971.PDF",
+      "title": "65971",
+      "embedding_date": "2025-07-28T22:13:54.398567",
+      "processing_time": 2.647552967071533
+    },
+    "60e236fcecdc5e99ab9149c4c186244f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/65786.PDF",
+      "title": "65786",
+      "embedding_date": "2025-07-28T22:13:54.398569",
+      "processing_time": 2.094853162765503
+    },
+    "5b6b797597dcc8b611899d34a2ead5f9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/65792.PDF",
+      "title": "65792",
+      "embedding_date": "2025-07-28T22:13:54.398571",
+      "processing_time": 2.668879747390747
+    },
+    "38fbbf9c8ed1e75237ac0ce3caa2b97d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/PD/64969.PDF",
+      "title": "64969",
+      "embedding_date": "2025-07-28T22:13:54.398574",
+      "processing_time": 3.1145880222320557
+    },
+    "44ed07972f2a10d281c5e786092cbc38": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/64027.PDF",
+      "title": "64027",
+      "embedding_date": "2025-07-28T22:13:54.398576",
+      "processing_time": 1.0416409969329834
+    },
+    "ff88000745d7fb20e47582f82d40c980": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/REP/63424.PDF",
+      "title": "63424",
+      "embedding_date": "2025-07-28T22:13:54.398579",
+      "processing_time": 2.965338706970215
+    },
+    "35959744a144edc1dbcda014710ea4fc": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/63430.PDF",
+      "title": "63430",
+      "embedding_date": "2025-07-28T22:13:54.398581",
+      "processing_time": 3.4701640605926514
+    },
+    "28f2220dd936e4434859774df9758615": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/63300.PDF",
+      "title": "63300",
+      "embedding_date": "2025-07-28T22:13:54.398584",
+      "processing_time": 2.1850500106811523
+    },
+    "2edcad1c771435ae07e0614e6e338120": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/63256.PDF",
+      "title": "63256",
+      "embedding_date": "2025-07-28T22:13:54.398586",
+      "processing_time": 2.9820921421051025
+    },
+    "55d3e1d41baa9cd83ff1e1dc4f9a5820": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/60683.PDF",
+      "title": "60683",
+      "embedding_date": "2025-07-28T22:13:54.398588",
+      "processing_time": 3.7710978984832764
+    },
+    "199668e0be0073cf87c7107e3afa3788": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/PD/62746.PDF",
+      "title": "62746",
+      "embedding_date": "2025-07-28T22:13:54.398591",
+      "processing_time": 3.933438777923584
+    },
+    "b90d626d8089d2e991fd6125ec43aaf7": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/60335.PDF",
+      "title": "60335",
+      "embedding_date": "2025-07-28T22:13:54.398593",
+      "processing_time": 6.21202826499939
+    },
+    "7154cea636c16f833f630f408410e018": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/59894.PDF",
+      "title": "59894",
+      "embedding_date": "2025-07-28T22:13:54.398595",
+      "processing_time": 2.720518112182617
+    },
+    "294e6fd0d45ffe65cac7b27f64034707": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/58776.PDF",
+      "title": "58776",
+      "embedding_date": "2025-07-28T22:13:54.398597",
+      "processing_time": 2.946597099304199
+    },
+    "f7d8b9e912ac932add2811c4dfbda0ca": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/56665.PDF",
+      "title": "56665",
+      "embedding_date": "2025-07-28T22:13:54.398600",
+      "processing_time": 1.9354031085968018
+    },
+    "7403ba8aa644f6f7896414d942126342": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/57642.PDF",
+      "title": "57642",
+      "embedding_date": "2025-07-28T22:13:54.398602",
+      "processing_time": 1.5554049015045166
+    },
+    "bd3243119e7f000c042fdc17b07d5e2f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/COMMENT_DECISION/55609.PDF",
+      "title": "55609",
+      "embedding_date": "2025-07-28T22:13:54.398605",
+      "processing_time": 1.1185998916625977
+    },
+    "09e5900b0270975ad4f603ff9e40bbc2": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/53767.PDF",
+      "title": "53767",
+      "embedding_date": "2025-07-28T22:13:54.398607",
+      "processing_time": 3.571803092956543
+    },
+    "4a901214f040f3a7d8a5e330f7d48de7": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/COMMENT_DECISION/52695.PDF",
+      "title": "52695",
+      "embedding_date": "2025-07-28T22:13:54.398610",
+      "processing_time": 1.4403469562530518
+    },
+    "d19ddf0f2869ae1d605cd2dc8eb62e79": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/52127.PDF",
+      "title": "52127",
+      "embedding_date": "2025-07-28T22:13:54.398612",
+      "processing_time": 8.654682159423828
+    },
+    "68eaa074426333ece4ce09836ad5472f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/50883.PDF",
+      "title": "50883",
+      "embedding_date": "2025-07-28T22:13:54.398615",
+      "processing_time": 0.7757859230041504
+    },
+    "e618ec9640459f88f81fd9e1c6650c11": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/COMMENT_DECISION/50869.PDF",
+      "title": "50869",
+      "embedding_date": "2025-07-28T22:13:54.398618",
+      "processing_time": 8.959728240966797
+    },
+    "74091e75ddf37f5782f887c7185c162c": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/47577.PDF",
+      "title": "47577",
+      "embedding_date": "2025-07-28T22:13:54.398620",
+      "processing_time": 1.9615159034729004
+    },
+    "88b25381c5ab7a751ea2a6c02ce6d00c": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/44806.PDF",
+      "title": "44806",
+      "embedding_date": "2025-07-28T22:13:54.398623",
+      "processing_time": 2.4553310871124268
+    },
+    "7307f4d00b7f174eb5a040485d3d1259": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/43639.PDF",
+      "title": "43639",
+      "embedding_date": "2025-07-28T22:13:54.398625",
+      "processing_time": 2.67560076713562
+    },
+    "0bb45aead4a0a18841795c5b454404cc": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/42389.PDF",
+      "title": "42389",
+      "embedding_date": "2025-07-28T22:13:54.398627",
+      "processing_time": 8.881586074829102
+    },
+    "b1810ac735d1c72e6c032857516f712e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/COMMENT_DECISION/40913.PDF",
+      "title": "40913",
+      "embedding_date": "2025-07-28T22:13:54.398630",
+      "processing_time": 7.7828991413116455
+    },
+    "b902c2724b3801c528fa89b709e883e6": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/36046.PDF",
+      "title": "36046",
+      "embedding_date": "2025-07-28T22:13:54.398632",
+      "processing_time": 0.8581719398498535
+    },
+    "cf06c6748049f903c1308202274ffc49": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/34357.PDF",
+      "title": "34357",
+      "embedding_date": "2025-07-28T22:13:54.398634",
+      "processing_time": 2.340595006942749
+    },
+    "c990dc974e87db2827ee681c485c0b9f": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/33708.PDF",
+      "title": "33708",
+      "embedding_date": "2025-07-28T22:13:54.398636",
+      "processing_time": 3.342947244644165
+    },
+    "94149ec0efc50e17dba56a4d2f1b8093": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/32491.PDF",
+      "title": "32491",
+      "embedding_date": "2025-07-28T22:13:54.398639",
+      "processing_time": 0.9467809200286865
+    },
+    "446f0a897f19a5635d07ad0dcbc05bc9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/32144.PDF",
+      "title": "32144",
+      "embedding_date": "2025-07-28T22:13:54.398641",
+      "processing_time": 0.9416279792785645
+    },
+    "1d8b9ad62b489f95bdf66134866bf09e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/32138.PDF",
+      "title": "32138",
+      "embedding_date": "2025-07-28T22:13:54.398643",
+      "processing_time": 1.0009119510650635
+    },
+    "691b1cdcc83860a2c642d4dc124cab64": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/RULINGS/31976.PDF",
+      "title": "31976",
+      "embedding_date": "2025-07-28T22:13:54.398645",
+      "processing_time": 1.107483148574829
+    },
+    "a166005cf61dc28eb25e6f917e8c5791": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/WORD_PDF/FINAL_DECISION/30547.PDF",
+      "title": "30547",
+      "embedding_date": "2025-07-28T22:13:54.398647",
+      "processing_time": 4.400691986083984
+    },
+    "98008c2e3b6286cf6e846f2c5bc4ce60": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M176/K948/176948422.PDF",
+      "title": "176948422",
+      "embedding_date": "2025-07-28T22:13:54.398649",
+      "processing_time": 1.4872193336486816
+    },
+    "e750ce38e8cd70178a5f67985e05b766": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/BRIEF/131669.PDF",
+      "title": "131669",
+      "embedding_date": "2025-07-28T22:13:54.398651",
+      "processing_time": 5.473567962646484
+    },
+    "33adf1a23c76e68e19cf0351991dc78e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/105000.PDF",
+      "title": "105000",
+      "embedding_date": "2025-07-28T22:13:54.398653",
+      "processing_time": 4.087158918380737
+    },
+    "34bf49614fea515c9680f1297b2a7c93": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/NOTICE/87280.PDF",
+      "title": "87280",
+      "embedding_date": "2025-07-28T22:13:54.398661",
+      "processing_time": 2.7809929847717285
+    },
+    "440c7809ad4b4f3a2d38ae5ce08ac0d9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85935.PDF",
+      "title": "85935",
+      "embedding_date": "2025-07-28T22:13:54.398663",
+      "processing_time": 4.342552185058594
+    },
+    "c1989faeac28e3f779518fe44b7eed18": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RESP/86300.PDF",
+      "title": "86300",
+      "embedding_date": "2025-07-28T22:13:54.398665",
+      "processing_time": 8.481598377227783
+    },
+    "269ca501013dc9fcefc2b86866e445fe": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85430.PDF",
+      "title": "85430",
+      "embedding_date": "2025-07-28T22:13:54.398668",
+      "processing_time": 2.8757028579711914
+    },
+    "133096863a61132c7b41288db9088aca": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85445.PDF",
+      "title": "85445",
+      "embedding_date": "2025-07-28T22:13:54.398670",
+      "processing_time": 3.942981243133545
+    },
+    "72876f4aa3ccfeb36cb487c5433fcf3b": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/75910.PDF",
+      "title": "75910",
+      "embedding_date": "2025-07-28T22:13:54.398672",
+      "processing_time": 2.0896570682525635
+    },
+    "66ed8bdd54a532596c44d276a67e15d9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/72695.PDF",
+      "title": "72695",
+      "embedding_date": "2025-07-28T22:13:54.398674",
+      "processing_time": 2.438480854034424
+    },
+    "4a5f56351ed1cc8ea0fdc857858c7cb7": {
+      "url": "http://docs.cpuc.ca.gov/word_pdf/agenda_decision/118189.pdf",
+      "title": "118189",
+      "embedding_date": "2025-07-28T22:13:54.398677",
+      "processing_time": 42.63781499862671
+    }
+  },
+  "failed_documents": {},
+  "total_embedded": 240,
+  "version": "1.0"
+}

@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-07-28T22:13:54.191519",
+  "proceeding": "R0310003",
+  "successful_count": 240,
+  "failed_count": 0,
+  "schema_errors_count": 0,
+  "last_successful": [
+    {
+      "hash": "269ca501013dc9fcefc2b86866e445fe",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85430.PDF",
+      "title": "85430",
+      "processing_time": 2.8757028579711914,
+      "chunks_added": 26,
+      "retry_count": 0
+    },
+    {
+      "hash": "133096863a61132c7b41288db9088aca",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/85445.PDF",
+      "title": "85445",
+      "processing_time": 3.942981243133545,
+      "chunks_added": 72,
+      "retry_count": 0
+    },
+    {
+      "hash": "72876f4aa3ccfeb36cb487c5433fcf3b",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/RULINGS/75910.PDF",
+      "title": "75910",
+      "processing_time": 2.0896570682525635,
+      "chunks_added": 4,
+      "retry_count": 0
+    },
+    {
+      "hash": "66ed8bdd54a532596c44d276a67e15d9",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/MOTION/72695.PDF",
+      "title": "72695",
+      "processing_time": 2.438480854034424,
+      "chunks_added": 20,
+      "retry_count": 0
+    },
+    {
+      "hash": "4a5f56351ed1cc8ea0fdc857858c7cb7",
+      "url": "http://docs.cpuc.ca.gov/word_pdf/agenda_decision/118189.pdf",
+      "title": "118189",
+      "processing_time": 42.63781499862671,
+      "chunks_added": 45,
+      "retry_count": 0
+    }
+  ],
+  "recent_failures": []
+}

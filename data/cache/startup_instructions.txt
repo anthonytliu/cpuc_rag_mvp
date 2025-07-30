@@ -1,0 +1,273 @@
+CPUC RAG SYSTEM - STARTUP INSTRUCTIONS
+=====================================
+
+This document explains how to run each component of the CPUC RAG system.
+
+SYSTEM OVERVIEW
+===============
+The system now consists of separate components:
+1. Standalone Document Scraper (for discovering new documents)
+2. Main RAG Application (for querying and analysis)
+3. Background Services (PDF scheduler, etc.)
+
+PREREQUISITES
+=============
+- Python environment with required packages installed
+- Chrome/Chromium browser installed (for scraping)
+- Working directory: /Users/anthony.liu/Downloads/CPUC_REG_RAG
+
+QUICK START WORKFLOW
+===================
+For new users or fresh installations:
+
+1. Run the scraper to discover documents:
+   python standalone_scraper.py R2207005
+
+2. Start the main application:
+   streamlit run app.py
+
+3. The app will automatically build embeddings from discovered documents
+
+DETAILED COMPONENT INSTRUCTIONS
+===============================
+
+1. STANDALONE DOCUMENT SCRAPER
+==============================
+
+Purpose: Discovers and downloads metadata for CPUC documents
+Location: standalone_scraper.py
+
+Basic Usage:
+-----------
+# Scrape default proceeding (R2207005)
+python standalone_scraper.py
+
+# Scrape specific proceeding
+python standalone_scraper.py R2207005
+
+# List available proceedings
+python standalone_scraper.py --list-proceedings
+
+# Run with verbose logging
+python standalone_scraper.py --verbose R2207005
+
+# Get help
+python standalone_scraper.py --help
+
+What it does:
+- Navigates to CPUC website
+- Downloads CSV of documents for the proceeding
+- Extracts PDF URLs and metadata
+- Performs Google search for additional documents
+- Saves results to JSON files
+- Creates comprehensive document history
+
+Output Files:
+- cpuc_csvs/[proceeding]_resultCSV.csv (official CPUC data)
+- cpuc_csvs/[proceeding]_scraped_pdf_history.json (comprehensive metadata)
+
+Expected Runtime: 5-15 minutes depending on document count
+
+Example Full Command:
+python standalone_scraper.py --verbose R2207005
+
+2. MAIN RAG APPLICATION
+=======================
+
+Purpose: Provides document analysis and query interface
+Location: app.py
+
+Basic Usage:
+-----------
+streamlit run app.py
+
+Access: http://localhost:8501
+
+What it does:
+- Loads existing document data from scraper output
+- Builds vector embeddings from PDF URLs
+- Provides query interface
+- Shows system status and analytics
+- Manages background services
+
+Prerequisites:
+- Must have scraped document data (run standalone_scraper.py first)
+- Will show warning if no data found
+
+System Tabs:
+- Query Interface: Ask questions about documents
+- System Status: View processing progress
+- System Management: Run manual operations
+- Timeline: Document timeline analysis
+
+3. TESTING THE SYSTEM
+=====================
+
+Run Scraper Tests:
+-----------------
+# Test basic functionality
+python -m unittest test_cpuc_scraper.TestCPUCSimplifiedScraper -v
+
+# Test new features (page URL tracking, duplicates)
+python -m unittest test_cpuc_scraper.TestPageURLTrackingAndDuplicatePrevention -v
+
+# Test standalone scraper integration
+python -m unittest test_cpuc_scraper.TestStandaloneScraperIntegration -v
+
+# Run all tests
+python -m unittest test_cpuc_scraper -v
+
+4. CONFIGURATION
+===============
+
+Environment Variables:
+---------------------
+# In .env or environment
+DEFAULT_PROCEEDING=R2207005
+PDF_SCHEDULER_ENABLED=true
+RUN_SCRAPER_ON_STARTUP=false  # Now disabled - use standalone scraper
+
+Config File:
+-----------
+Edit config.py to change:
+- DEFAULT_PROCEEDING
+- Browser settings
+- Performance parameters
+- File paths
+
+5. TROUBLESHOOTING
+=================
+
+Common Issues:
+
+"No existing data found":
+- Run: python standalone_scraper.py [proceeding]
+- Then restart: streamlit run app.py
+
+"Scraper fails":
+- Check internet connection
+- Verify Chrome browser is installed
+- Try with --verbose flag for more details
+- Check selenium compatibility
+
+"Vector store build fails":
+- Ensure scraped PDF history exists
+- Check PDF URLs are accessible
+- Monitor system resources (memory)
+
+"Import errors":
+- Ensure all dependencies installed: pip install -r requirements.txt
+- Check Python version compatibility
+
+File Locations:
+--------------
+- Scraped Data: cpuc_csvs/
+- Vector Store: local_lance_db/
+- Logs: standalone_scraper.log (scraper), app logs in terminal
+
+6. TYPICAL WORKFLOWS
+===================
+
+A. First Time Setup:
+-------------------
+1. python standalone_scraper.py --list-proceedings
+2. python standalone_scraper.py R2207005
+3. streamlit run app.py
+
+B. Regular Operation:
+--------------------
+1. streamlit run app.py (system runs with existing data)
+2. Optionally run scraper periodically for updates
+
+C. Adding New Proceeding:
+------------------------
+1. python standalone_scraper.py R2345678
+2. Restart app to pick up new data
+3. Use proceeding selector in app interface
+
+D. Development/Testing:
+----------------------
+1. python -m unittest test_cpuc_scraper -v
+2. python standalone_scraper.py --verbose [proceeding]
+3. streamlit run app.py
+
+7. PERFORMANCE TIPS
+==================
+
+Scraper Performance:
+- Use --headless flag (default) for faster operation
+- Run during off-peak hours for better website response
+- Monitor for timeouts and retry if needed
+
+App Performance:
+- Allow embeddings to build completely before heavy querying
+- Use proceeding selector to focus on specific datasets
+- Monitor memory usage with large document sets
+
+8. MONITORING AND LOGS
+=====================
+
+Scraper Logs:
+- Console output shows progress
+- standalone_scraper.log contains detailed logs
+- Use --verbose flag for maximum detail
+
+App Logs:
+- Streamlit console shows system status
+- Check System Status tab for processing progress
+- Background processing notifications in UI
+
+File System Monitoring:
+- cpuc_csvs/ for scraped data
+- local_lance_db/ for vector stores
+- Check file sizes and timestamps
+
+9. ADVANCED USAGE
+================
+
+Custom Scraper Settings:
+python standalone_scraper.py --verbose --headless R2207005
+
+Multiple Proceedings:
+python standalone_scraper.py R2207005
+python standalone_scraper.py R2345678
+streamlit run app.py
+
+Integration with External Tools:
+- JSON output can be processed by external scripts
+- CSV data compatible with spreadsheet applications
+- Vector store can be accessed programmatically
+
+10. GETTING HELP
+===============
+
+Command Line Help:
+python standalone_scraper.py --help
+
+System Information:
+python standalone_scraper.py --list-proceedings
+
+Testing Status:
+python -m unittest test_cpuc_scraper.TestStandaloneScraperIntegration -v
+
+Documentation:
+- README files in project directory
+- Code comments and docstrings
+- Test files for usage examples
+
+SUMMARY COMMANDS
+===============
+
+# Minimal workflow
+python standalone_scraper.py
+streamlit run app.py
+
+# Full workflow with logging
+python standalone_scraper.py --verbose R2207005
+streamlit run app.py
+
+# Testing
+python -m unittest test_cpuc_scraper -v
+
+# Help
+python standalone_scraper.py --help

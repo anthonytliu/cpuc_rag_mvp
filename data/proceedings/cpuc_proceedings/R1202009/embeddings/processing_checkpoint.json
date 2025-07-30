@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-07-28T22:14:41.911447",
+  "proceeding": "R1202009",
+  "successful_count": 12,
+  "failed_count": 0,
+  "schema_errors_count": 0,
+  "last_successful": [
+    {
+      "hash": "3f58d9e7da6f8eedc67d68c20277f6ae",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/165007.PDF",
+      "title": "165007",
+      "processing_time": 2.2467710971832275,
+      "chunks_added": 29,
+      "retry_count": 0
+    },
+    {
+      "hash": "4cbdf2e92d43cc1aa297bc4f61727330",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/164995.PDF",
+      "title": "164995",
+      "processing_time": 6.235267162322998,
+      "chunks_added": 34,
+      "retry_count": 0
+    },
+    {
+      "hash": "43cd19a3f641b9aad91b4e7b4aa85a07",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162836.PDF",
+      "title": "162836",
+      "processing_time": 2.574694871902466,
+      "chunks_added": 31,
+      "retry_count": 0
+    },
+    {
+      "hash": "039619934e953435cdd74010ffed8af3",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162930.PDF",
+      "title": "162930",
+      "processing_time": 1.9652278423309326,
+      "chunks_added": 26,
+      "retry_count": 0
+    },
+    {
+      "hash": "c630b9d166fc2756deeee3f045755847",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/EFILE/CM/162841.PDF",
+      "title": "162841",
+      "processing_time": 9.658911228179932,
+      "chunks_added": 186,
+      "retry_count": 0
+    }
+  ],
+  "recent_failures": []
+}

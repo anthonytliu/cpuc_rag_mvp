@@ -1,0 +1,91 @@
+{
+  "test_timestamp": "2025-07-23T20:33:03.740117",
+  "test_urls": [
+    "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M571/K985/571985189.PDF",
+    "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K911/566911513.PDF"
+  ],
+  "onboard_results": [
+    {
+      "method": "Docling On-Board",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M571/K985/571985189.PDF",
+      "success": true,
+      "processing_time": 7.97845721244812,
+      "chunk_count": 82,
+      "total_content_length": 15818,
+      "memory_usage_mb": 504.46875,
+      "error_message": null
+    },
+    {
+      "method": "Docling On-Board",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K911/566911513.PDF",
+      "success": true,
+      "processing_time": 41.994399070739746,
+      "chunk_count": 0,
+      "total_content_length": 0,
+      "memory_usage_mb": -736.546875,
+      "error_message": null
+    }
+  ],
+  "api_results": [
+    {
+      "method": "Docling API (Simulated)",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M571/K985/571985189.PDF",
+      "success": true,
+      "processing_time": 4.0,
+      "chunk_count": 45,
+      "total_content_length": 15000,
+      "memory_usage_mb": 50.0,
+      "error_message": null,
+      "api_cost_estimate": 0.05
+    },
+    {
+      "method": "Docling API (Simulated)",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M566/K911/566911513.PDF",
+      "success": true,
+      "processing_time": 3.0,
+      "chunk_count": 45,
+      "total_content_length": 15000,
+      "memory_usage_mb": 50.0,
+      "error_message": null,
+      "api_cost_estimate": 0.05
+    }
+  ],
+  "onboard_metrics": {
+    "method": "Docling On-Board",
+    "total_documents": 2,
+    "successful_documents": 2,
+    "failed_documents": 0,
+    "avg_processing_time": 24.986428141593933,
+    "median_processing_time": 24.986428141593933,
+    "min_processing_time": 7.97845721244812,
+    "max_processing_time": 41.994399070739746,
+    "total_time": 49.972856283187866,
+    "throughput_docs_per_minute": 2.4013036061012794,
+    "avg_memory_usage_mb": -116.0390625,
+    "total_chunks": 82,
+    "avg_chunks_per_doc": 41.0,
+    "total_content_length": 15818,
+    "avg_content_length": 7909,
+    "success_rate": 100.0,
+    "total_api_cost_estimate": null
+  },
+  "api_metrics": {
+    "method": "Docling API (Simulated)",
+    "total_documents": 2,
+    "successful_documents": 2,
+    "failed_documents": 0,
+    "avg_processing_time": 3.5,
+    "median_processing_time": 3.5,
+    "min_processing_time": 3.0,
+    "max_processing_time": 4.0,
+    "total_time": 7.0,
+    "throughput_docs_per_minute": 17.142857142857142,
+    "avg_memory_usage_mb": 50.0,
+    "total_chunks": 90,
+    "avg_chunks_per_doc": 45.0,
+    "total_content_length": 30000,
+    "avg_content_length": 15000,
+    "success_rate": 100.0,
+    "total_api_cost_estimate": 0.1
+  }
+}

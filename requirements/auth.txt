@@ -1,0 +1,22 @@
+# Additional requirements for authentication system
+# Add these to your existing requirements.txt
+
+# OAuth and authentication
+authlib==1.2.1
+requests==2.31.0
+PyJWT==2.8.0
+
+# Database (if upgrading from SQLite)
+psycopg2-binary==2.9.7  # For PostgreSQL in production
+sqlalchemy==2.0.23  # For database ORM (optional)
+
+# Security
+cryptography==41.0.7
+python-dotenv==1.0.0
+
+# Session management
+streamlit-authenticator==0.2.3  # Alternative auth library
+
+# Web deployment
+gunicorn==21.2.0  # For production WSGI server
+nginx==1.18.0  # For reverse proxy (system package)
