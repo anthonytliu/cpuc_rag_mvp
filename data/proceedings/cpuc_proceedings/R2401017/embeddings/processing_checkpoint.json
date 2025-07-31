@@ -1,0 +1,86 @@
+{
+  "timestamp": "2025-07-30T13:21:36.829273",
+  "proceeding": "R2401017",
+  "successful_count": 21,
+  "failed_count": 11,
+  "schema_errors_count": 0,
+  "last_successful": [
+    {
+      "hash": "4ad53d1b7e7bf0f84ee1607487f4bd56",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K986/571986511.PDF",
+      "title": "571986511",
+      "processing_time": 7.745028972625732,
+      "chunks_added": 10,
+      "retry_count": 0
+    },
+    {
+      "hash": "ad28c4df9568a4245b7c0d6be2d2756e",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K990/571990170.PDF",
+      "title": "571990170",
+      "processing_time": 3.314018249511719e-05,
+      "chunks_added": 0,
+      "retry_count": 2
+    },
+    {
+      "hash": "0006726599920bbed79e284ee170b0a0",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K955/571955781.PDF",
+      "title": "571955781",
+      "processing_time": 10.653496742248535,
+      "chunks_added": 60,
+      "retry_count": 0
+    },
+    {
+      "hash": "c4c2079abc4e8ddaa69ed7ee08824d21",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K986/571986603.PDF",
+      "title": "571986603",
+      "processing_time": 109.57454681396484,
+      "chunks_added": 257,
+      "retry_count": 1
+    },
+    {
+      "hash": "733c6079e769647d69d38f563aa69680",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K244/571244411.PDF",
+      "title": "571244411",
+      "processing_time": 2.5987625122070312e-05,
+      "chunks_added": 0,
+      "retry_count": 2
+    }
+  ],
+  "recent_failures": [
+    {
+      "hash": "f6edd4ae1787a028bbe45264a8419e63",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M572/K574/572574947.PDF",
+      "title": "572574947",
+      "error": "Field 'char_end' not found in target schema",
+      "retry_count": 0
+    },
+    {
+      "hash": "989d5ec39a23b6b6ebc91ba5f02443a5",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M572/K574/572574284.PDF",
+      "title": "572574284",
+      "error": "Field 'char_end' not found in target schema",
+      "retry_count": 3
+    },
+    {
+      "hash": "8dff11efd4aa5f45e5f18118b45d07d9",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K943/571943881.PDF",
+      "title": "571943881",
+      "error": "Field 'char_end' not found in target schema",
+      "retry_count": 0
+    },
+    {
+      "hash": "8876c2852cb799cf4a54abc061698f72",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K986/571986512.PDF",
+      "title": "571986512",
+      "error": "Processing timeout after 120 seconds",
+      "retry_count": 3
+    },
+    {
+      "hash": "05f100926001b1d47712d99930d2cd6b",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M571/K943/571943870.PDF",
+      "title": "571943870",
+      "error": "Processing timeout after 120 seconds",
+      "retry_count": 3
+    }
+  ]
+}

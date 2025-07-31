@@ -1,0 +1,64 @@
+{
+  "overall_status": "\u26a0\ufe0f PASSED WITH WARNINGS",
+  "proceeding": "R2401017",
+  "test_duration": 6.994733095169067,
+  "timestamp": "2025-07-30T14:57:02.351295",
+  "test_results": {
+    "health_check": {
+      "status": "PASSED",
+      "proceeding": "R2401017",
+      "embedding_model_ready": true,
+      "vector_store_ready": true,
+      "lance_db_connected": true,
+      "vector_count": 20,
+      "db_path": "/Users/anthony.liu/Downloads/CPUC_REG_RAG/data/vector_stores/local_lance_db/R2401017",
+      "timestamp": "2025-07-30T14:57:02.292976"
+    },
+    "data_integrity": {
+      "status": "PASSED",
+      "files_exist": {
+        "main_folder": true,
+        "document_hashes": true,
+        "vector_db": true
+      },
+      "total_documents": 46,
+      "total_expected_chunks": 9950,
+      "unique_urls": 46,
+      "average_chunks_per_doc": 216.3
+    },
+    "vector_database": {
+      "status": "PASSED",
+      "vector_count": 20,
+      "table_accessible": true,
+      "row_count": 20,
+      "table_name": "R2401017_documents",
+      "schema_available": true
+    },
+    "incremental_processing": {
+      "status": "PASSED",
+      "embedder_ready": true,
+      "total_embedded": 0,
+      "total_failed": 0,
+      "last_updated": "2025-07-30T14:57:02.299681",
+      "embedding_status": "empty"
+    },
+    "ongoing_processes": {
+      "status": "WARNING",
+      "python_processes_count": 1,
+      "r2401017_processes_count": 1,
+      "r2401017_processes": [
+        {
+          "pid": 37021,
+          "cmdline": "/opt/homebrew/Cellar/python@3.13/3.13.3_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python test_r2401017_consolidation.py"
+        }
+      ]
+    },
+    "backup_cleanup": {
+      "status": "PASSED",
+      "remaining_backup_folders": 0,
+      "consolidated_backups": 1,
+      "main_folder_proper": true,
+      "backup_folder_names": []
+    }
+  }
+}

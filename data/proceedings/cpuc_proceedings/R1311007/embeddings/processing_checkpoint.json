@@ -1,0 +1,86 @@
+{
+  "timestamp": "2025-07-30T20:32:32.864507",
+  "proceeding": "R1311007",
+  "successful_count": 12,
+  "failed_count": 406,
+  "schema_errors_count": 0,
+  "last_successful": [
+    {
+      "hash": "8f76a268b3d6e9e1c3bd589e0a0836b2",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M212/K642/212642689.PDF",
+      "title": "212642689",
+      "processing_time": 6.404964923858643,
+      "chunks_added": 2,
+      "retry_count": 0
+    },
+    {
+      "hash": "28c60a79ff37807f7cf5ff77b53b111c",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M211/K654/211654688.PDF",
+      "title": "211654688",
+      "processing_time": 5.626678466796875e-05,
+      "chunks_added": 0,
+      "retry_count": 2
+    },
+    {
+      "hash": "30f83bde2530e7e213f407f7ff9b0949",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M211/K924/211924660.PDF",
+      "title": "211924660",
+      "processing_time": 1.9311904907226562e-05,
+      "chunks_added": 0,
+      "retry_count": 2
+    },
+    {
+      "hash": "85160f0704a83e153c34bbfb8339fb59",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M198/K217/198217207.PDF",
+      "title": "198217207",
+      "processing_time": 2.3367998600006104,
+      "chunks_added": 1,
+      "retry_count": 0
+    },
+    {
+      "hash": "3486c4a768896fb8fe314622ac1389d5",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M199/K979/199979892.PDF",
+      "title": "199979892",
+      "processing_time": 2.580430030822754,
+      "chunks_added": 12,
+      "retry_count": 0
+    }
+  ],
+  "recent_failures": [
+    {
+      "hash": "347cbae00c74bb1c6365623e25077ee9",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M103/K390/103390362.PDF",
+      "title": "103390362",
+      "error": "Recursion level in ArrowSchema struct exceeded",
+      "retry_count": 0
+    },
+    {
+      "hash": "de973520729e056f11af56dbbab2fcde",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M094/K270/94270121.PDF",
+      "title": "94270121",
+      "error": "Recursion level in ArrowSchema struct exceeded",
+      "retry_count": 0
+    },
+    {
+      "hash": "df65d02168d0277b3e1f1d848b75bbed",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M088/K661/88661898.PDF",
+      "title": "88661898",
+      "error": "Recursion level in ArrowSchema struct exceeded",
+      "retry_count": 0
+    },
+    {
+      "hash": "586c5c427b7da81d7d9290f3ff4d101f",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M084/K126/84126187.PDF",
+      "title": "84126187",
+      "error": "Recursion level in ArrowSchema struct exceeded",
+      "retry_count": 0
+    },
+    {
+      "hash": "f9e72638c0e4ac1952fea15f2c243c9b",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Published/G000/M081/K996/81996327.PDF",
+      "title": "81996327",
+      "error": "Recursion level in ArrowSchema struct exceeded",
+      "retry_count": 0
+    }
+  ]
+}

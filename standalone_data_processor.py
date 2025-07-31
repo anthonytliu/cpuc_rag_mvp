@@ -4,25 +4,72 @@ Standalone Data Processing System for CPUC Documents
 
 This script processes scraped PDF data from the cpuc_proceedings structure,
 creating embeddings and chunks for use in the RAG system. It operates
-independently from the main application and maintains all scraped data
+independently of the main application and maintains all scraped data
 as read-only.
 
 Features:
 - Processes existing scraped PDF metadata from cpuc_proceedings structure
 - Creates embeddings folder within each proceeding directory
-- Populates centralized vector database in root directory
+- Populates a centralized vector database in root directory
 - Provides progress tracking and error recovery
 - Maintains backward compatibility with existing data
+- NEW: Large file timeout handling with failed file tracking
+- NEW: Local retry processing for failed files with extended timeouts
+- NEW: Comprehensive failed file management system
 
-Usage:
+Standard Usage:
     python standalone_data_processor.py [proceeding_number]
     python standalone_data_processor.py --all
     python standalone_data_processor.py --list-proceedings
     
+NEW: Failed File Processing Options:
+    python standalone_data_processor.py --failed-files [proceeding_number]
+    python standalone_data_processor.py --failed-files --all
+    python standalone_data_processor.py --failed-status [proceeding_number]
+    python standalone_data_processor.py --test-large-file
+
+Processing Modes:
+1. STANDARD MODE (default): Process scraped PDFs with standard 5-minute timeout
+   - URLs that timeout are recorded in proceeding/failed_files.json
+   - Failed files can be retried later with local processing
+   
+2. FAILED FILES MODE (--failed-files): Process previously failed files
+   - Downloads PDFs locally for processing with extended 30-minute timeout
+   - Uses both Docling and Chonkie fallback methods
+   - Updates failed_files.json with processing results
+   
+3. STATUS MODE (--failed-status): Check failed files status
+   - Shows count of failed vs processed files per proceeding
+   - Lists details of failed files including retry counts
+   
+4. TEST MODE (--test-large-file): Test large file processing
+   - Uses known large file for testing timeout and retry systems
+   - Demonstrates complete workflow from timeout to local retry
+
 Examples:
+    # Standard processing
     python standalone_data_processor.py R2207005
     python standalone_data_processor.py --all
+    
+    # Process failed files with local download and extended timeout
+    python standalone_data_processor.py --failed-files R2207005
+    python standalone_data_processor.py --failed-files --all
+    
+    # Check failed files status
+    python standalone_data_processor.py --failed-status R2207005
+    python standalone_data_processor.py --failed-status --all
+    
+    # Test large file processing system
+    python standalone_data_processor.py --test-large-file
+    
+    # List available proceedings
     python standalone_data_processor.py --list-proceedings
+
+Configuration Settings:
+- DEFAULT_PROCESSING_TIMEOUT: 300 seconds (5 minutes) for standard processing
+- LARGE_FILE_PROCESSING_TIMEOUT: 1800 seconds (30 minutes) for local retry
+- Failed files are stored in: proceeding_dir/failed_files.json
+- Timeouts are configurable in src/core/config.py
 
 Author: Claude Code
 """
@@ -112,6 +159,38 @@ Examples:
         type=int,
         default=10,
         help='Number of documents to process in each batch (default: 10)'
+    )
+    
+    parser.add_argument(
+        '--no-timeout',
+        action='store_true',
+        help='Disable 300-second timeout for document processing (use for very large documents)'
+    )
+    
+    # NEW: Failed file processing options
+    parser.add_argument(
+        '--failed-files',
+        action='store_true',
+        help='Process previously failed files using local download and extended timeout'
+    )
+    
+    parser.add_argument(
+        '--failed-status',
+        action='store_true',
+        help='Show status of failed files for proceedings'
+    )
+    
+    parser.add_argument(
+        '--test-large-file',
+        action='store_true',
+        help='Test large file processing system with known large PDF'
+    )
+    
+    parser.add_argument(
+        '--max-failed',
+        type=int,
+        metavar='N',
+        help='Maximum number of failed files to process (default: all)'
     )
     
     return parser.parse_args()
@@ -331,7 +410,7 @@ def load_scraped_pdf_data(proceeding: str) -> Optional[Dict]:
         logger.error(f"Failed to load scraped data for {proceeding}: {e}")
         return None
 
-def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_rebuild: bool = False) -> Dict:
+def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_rebuild: bool = False, enable_timeout: bool = True) -> Dict:
     """
     Process all documents for a proceeding into embeddings.
     
@@ -339,6 +418,7 @@ def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_re
         proceeding: Proceeding number (e.g., 'R2207005')
         batch_size: Number of documents to process in each batch
         force_rebuild: Whether to rebuild existing embeddings
+        enable_timeout: Whether to enable 300-second timeout for document processing
         
     Returns:
         Dictionary with processing results
@@ -371,7 +451,7 @@ def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_re
             if config.VERBOSE_LOGGING:
                 logger.debug(f"[{progress}%] {message}")
         
-        embedder = IncrementalEmbedder(proceeding, progress_callback=progress_callback)
+        embedder = IncrementalEmbedder(proceeding, progress_callback=progress_callback, enable_timeout=enable_timeout)
         
         # Process embeddings
         results = embedder.process_incremental_embeddings()
@@ -419,7 +499,7 @@ def process_proceeding_documents(proceeding: str, batch_size: int = 10, force_re
             'documents_processed': 0
         }
 
-def process_multiple_proceedings(proceedings: List[str], batch_size: int = 10, force_rebuild: bool = False) -> Dict:
+def process_multiple_proceedings(proceedings: List[str], batch_size: int = 10, force_rebuild: bool = False, enable_timeout: bool = True) -> Dict:
     """Process multiple proceedings."""
     if not config.DEBUG:
         print(f"\n🚀 Starting data processing for {len(proceedings)} proceedings")
@@ -443,7 +523,7 @@ def process_multiple_proceedings(proceedings: List[str], batch_size: int = 10, f
             logger.info(f"📊 Processing proceeding {i}/{len(proceedings)}: {proceeding}")
         
         try:
-            result = process_proceeding_documents(proceeding, batch_size, force_rebuild)
+            result = process_proceeding_documents(proceeding, batch_size, force_rebuild, enable_timeout)
             results['proceedings_results'][proceeding] = result
             
             if result.get('status') == 'completed':
@@ -516,6 +596,150 @@ def show_detailed_status(proceeding: str) -> None:
         for error in status['errors']:
             print(f"  • {error}")
 
+
+def handle_failed_status_request(args):
+    """Handle --failed-status request."""
+    from src.data_processing.data_processing import get_failed_files_status
+    
+    if args.proceeding:
+        # Single proceeding
+        proceedings = [args.proceeding]
+    elif args.all:
+        # All discovered proceedings
+        proceedings = discover_available_proceedings()
+    else:
+        # All configured proceedings
+        proceedings = get_config_proceedings()
+    
+    print(f"\n📊 Failed Files Status Report")
+    print("=" * 60)
+    
+    total_failed = 0
+    total_processed = 0
+    
+    for proceeding in proceedings:
+        status = get_failed_files_status(proceeding)
+        
+        if status['status'] == 'error':
+            print(f"\n❌ {proceeding}: Error - {status.get('error', 'Unknown error')}")
+            continue
+        
+        print(f"\n📁 {proceeding}")
+        print(f"  Failed files: {status.get('total_failed', 0)}")
+        print(f"  Processed files: {status.get('total_processed', 0)}")
+        
+        total_failed += status.get('total_failed', 0)
+        total_processed += status.get('total_processed', 0)
+        
+        if status['failed_files']:
+            print(f"  Failed file details:")
+            for file_info in status['failed_files'][:5]:  # Show first 5
+                print(f"    • {file_info['title'][:50]}...")
+                print(f"      Type: {file_info['failure_type']}, Retries: {file_info['retry_count']}")
+            
+            if len(status['failed_files']) > 5:
+                print(f"    ... and {len(status['failed_files']) - 5} more")
+    
+    print(f"\n📈 Summary")
+    print(f"  Total failed files: {total_failed}")
+    print(f"  Total processed files: {total_processed}")
+    
+    if total_failed > 0:
+        print(f"\n💡 To process failed files:")
+        if len(proceedings) == 1:
+            print(f"  python standalone_data_processor.py --failed-files {proceedings[0]}")
+        else:
+            print(f"  python standalone_data_processor.py --failed-files --all")
+
+
+def handle_failed_files_processing(args):
+    """Handle --failed-files processing request."""
+    from src.data_processing.data_processing import process_failed_files_locally
+    
+    if args.proceeding:
+        # Single proceeding
+        proceedings = [args.proceeding]
+    elif args.all:
+        # All discovered proceedings
+        proceedings = discover_available_proceedings()
+    else:
+        # Default proceeding
+        proceedings = [config.DEFAULT_PROCEEDING]
+    
+    print(f"\n🔄 Processing Failed Files with Local Download")
+    print("=" * 60)
+    print(f"Using extended timeout: {config.LARGE_FILE_PROCESSING_TIMEOUT} seconds")
+    
+    if args.max_failed:
+        print(f"Limiting to {args.max_failed} files per proceeding")
+    
+    print()
+    
+    total_processed = 0
+    total_successful = 0
+    total_still_failed = 0
+    
+    for proceeding in proceedings:
+        print(f"📁 Processing failed files for {proceeding}...")
+        
+        results = process_failed_files_locally(
+            proceeding=proceeding,
+            max_files=args.max_failed,
+            use_large_timeout=True
+        )
+        
+        if results['status'] == 'no_failed_files':
+            print(f"  ✅ No failed files to process")
+            continue
+        elif results['status'] == 'error':
+            print(f"  ❌ Error: {results.get('error', 'Unknown error')}")
+            continue
+        
+        attempted = results.get('total_attempted', 0)
+        successful = results.get('processed', 0)
+        still_failed = len(results.get('still_failed', []))
+        
+        print(f"  📊 Results:")
+        print(f"    Attempted: {attempted}")
+        print(f"    Successful: {successful}")
+        print(f"    Still failed: {still_failed}")
+        
+        total_processed += attempted
+        total_successful += successful
+        total_still_failed += still_failed
+        
+        if results.get('successful'):
+            print(f"  ✅ Successfully processed:")
+            for file_info in results['successful'][:3]:  # Show first 3
+                print(f"    • {file_info['title'][:50]}... ({file_info['chunks']} chunks)")
+            if len(results['successful']) > 3:
+                print(f"    ... and {len(results['successful']) - 3} more")
+        
+        if results.get('still_failed'):
+            print(f"  ❌ Still failed:")
+            for file_info in results['still_failed'][:3]:  # Show first 3
+                print(f"    • {file_info['title'][:50]}...")
+                if 'error' in file_info:
+                    print(f"      Error: {file_info['error'][:100]}")
+            if len(results['still_failed']) > 3:
+                print(f"    ... and {len(results['still_failed']) - 3} more")
+        
+        print()
+    
+    print(f"📈 Final Summary")
+    print(f"  Total attempted: {total_processed}")
+    print(f"  Total successful: {total_successful}")
+    print(f"  Total still failed: {total_still_failed}")
+    
+    if total_successful > 0:
+        print(f"\n✅ Successfully processed {total_successful} previously failed files!")
+        print(f"  These files have been added to the vector database")
+    
+    if total_still_failed > 0:
+        print(f"\n⚠️  {total_still_failed} files still failed after local processing")
+        print(f"  These files may have structural issues or be corrupted")
+
+
 def main():
     """Main entry point for standalone data processor."""
     args = parse_arguments()
@@ -533,6 +757,22 @@ def main():
     # Handle status request
     if args.status:
         show_detailed_status(args.status)
+        return 0
+    
+    # NEW: Handle failed file testing
+    if args.test_large_file:
+        from src.data_processing.test_large_file_processing import main as test_main
+        logger.info("Running large file processing test...")
+        return test_main()
+    
+    # NEW: Handle failed files status request
+    if args.failed_status:
+        handle_failed_status_request(args)
+        return 0
+    
+    # NEW: Handle failed files processing request
+    if args.failed_files:
+        handle_failed_files_processing(args)
         return 0
     
     # Determine proceedings to process
@@ -567,6 +807,7 @@ def main():
             print(f"  {i}. {p}")
     print(f"Batch Size: {args.batch_size}")
     print(f"Force Rebuild: {args.force_rebuild}")
+    print(f"Timeout: {'Disabled' if args.no_timeout else '300 seconds'}")
     print(f"=" * 50)
     
     if len(proceedings) == 1:
@@ -574,7 +815,8 @@ def main():
         results = process_proceeding_documents(
             proceedings[0], 
             batch_size=args.batch_size,
-            force_rebuild=args.force_rebuild
+            force_rebuild=args.force_rebuild,
+            enable_timeout=not args.no_timeout
         )
         
         if results.get('status') == 'completed':
@@ -589,7 +831,8 @@ def main():
         results = process_multiple_proceedings(
             proceedings, 
             batch_size=args.batch_size,
-            force_rebuild=args.force_rebuild
+            force_rebuild=args.force_rebuild,
+            enable_timeout=not args.no_timeout
         )
         
         if results['successful'] > 0:

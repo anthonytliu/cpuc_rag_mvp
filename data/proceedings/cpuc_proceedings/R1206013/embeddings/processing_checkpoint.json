@@ -1,86 +1,50 @@
 {
-  "timestamp": "2025-07-29T05:47:01.922221",
+  "timestamp": "2025-07-29T22:25:56.626392",
   "proceeding": "R1206013",
-  "successful_count": 1129,
-  "failed_count": 10,
+  "successful_count": 10,
+  "failed_count": 0,
   "schema_errors_count": 0,
   "last_successful": [
-    {
-      "hash": "9452b893747fefa502e7c9082123c14a",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K734/31734736.PDF",
-      "title": "31734736",
-      "processing_time": 1.422415018081665,
-      "chunks_added": 10,
-      "retry_count": 0
-    },
-    {
-      "hash": "c48a5901ce43859705ebccf013b5edb3",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M031/K735/31735616.PDF",
-      "title": "31735616",
-      "processing_time": 3.23297119140625,
-      "chunks_added": 44,
-      "retry_count": 0
-    },
-    {
-      "hash": "99b4e51ab8e7ab9ce24688b4e896c80b",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M162/K005/162005324.PDF",
-      "title": "162005324",
-      "processing_time": 4.756458044052124,
-      "chunks_added": 36,
-      "retry_count": 0
-    },
-    {
-      "hash": "f2ac5f5a2280a5c42e0597928c3b08e9",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M154/K225/154225608.PDF",
-      "title": "154225608",
-      "processing_time": 1.4297518730163574,
-      "chunks_added": 5,
-      "retry_count": 0
-    },
-    {
-      "hash": "1b22b00bc101017f2b30e55481390fc3",
-      "url": "https://www.cpuc.ca.gov/-/media/cpuc-website/divisions/energy-division/documents/demand-response/demand-response-workshops/advanced-der---demand-flexibility-management/sdge-commentsadvanced-der--demand-flexibility-management-workshop.pdf",
-      "title": "sdge commentsadvanced der  demand flexibility management workshop",
-      "processing_time": 4.587908983230591,
-      "chunks_added": 15,
-      "retry_count": 0
-    }
-  ],
-  "recent_failures": [
     {
       "hash": "e160446266848e2c87c1d61350168cf3",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M144/K897/144897239.PDF",
       "title": "144897239",
-      "error": "Processing timeout after 300 seconds",
-      "retry_count": 3
+      "processing_time": 1.8835067749023438e-05,
+      "chunks_added": 0,
+      "retry_count": 0
     },
     {
       "hash": "01d10b253814b9b9eca4da85c284f0ce",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M143/K989/143989538.PDF",
       "title": "143989538",
-      "error": "Processing timeout after 300 seconds",
-      "retry_count": 3
+      "processing_time": 1.4781951904296875e-05,
+      "chunks_added": 0,
+      "retry_count": 0
     },
     {
       "hash": "37282a3abf4a9c84668af80f2948286d",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M141/K905/141905206.PDF",
       "title": "141905206",
-      "error": "No chunks extracted from document",
-      "retry_count": 2
+      "processing_time": 1.1920928955078125e-05,
+      "chunks_added": 0,
+      "retry_count": 0
     },
     {
       "hash": "7def10e9072b6a3d9b9308acc3a779c9",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M131/K173/131173969.PDF",
       "title": "131173969",
-      "error": "No chunks extracted from document",
+      "processing_time": 6.704965829849243,
+      "chunks_added": 6,
       "retry_count": 0
     },
     {
       "hash": "2a162795c275841f25e8d93c3375f0b3",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M141/K905/141905162.PDF",
       "title": "141905162",
-      "error": "No chunks extracted from document",
+      "processing_time": 24.375617027282715,
+      "chunks_added": 18,
       "retry_count": 0
     }
-  ]
+  ],
+  "recent_failures": []
 }

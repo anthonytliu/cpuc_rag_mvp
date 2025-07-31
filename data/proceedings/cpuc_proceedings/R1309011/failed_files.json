@@ -1,0 +1,22 @@
+{
+  "36bbceaea0c95442734d7b6fb1532970": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M343/K092/343092102.PDF",
+    "title": "343092102",
+    "proceeding": "R1309011",
+    "failure_type": "error",
+    "error_message": "signal only works in main thread of the main interpreter",
+    "failed_timestamp": "2025-07-30T11:58:26.720100",
+    "retry_count": 4,
+    "status": "failed"
+  },
+  "2ffa5aaaabcc736579258932494ee608": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M338/K729/338729242.PDF",
+    "title": "338729242",
+    "proceeding": "R1309011",
+    "failure_type": "error",
+    "error_message": "signal only works in main thread of the main interpreter",
+    "failed_timestamp": "2025-07-30T12:00:27.401701",
+    "retry_count": 1,
+    "status": "failed"
+  }
+}

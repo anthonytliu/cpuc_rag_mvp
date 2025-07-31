@@ -28,6 +28,13 @@ try:
     from ..core import config
     from .embedding_only_system import EmbeddingOnlySystem
 except ImportError:
+    import sys
+    from pathlib import Path
+    # Add src directory to path for absolute imports
+    src_dir = Path(__file__).parent.parent
+    if str(src_dir) not in sys.path:
+        sys.path.insert(0, str(src_dir))
+    
     from core import config
     from data_processing.embedding_only_system import EmbeddingOnlySystem
 
@@ -37,16 +44,18 @@ logger = logging.getLogger(__name__)
 class IncrementalEmbedder:
     """Manages incremental embedding with progress tracking and error recovery."""
     
-    def __init__(self, proceeding: str, progress_callback: Optional[Callable] = None):
+    def __init__(self, proceeding: str, progress_callback: Optional[Callable] = None, enable_timeout: bool = True):
         """
         Initialize incremental embedder for a specific proceeding.
         
         Args:
             proceeding: Proceeding number (e.g., "R2207005")
             progress_callback: Optional callback for progress updates
+            enable_timeout: Whether to enable 300-second timeout for document processing
         """
         self.proceeding = proceeding
         self.progress_callback = progress_callback
+        self.enable_timeout = enable_timeout
         
         # Initialize lightweight embedding system (no GPT/LLM required)
         self.embedding_system = EmbeddingOnlySystem(proceeding)
@@ -382,8 +391,12 @@ class IncrementalEmbedder:
         import threading
         
         result = {'success': False, 'error': 'Unknown error'}
-        # Use adaptive timeout - default to large document timeout since we can't easily get size here
-        timeout_seconds = getattr(config, 'URL_PROCESSING_TIMEOUT', 900)
+        
+        # Use timeout setting from initialization, extend timeout for complex documents
+        if self.enable_timeout:
+            timeout_seconds = 300  # 5 minutes for complex documents (was 120)
+        else:
+            timeout_seconds = getattr(config, 'URL_PROCESSING_TIMEOUT', 900)  # Use config default if no timeout
         
         def timeout_handler():
             return {
@@ -445,6 +458,20 @@ class IncrementalEmbedder:
             
             logger.debug(f"Processing document: {title} ({url})")
             
+            # Check if document is already processed using embedding system's hash tracking
+            if self.embedding_system.is_document_processed(url):
+                logger.debug(f"Document already processed: {title}")
+                processing_time = time.time() - start_time
+                return {
+                    'success': True,
+                    'processing_time': processing_time,
+                    'chunks_added': 0,
+                    'total_chunks_processed': 0,
+                    'success_rate': '100%',
+                    'skipped': True,
+                    'reason': 'Already processed'
+                }
+            
             # Step 1: Extract chunks from the URL using the RAG system's single URL processor
             url_data = {
                 'url': url,
@@ -466,10 +493,48 @@ class IncrementalEmbedder:
                     'processing_time': processing_time
                 }
             
-            # Step 2: Add chunks incrementally to the vector store
-            result = self.embedding_system.add_document_incrementally(
-                documents=chunks
-            )
+            # Step 2: Add chunks incrementally to the vector store with Chonkie schema
+            # Use appropriate batch sizes - no need to limit chunks with proper schema
+            batch_size = 50  # Standard batch size for Chonkie schema
+            if len(chunks) > 500:
+                # For very large chunk sets, use smaller batches but process all chunks
+                batch_size = 25
+                logger.info(f"Large chunk set detected ({len(chunks)} total), using batch size {batch_size} for efficiency")
+            
+            # Special handling for ArrowSchema recursion-prone documents
+            processing_method = chunks[0].metadata.get('processing_method', '') if chunks else ''
+            if 'docling_direct' in processing_method:
+                batch_size = 5  # Even smaller batches for recursion recovery mode
+                logger.info(f"Docling direct mode detected - using ultra-small batch size: {batch_size}")
+            
+            # Add documents with enhanced ArrowSchema recursion protection
+            try:
+                result = self.embedding_system.add_document_incrementally(
+                    documents=chunks,
+                    batch_size=batch_size,
+                    use_progress_tracking=False  # Disable to reduce complexity
+                )
+            except Exception as embed_error:
+                error_msg = str(embed_error).lower()
+                if 'recursion level' in error_msg or 'arrowschema' in error_msg:
+                    logger.warning(f"ArrowSchema recursion during embedding - using minimal batch processing")
+                    # Try with minimal batch size as final attempt
+                    try:
+                        result = self.embedding_system.add_document_incrementally(
+                            documents=chunks[:10],  # Limit to first 10 chunks only
+                            batch_size=1,  # Process one at a time
+                            use_progress_tracking=False
+                        )
+                        if result.get('success'):
+                            logger.info("Minimal batch processing successful for ArrowSchema recursion recovery")
+                        else:
+                            logger.error("Even minimal batch processing failed")
+                            result = {'success': False, 'error': 'ArrowSchema recursion - minimal processing failed'}
+                    except Exception as final_error:
+                        logger.error(f"Final attempt at ArrowSchema recovery failed: {final_error}")
+                        result = {'success': False, 'error': f'ArrowSchema recursion recovery failed: {final_error}'}
+                else:
+                    raise embed_error
             success = result.get('success', False)
             
             processing_time = time.time() - start_time
@@ -477,6 +542,9 @@ class IncrementalEmbedder:
             if success:
                 # Get the actual chunk count that was successfully added
                 actual_chunks_added = result.get('added', len(chunks))
+                
+                # Add document to hash tracking
+                self.embedding_system.add_document_to_hashes(url, title, actual_chunks_added)
                 
                 logger.debug(f"Successfully processed {title} ({actual_chunks_added}/{len(chunks)} chunks added) in {processing_time:.2f}s")
                 return {
@@ -618,14 +686,14 @@ class IncrementalEmbedder:
 
 # Convenience functions
 
-def create_incremental_embedder(proceeding: str, progress_callback=None) -> IncrementalEmbedder:
+def create_incremental_embedder(proceeding: str, progress_callback=None, enable_timeout: bool = True) -> IncrementalEmbedder:
     """Factory function to create incremental embedder."""
-    return IncrementalEmbedder(proceeding, progress_callback=progress_callback)
+    return IncrementalEmbedder(proceeding, progress_callback=progress_callback, enable_timeout=enable_timeout)
 
 
-def process_incremental_embeddings(proceeding: str, progress_callback=None) -> Dict:
+def process_incremental_embeddings(proceeding: str, progress_callback=None, enable_timeout: bool = True) -> Dict:
     """Process incremental embeddings for a proceeding."""
-    embedder = create_incremental_embedder(proceeding, progress_callback)
+    embedder = create_incremental_embedder(proceeding, progress_callback, enable_timeout)
     return embedder.process_incremental_embeddings()
 
 

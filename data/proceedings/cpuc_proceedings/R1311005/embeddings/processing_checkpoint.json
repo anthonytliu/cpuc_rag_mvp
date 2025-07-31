@@ -1,15 +1,15 @@
 {
-  "timestamp": "2025-07-29T15:07:08.672973",
+  "timestamp": "2025-07-29T22:16:32.883605",
   "proceeding": "R1311005",
-  "successful_count": 32,
-  "failed_count": 0,
+  "successful_count": 28,
+  "failed_count": 4,
   "schema_errors_count": 0,
   "last_successful": [
     {
       "hash": "957102b1039f6613d5da50a03940ab64",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M550/K112/550112140.PDF",
       "title": "550112140",
-      "processing_time": 5.101699113845825,
+      "processing_time": 4.855472803115845,
       "chunks_added": 10,
       "retry_count": 0
     },
@@ -17,7 +17,7 @@
       "hash": "a6bd3f6ae9ad98201083cefd4d3234ed",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M549/K795/549795590.PDF",
       "title": "549795590",
-      "processing_time": 5.4624550342559814,
+      "processing_time": 5.522227048873901,
       "chunks_added": 11,
       "retry_count": 0
     },
@@ -25,7 +25,7 @@
       "hash": "fcb2eec24a5090bf655b638e185997f1",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M550/K147/550147919.PDF",
       "title": "550147919",
-      "processing_time": 169.5493540763855,
+      "processing_time": 148.52217721939087,
       "chunks_added": 61,
       "retry_count": 0
     },
@@ -33,7 +33,7 @@
       "hash": "0584a78249763e55dc06c6dae94ecfdd",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M549/K465/549465224.PDF",
       "title": "549465224",
-      "processing_time": 241.94227623939514,
+      "processing_time": 235.35801768302917,
       "chunks_added": 83,
       "retry_count": 0
     },
@@ -41,10 +41,39 @@
       "hash": "b67a407226d8d7ce82e0db8d68cf2f1b",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M549/K971/549971345.PDF",
       "title": "549971345",
-      "processing_time": 4.952194929122925,
-      "chunks_added": 15,
+      "processing_time": 6.294158935546875,
+      "chunks_added": 61,
       "retry_count": 0
     }
   ],
-  "recent_failures": []
+  "recent_failures": [
+    {
+      "hash": "ae75634d20a836dd48f874241a4272a2",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M568/K535/568535502.PDF",
+      "title": "568535502",
+      "error": "'NoneType' object has no attribute 'add_documents'",
+      "retry_count": 0
+    },
+    {
+      "hash": "3f081a0189428ad33b9fbd0bcd0c9134",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M560/K273/560273054.PDF",
+      "title": "560273054",
+      "error": "'NoneType' object has no attribute 'add_documents'",
+      "retry_count": 0
+    },
+    {
+      "hash": "cbc70e105c8a2541ba59ad2ed5b1099a",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M553/K678/553678520.PDF",
+      "title": "553678520",
+      "error": "'NoneType' object has no attribute 'add_documents'",
+      "retry_count": 0
+    },
+    {
+      "hash": "41dc7087716a04fafb6dc9add496a486",
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M553/K185/553185402.PDF",
+      "title": "553185402",
+      "error": "'NoneType' object has no attribute 'add_documents'",
+      "retry_count": 0
+    }
+  ]
 }

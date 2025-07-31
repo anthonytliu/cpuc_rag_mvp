@@ -1,58 +1,18 @@
 {
-  "timestamp": "2025-07-29T07:06:40.033755",
+  "timestamp": "2025-07-29T22:25:56.930439",
   "proceeding": "R1211005",
-  "successful_count": 1250,
-  "failed_count": 1,
+  "successful_count": 1,
+  "failed_count": 0,
   "schema_errors_count": 0,
   "last_successful": [
-    {
-      "hash": "cf8c3bb2c7b6978ff5b45052d543d4ac",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M081/K583/81583258.PDF",
-      "title": "81583258",
-      "processing_time": 9.806683778762817,
-      "chunks_added": 184,
-      "retry_count": 0
-    },
-    {
-      "hash": "bcb37e18dc0bb7627b087477e89a4044",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M079/K848/79848855.PDF",
-      "title": "79848855",
-      "processing_time": 1.3782742023468018,
-      "chunks_added": 11,
-      "retry_count": 0
-    },
-    {
-      "hash": "c1f149e38d19258548bf8357b9b928c6",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M077/K196/77196670.PDF",
-      "title": "77196670",
-      "processing_time": 2.115027904510498,
-      "chunks_added": 15,
-      "retry_count": 0
-    },
-    {
-      "hash": "8f224d52f8e5bc388cdad4544451e290",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M066/K068/66068542.PDF",
-      "title": "66068542",
-      "processing_time": 1.5622389316558838,
-      "chunks_added": 13,
-      "retry_count": 0
-    },
-    {
-      "hash": "1988696d40a752806d04fe2256c8caf2",
-      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M059/K848/59848939.PDF",
-      "title": "59848939",
-      "processing_time": 1.121168851852417,
-      "chunks_added": 6,
-      "retry_count": 0
-    }
-  ],
-  "recent_failures": [
     {
       "hash": "461de3dd04185764dac930e124243db8",
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M098/K402/98402257.PDF",
       "title": "98402257",
-      "error": "Processing timeout after 300 seconds",
-      "retry_count": 3
+      "processing_time": 1.2636184692382812e-05,
+      "chunks_added": 0,
+      "retry_count": 0
     }
-  ]
+  ],
+  "recent_failures": []
 }

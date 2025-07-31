@@ -2,9 +2,17 @@ import logging
 import os
 import gc
 import threading
+import warnings
 from typing import Optional, Dict, Any
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
+
+# Suppress MPS pin_memory warnings at module level
+warnings.filterwarnings(
+    "ignore", 
+    message=".*pin_memory.*argument is set as true but not supported on MPS.*",
+    category=UserWarning
+)
 
 # Try relative imports first, fall back to absolute
 try:
@@ -158,23 +166,61 @@ def get_embedding_model(force_reload: bool = False):
             else:
                 device = "cpu"
             
-            # Get optimized batch size
+            # Get optimized batch size - Mac M4 Pro specific optimization
             base_batch_size = int(os.environ.get('EMBEDDING_BATCH_SIZE', '32'))
-            optimal_batch_size = cuda_manager.get_optimal_batch_size(base_batch_size)
+            
+            # Mac M4 Pro has 48GB RAM and excellent memory bandwidth - use larger batches
+            if device == "mps":
+                # Optimize for M4 Pro: larger batches for better throughput
+                import psutil
+                memory_gb = psutil.virtual_memory().total / (1024**3)
+                if memory_gb >= 32:  # M4 Pro with 48GB
+                    optimal_batch_size = min(base_batch_size * 4, 128)
+                    logger.info(f"M4 Pro detected with {memory_gb:.0f}GB RAM - using optimized batch size: {optimal_batch_size}")
+                else:
+                    optimal_batch_size = base_batch_size * 2
+            else:
+                optimal_batch_size = cuda_manager.get_optimal_batch_size(base_batch_size)
             
             # Model configuration with device-specific optimizations
             model_kwargs = {"device": device}
             encode_kwargs = {"batch_size": optimal_batch_size}
             
-            # Add CUDA-specific optimizations
+            # Add device-specific optimizations
             if device == "cuda":
                 model_kwargs.update({
                     "device_map": "auto",
                     "torch_dtype": torch.float16 if torch.cuda.is_available() else torch.float32
                 })
                 encode_kwargs.update({
-                    "show_progress_bar": False,  # Reduce CUDA overhead
-                    "convert_to_tensor": True
+                    "convert_to_tensor": True,
+                    "normalize_embeddings": True  # Better for similarity search
+                })
+            elif device == "mps":
+                # MPS-specific optimizations for Mac M4 Pro
+                model_kwargs.update({
+                    "model_kwargs": {"torch_dtype": torch.float32},  # M4 optimized precision
+                })
+                encode_kwargs.update({
+                    "convert_to_tensor": True,
+                    "normalize_embeddings": True,
+                    "convert_to_numpy": False,   # Keep tensors on MPS
+                })
+                
+                # M4 Pro memory optimizations
+                os.environ.update({
+                    'PYTORCH_MPS_HIGH_WATERMARK_RATIO': '0.8',
+                    'PYTORCH_MPS_LOW_WATERMARK_RATIO': '0.6',
+                    'OMP_NUM_THREADS': '8',  # Use performance cores
+                    'MKL_NUM_THREADS': '8',
+                })
+                
+                logger.info(f"M4 Pro MPS optimizations applied - batch size: {optimal_batch_size}")
+            else:
+                # CPU optimizations
+                encode_kwargs.update({
+                    "convert_to_tensor": True,
+                    "normalize_embeddings": True
                 })
             
             try:

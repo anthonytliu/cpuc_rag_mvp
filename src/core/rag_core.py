@@ -1179,31 +1179,30 @@ class CPUCRAGSystem:
         """
         logger.warning("🚨 CORRUPTION DETECTED - Attempting recovery...")
         
-        # Try to backup document hashes before cleanup
+        # Preserve document hashes in memory before cleanup (no backup files)
         backup_created = False
+        preserved_hashes = {}
         if self.doc_hashes_file.exists() and self.doc_hashes:
             try:
-                backup_path = self.doc_hashes_file.parent / f"document_hashes_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-                shutil.copy2(self.doc_hashes_file, backup_path)
-                logger.info(f"✅ Created backup of document hashes at {backup_path}")
+                preserved_hashes = self.doc_hashes.copy()
+                logger.info("📦 Preserved document hashes in memory for recovery (no backup files created)")
                 backup_created = True
             except Exception as e:
-                logger.error(f"Failed to backup document hashes: {e}")
+                logger.error(f"Failed to preserve document hashes: {e}")
         
         # Clean up corrupted database
         if self.db_dir.exists():
             logger.warning(f"🚨 Removing corrupted vector store at {self.db_dir}")
             shutil.rmtree(self.db_dir)
         
-        # Reset state but preserve doc_hashes if backup was created
+        # Reset state but preserve doc_hashes if preservation was successful
         self.vectordb = None
         if not backup_created:
-            logger.warning("🚨 No backup created - resetting document hashes")
+            logger.warning("🚨 No hashes preserved - resetting document hashes")
             self.doc_hashes = {}
-            if self.doc_hashes_file.exists():
-                self.doc_hashes_file.unlink()
         else:
-            logger.info("✅ Preserving document hashes for recovery")
+            self.doc_hashes = preserved_hashes
+            logger.info("✅ Preserved document hashes for recovery")
             
         logger.warning("🚨 Corrupted vector store cleaned up. Recovery will use existing document hashes if available.")
 
@@ -1417,16 +1416,8 @@ class CPUCRAGSystem:
         try:
             logger.info("🔄 Starting schema migration for enhanced citation support...")
             
-            # Step 1: Backup existing vector store
-            import shutil
-            from datetime import datetime
-            
-            backup_path = self.db_dir.parent / f"{self.db_dir.name}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            logger.info(f"📦 Creating backup at: {backup_path}")
-            
-            if self.db_dir.exists():
-                shutil.copytree(self.db_dir, backup_path)
-                logger.info("✅ Backup created successfully")
+            # Step 1: No backup folder creation - direct migration with data preservation
+            logger.info("📦 Starting direct schema migration (no backup folders created)")
             
             # Step 2: Remove the incompatible table
             table_path = self.db_dir / f"{self.current_proceeding}_documents.lance"
@@ -1441,7 +1432,6 @@ class CPUCRAGSystem:
             
             if self.vector_store:
                 logger.info("✅ Schema migration completed successfully")
-                logger.info(f"📂 Backup preserved at: {backup_path}")
                 return True
             else:
                 logger.error("❌ Failed to reinitialize vector store after migration")

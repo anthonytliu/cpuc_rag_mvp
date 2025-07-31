@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-07-29T07:06:40.253540",
+  "last_updated": "2025-07-29T22:25:57.138082",
   "embedded_documents": {
     "94257ea9d7b3f732149be8ce7d784057": {
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M567/K537/567537502.PDF",
@@ -7500,6 +7500,12 @@
       "title": "59848939",
       "embedding_date": "2025-07-29T07:06:40.253512",
       "processing_time": 1.121168851852417
+    },
+    "461de3dd04185764dac930e124243db8": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M098/K402/98402257.PDF",
+      "title": "98402257",
+      "embedding_date": "2025-07-29T22:25:57.138052",
+      "processing_time": 1.2636184692382812e-05
     }
   },
   "failed_documents": {
@@ -7509,6 +7515,6 @@
       "last_attempt": "2025-07-29T07:06:40.253517"
     }
   },
-  "total_embedded": 1250,
+  "total_embedded": 1251,
   "version": "1.0"
 }

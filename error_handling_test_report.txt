@@ -1,0 +1,19 @@
+
+🧪 ERROR HANDLING TEST REPORT
+==================================================
+
+📊 SUMMARY:
+   Test Duration: 17.47s
+   Tests Passed: 1/4
+   Success Rate: 25.0%
+
+🔧 TEST RESULTS:
+   ❌ FAIL Import Error Handling
+   ❌ FAIL Arrowschema Recursion Handling
+   ✅ PASS Docling Direct Processing
+   ❌ FAIL Incremental Embedder Protection
+
+🎯 OVERALL ASSESSMENT:
+   ⚠️ SIGNIFICANT ISSUES DETECTED
+   • Error handling needs attention
+   • Review failed tests and fix issues

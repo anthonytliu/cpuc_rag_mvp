@@ -40,48 +40,9 @@ USE_URL_PROCESSING = True
 URL_VALIDATION_TIMEOUT = 30  # seconds
 URL_PROCESSING_TIMEOUT = 900  # seconds for Docling processing (increased for large PDFs)
 
-# Adaptive timeout settings based on document size
-ADAPTIVE_TIMEOUT_ENABLED = True
-TIMEOUT_SMALL_DOC = 300    # < 100KB PDFs
-TIMEOUT_MEDIUM_DOC = 600   # 100KB - 1MB PDFs  
-TIMEOUT_LARGE_DOC = 1200   # > 1MB PDFs (20 minutes for very large documents)
-
-def get_adaptive_timeout(content_size_bytes: int = None, content_length_chars: int = None) -> int:
-    """
-    Calculate adaptive timeout based on document size.
-    
-    Args:
-        content_size_bytes: Size of document in bytes (from HTTP headers)
-        content_length_chars: Length of extracted text in characters
-        
-    Returns:
-        Timeout in seconds
-    """
-    if not ADAPTIVE_TIMEOUT_ENABLED:
-        return URL_PROCESSING_TIMEOUT
-    
-    # Estimate size if we have character count but not byte count
-    if content_size_bytes is None and content_length_chars is not None:
-        # Rough estimate: 1 character ≈ 1-2 bytes for text, but PDFs have overhead
-        content_size_bytes = content_length_chars * 3  # Conservative estimate
-    
-    if content_size_bytes is None:
-        return URL_PROCESSING_TIMEOUT  # Use default if size unknown
-    
-    # Convert to KB/MB for easier thresholds
-    size_kb = content_size_bytes / 1024
-    size_mb = size_kb / 1024
-    
-    if size_kb < 100:  # Small documents
-        return TIMEOUT_SMALL_DOC
-    elif size_mb < 1:  # Medium documents  
-        return TIMEOUT_MEDIUM_DOC
-    else:  # Large documents
-        # For very large documents, scale timeout further
-        if size_mb > 10:  # > 10MB
-            return TIMEOUT_LARGE_DOC * 2  # 40 minutes for huge documents
-        else:
-            return TIMEOUT_LARGE_DOC
+# Default timeout for document processing (5 minutes)
+DEFAULT_PROCESSING_TIMEOUT = 300  # 5 minutes for standard processing
+LARGE_FILE_PROCESSING_TIMEOUT = 3600  # 30 minutes for known large files
 
 # --- MULTI-PROCEEDING SYSTEM SETTINGS ---
 # Load proceeding titles from the generated JSON file

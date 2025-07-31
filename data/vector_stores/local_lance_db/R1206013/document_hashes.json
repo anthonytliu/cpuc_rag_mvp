@@ -9094,5 +9094,21 @@
     "chunk_count": 15,
     "total_chunks_processed": 15,
     "success_rate": "100.0%"
+  },
+  "7def10e9072b6a3d9b9308acc3a779c9": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M131/K173/131173969.PDF",
+    "title": "131173969",
+    "last_processed": "2025-07-29T22:25:32.131478",
+    "chunk_count": 6,
+    "total_chunks_processed": 6,
+    "success_rate": "100.0%"
+  },
+  "2a162795c275841f25e8d93c3375f0b3": {
+    "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M141/K905/141905162.PDF",
+    "title": "141905162",
+    "last_processed": "2025-07-29T22:25:56.564789",
+    "chunk_count": 18,
+    "total_chunks_processed": 18,
+    "success_rate": "100.0%"
   }
 }

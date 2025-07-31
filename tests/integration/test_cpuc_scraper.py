@@ -15,7 +15,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 # Import the scraper functions
-from cpuc_scraper import (
+from src.scrapers.cpuc_scraper import (
     CPUCSimplifiedScraper,
     ProgressBar
 )

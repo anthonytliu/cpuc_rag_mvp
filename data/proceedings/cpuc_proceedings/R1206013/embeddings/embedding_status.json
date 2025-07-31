@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-07-29T05:47:02.136080",
+  "last_updated": "2025-07-29T22:25:56.833438",
   "embedded_documents": {
     "e5b08cefc6fe3fa78c9587973d83904f": {
       "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M556/K053/556053017.PDF",
@@ -6774,6 +6774,66 @@
       "title": "sdge commentsadvanced der  demand flexibility management workshop",
       "embedding_date": "2025-07-29T05:47:02.136028",
       "processing_time": 4.587908983230591
+    },
+    "d44977ad4ca7ebfd10ce645061056f8e": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M155/K876/155876430.PDF",
+      "title": "155876430",
+      "embedding_date": "2025-07-29T22:25:56.833406",
+      "processing_time": 6.771087646484375e-05
+    },
+    "7ac692c68f12b0d4b88a8828748ae979": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M151/K988/151988120.PDF",
+      "title": "151988120",
+      "embedding_date": "2025-07-29T22:25:56.833418",
+      "processing_time": 2.1219253540039062e-05
+    },
+    "339defaff1f73b23eebb86fa5a1227e7": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M151/K988/151988469.PDF",
+      "title": "151988469",
+      "embedding_date": "2025-07-29T22:25:56.833421",
+      "processing_time": 1.71661376953125e-05
+    },
+    "3685bd05bb5613f41ecbeb95226c3435": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M151/K988/151988887.PDF",
+      "title": "151988887",
+      "embedding_date": "2025-07-29T22:25:56.833425",
+      "processing_time": 1.2159347534179688e-05
+    },
+    "93d8b03187cf201e6cad7cac20eb0846": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M151/K726/151726051.PDF",
+      "title": "151726051",
+      "embedding_date": "2025-07-29T22:25:56.833427",
+      "processing_time": 1.2159347534179688e-05
+    },
+    "e160446266848e2c87c1d61350168cf3": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M144/K897/144897239.PDF",
+      "title": "144897239",
+      "embedding_date": "2025-07-29T22:25:56.833429",
+      "processing_time": 1.8835067749023438e-05
+    },
+    "01d10b253814b9b9eca4da85c284f0ce": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M143/K989/143989538.PDF",
+      "title": "143989538",
+      "embedding_date": "2025-07-29T22:25:56.833430",
+      "processing_time": 1.4781951904296875e-05
+    },
+    "37282a3abf4a9c84668af80f2948286d": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M141/K905/141905206.PDF",
+      "title": "141905206",
+      "embedding_date": "2025-07-29T22:25:56.833432",
+      "processing_time": 1.1920928955078125e-05
+    },
+    "7def10e9072b6a3d9b9308acc3a779c9": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M131/K173/131173969.PDF",
+      "title": "131173969",
+      "embedding_date": "2025-07-29T22:25:56.833434",
+      "processing_time": 6.704965829849243
+    },
+    "2a162795c275841f25e8d93c3375f0b3": {
+      "url": "https://docs.cpuc.ca.gov/PublishedDocs/Efile/G000/M141/K905/141905162.PDF",
+      "title": "141905162",
+      "embedding_date": "2025-07-29T22:25:56.833435",
+      "processing_time": 24.375617027282715
     }
   },
   "failed_documents": {
@@ -6828,6 +6888,6 @@
       "last_attempt": "2025-07-29T05:47:02.136077"
     }
   },
-  "total_embedded": 1129,
+  "total_embedded": 1139,
   "version": "1.0"
 }

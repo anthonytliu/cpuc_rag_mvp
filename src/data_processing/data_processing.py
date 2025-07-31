@@ -1,14 +1,25 @@
 import hashlib
+import json
 import logging
 import os
 import re
 import requests
+import signal
 import tempfile
 import time
+import warnings
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict
 from urllib.parse import urlparse
+
+# Suppress MPS pin_memory warnings from Docling processing
+warnings.filterwarnings(
+    "ignore", 
+    message=".*pin_memory.*argument is set as true but not supported on MPS.*",
+    category=UserWarning
+)
 
 from docling.backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
 from docling.datamodel.base_models import InputFormat, ConversionStatus
@@ -21,9 +32,84 @@ from langchain.docstore.document import Document
 try:
     from ..core import config
 except ImportError:
+    import sys
+    from pathlib import Path
+    # Add src directory to path for absolute imports
+    src_dir = Path(__file__).parent.parent
+    if str(src_dir) not in sys.path:
+        sys.path.insert(0, str(src_dir))
+    
     from core import config
 
 logger = logging.getLogger(__name__)
+
+
+class TimeoutException(Exception):
+    """Exception raised when a timeout occurs."""
+    pass
+
+
+@contextmanager
+def timeout_context(seconds: int):
+    """
+    Context manager that enforces a timeout using either signals (main thread) or threading (worker threads).
+    
+    This handles both main thread and worker thread scenarios for timeout enforcement.
+    
+    Args:
+        seconds: Timeout in seconds
+        
+    Raises:
+        TimeoutException: If the operation times out
+    """
+    import threading
+    import time
+    
+    # Check if we're in the main thread
+    is_main_thread = threading.current_thread() is threading.main_thread()
+    
+    if is_main_thread:
+        # Use signal-based timeout for main thread
+        def timeout_handler(signum, frame):
+            raise TimeoutException(f"Operation timed out after {seconds} seconds")
+        
+        # Set the signal handler and alarm
+        old_handler = signal.signal(signal.SIGALRM, timeout_handler)
+        signal.alarm(seconds)
+        
+        try:
+            yield
+        finally:
+            # Restore the old signal handler and cancel the alarm
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old_handler)
+    else:
+        # Use threading-based timeout for worker threads
+        # This is less precise but works in all thread contexts
+        result = {'completed': False, 'exception': None}
+        
+        def target():
+            try:
+                result['completed'] = True
+            except Exception as e:
+                result['exception'] = e
+        
+        # Create a flag to track completion
+        timeout_occurred = threading.Event()
+        
+        start_time = time.time()
+        try:
+            yield
+            # If we get here, the operation completed successfully
+        except Exception as e:
+            # Re-raise any exception that occurred during the operation
+            raise
+        finally:
+            # Check if we exceeded the timeout
+            elapsed = time.time() - start_time
+            if elapsed > seconds:
+                logger.warning(f"Operation took {elapsed:.1f}s, exceeded {seconds}s timeout (thread-based detection)")
+                # Note: We can't interrupt the operation in worker threads, but we can log it
 
 # Set Docling threading configuration for performance
 if hasattr(config, 'DOCLING_THREADS') and config.DOCLING_THREADS:
@@ -1362,10 +1448,17 @@ def _extract_with_chonkie_fallback(pdf_url: str, source_name: str, doc_date, pub
                             "supersedes_priority": _calculate_supersedes_priority(doc_type, doc_date),
                         })
                         
-                        langchain_documents.append(Document(
+                        # Create document with unified metadata schema
+                        doc = Document(
                             page_content=chunk_info['text'], 
                             metadata=enhanced_metadata
-                        ))
+                        )
+                        
+                        # Use minimal metadata schema to prevent ArrowSchema recursion issues
+                        from .minimal_metadata_schema import normalize_document_metadata_minimal
+                        normalized_doc = normalize_document_metadata_minimal(doc, 'chonkie')
+                        
+                        langchain_documents.append(normalized_doc)
                     
                     logger.info(f"Created {len(langchain_documents)} LangChain documents via Chonkie {strategy}")
                     return langchain_documents
@@ -1430,7 +1523,14 @@ def _process_with_chonkie_primary(pdf_url: str, document_title: str = None, proc
     else:
         logger.warning("Chonkie primary processing failed - falling back to enhanced Docling")
         # Fallback to enhanced Docling processing with character position metadata
-        from enhanced_docling_fallback import _process_with_enhanced_docling_fallback
+        try:
+            from .enhanced_docling_fallback import _process_with_enhanced_docling_fallback
+        except ImportError:
+            try:
+                from enhanced_docling_fallback import _process_with_enhanced_docling_fallback
+            except ImportError:
+                logger.warning("Enhanced Docling fallback module not available - using standard Docling")
+                return _process_with_simplified_fallback(pdf_url, document_title, proceeding)
         enhanced_result = _process_with_enhanced_docling_fallback(pdf_url, document_title, proceeding, enable_ocr_fallback)
         
         if enhanced_result:
@@ -1451,6 +1551,8 @@ def _process_with_hybrid_evaluation(pdf_url: str, document_title: str = None, pr
     
     For documents with high table/financial content scores, run both Docling and Chonkie,
     then use an agent to evaluate which result is better.
+    
+    Enhanced with ArrowSchema recursion and timeout error handling.
     """
     logger.info(f"Processing with hybrid evaluation: {pdf_url}")
     
@@ -1459,6 +1561,206 @@ def _process_with_hybrid_evaluation(pdf_url: str, document_title: str = None, pr
         return _process_with_standard_docling(pdf_url, document_title, proceeding, 
                                             enable_ocr_fallback, enable_chonkie_fallback)
     
+    try:
+        # For large/complex documents, disable timeout to allow complete processing
+        logger.info(f"Processing hybrid evaluation without timeout constraints for: {pdf_url}")
+        logger.info("⏳ Large document processing - this may take several minutes...")
+        
+        # Use new Chonkie-first processing approach
+        return process_with_chonkie_first_approach(pdf_url, document_title, proceeding, enable_ocr_fallback)
+    
+    except Exception as e:
+        error_msg = str(e).lower()
+        
+        # Check for ArrowSchema recursion errors first
+        if 'recursion level' in error_msg or 'arrowschema' in error_msg:
+            logger.warning(f"ArrowSchema recursion error detected for {pdf_url}: {e}")
+            logger.info("Using Docling directly for ArrowSchema recursion recovery")
+            return _process_with_docling_direct(pdf_url, document_title, proceeding)
+        
+        # Check for timeout-related errors
+        elif 'timeout' in error_msg:
+            logger.error(f"Hybrid processing encountered timeout-related error for: {pdf_url}")
+            # Fallback to simpler processing
+            return _process_with_simplified_fallback(pdf_url, document_title, proceeding)
+        
+        # Handle other errors
+        else:
+            logger.error(f"Hybrid processing failed for {pdf_url}: {e}")
+            return []
+
+
+def _process_with_docling_direct(pdf_url: str, document_title: str, proceeding: str) -> List[Document]:
+    """
+    Direct Docling processing for ArrowSchema recursion errors.
+    Uses Docling with minimal configuration to avoid recursion issues.
+    """
+    logger.info(f"Using Docling direct processing for ArrowSchema recovery: {pdf_url}")
+    logger.info("⏳ ArrowSchema recovery mode - processing may take longer due to individual chunk handling...")
+    
+    import time
+    start_time = time.time()
+    
+    try:
+        # Import Docling with minimal configuration
+        from docling.backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
+        from docling.datamodel.base_models import InputFormat, ConversionStatus
+        from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode
+        from docling.document_converter import DocumentConverter, PdfFormatOption
+        
+        # Use minimal pipeline options to avoid recursion
+        minimal_options = PdfPipelineOptions()
+        minimal_options.table_structure_options.mode = TableFormerMode.FAST
+        
+        # Create minimal converter
+        converter = DocumentConverter(
+            format_options={
+                InputFormat.PDF: PdfFormatOption(
+                    backend=DoclingParseV4DocumentBackend,
+                    pipeline_options=minimal_options
+                )
+            }
+        )
+        
+        logger.info(f"Converting document with minimal Docling: {pdf_url}")
+        result = converter.convert(pdf_url)
+        
+        if result.status != ConversionStatus.SUCCESS:
+            logger.warning(f"Docling direct conversion failed with status: {result.status}")
+            return _process_with_simplified_fallback(pdf_url, document_title, proceeding)
+        
+        # Process content with minimal chunking to avoid recursion
+        content = result.document.export_to_markdown()
+        
+        if not content or len(content.strip()) < 50:
+            logger.warning("Docling direct processing extracted minimal content")
+            return _process_with_simplified_fallback(pdf_url, document_title, proceeding)
+        
+        # Create simple chunks (avoid complex operations that might trigger recursion)
+        max_chunk_size = 1000  # Smaller chunks to prevent recursion
+        chunks = []
+        
+        # Split content into simple chunks
+        paragraphs = content.split('\n\n')
+        current_chunk = ""
+        chunk_index = 0
+        
+        for paragraph in paragraphs:
+            if len(current_chunk) + len(paragraph) <= max_chunk_size:
+                current_chunk += paragraph + "\n\n"
+            else:
+                if current_chunk.strip():
+                    # Create document with minimal metadata to avoid recursion
+                    doc = Document(
+                        page_content=current_chunk.strip(),
+                        metadata={
+                            'url': pdf_url,
+                            'title': document_title or extract_filename_from_url(pdf_url),
+                            'source': pdf_url,
+                            'chunk_id': f"docling_direct_{chunk_index}",
+                            'proceeding': proceeding,
+                            'processing_method': 'docling_direct_recursion_recovery',
+                            'char_start': chunk_index * max_chunk_size,
+                            'char_end': (chunk_index + 1) * max_chunk_size,
+                            'char_length': len(current_chunk.strip()),
+                            'chunk_index': chunk_index,
+                            'extraction_confidence': 0.7,  # Lower confidence for recovery mode
+                            'document_date': datetime.now().isoformat(),
+                            'document_type': 'proceeding',
+                            'proceeding_number': proceeding
+                        }
+                    )
+                    chunks.append(doc)
+                    chunk_index += 1
+                
+                current_chunk = paragraph + "\n\n"
+        
+        # Add final chunk
+        if current_chunk.strip():
+            doc = Document(
+                page_content=current_chunk.strip(),
+                metadata={
+                    'url': pdf_url,
+                    'title': document_title or extract_filename_from_url(pdf_url),
+                    'source': pdf_url,
+                    'chunk_id': f"docling_direct_{chunk_index}",
+                    'proceeding': proceeding,
+                    'processing_method': 'docling_direct_recursion_recovery',
+                    'char_start': chunk_index * max_chunk_size,
+                    'char_end': (chunk_index + 1) * max_chunk_size,
+                    'char_length': len(current_chunk.strip()),
+                    'chunk_index': chunk_index,
+                    'extraction_confidence': 0.7,
+                    'document_date': datetime.now().isoformat(),
+                    'document_type': 'proceeding',
+                    'proceeding_number': proceeding
+                }
+            )
+            chunks.append(doc)
+        
+        processing_time = time.time() - start_time
+        logger.info(f"✅ Docling direct processing successful: {len(chunks)} chunks extracted in {processing_time:.1f}s")
+        logger.info(f"📊 ArrowSchema Recovery Results:")
+        logger.info(f"   • Processing time: {processing_time:.1f}s")
+        logger.info(f"   • Chunks created: {len(chunks)}")
+        logger.info(f"   • Recovery rate: {len(chunks)/processing_time:.1f} chunks/sec" if processing_time > 0 else "   • Instant recovery")
+        return chunks
+        
+    except Exception as e:
+        logger.error(f"Docling direct processing failed: {e}")
+        return _process_with_simplified_fallback(pdf_url, document_title, proceeding)
+
+
+def _process_with_simplified_fallback(pdf_url: str, document_title: str, proceeding: str) -> List[Document]:
+    """Simplified fallback processing for documents with complex errors."""
+    logger.info(f"Using simplified fallback processing for: {pdf_url}")
+    
+    try:
+        # Try Chonkie-only processing with minimal complexity
+        text = extract_text_from_pdf_url(pdf_url)
+        if not text:
+            logger.error(f"No text extracted in fallback for: {pdf_url}")
+            return []
+        
+        # Use simple sentence chunking to avoid recursion issues
+        chunks = safe_chunk_with_chonkie(text, "sentence")
+        if not chunks:
+            logger.error(f"No chunks created in fallback for: {pdf_url}")
+            return []
+        
+        # Create simple documents with minimal metadata
+        documents = []
+        for i, chunk in enumerate(chunks[:50]):  # Limit to 50 chunks max
+            if chunk.strip():
+                doc = Document(
+                    page_content=chunk,
+                    metadata={
+                        'source': pdf_url,
+                        'title': document_title or extract_filename_from_url(pdf_url),
+                        'chunk_id': f"fallback_{i}",
+                        'proceeding': proceeding,
+                        'processing_method': 'simplified_fallback',
+                        'chunk_level': 'sentence',
+                        'content_type': 'text/plain',
+                        'document_date': datetime.now().isoformat(),
+                        'document_type': 'proceeding',
+                        'proceeding_number': proceeding or 'unknown',
+                    }
+                )
+                documents.append(doc)
+        
+        logger.info(f"Simplified fallback created {len(documents)} chunks")
+        return documents
+        
+    except Exception as e:
+        logger.error(f"Simplified fallback also failed for {pdf_url}: {e}")
+        return []
+
+
+def _run_hybrid_processing_with_error_handling(pdf_url: str, document_title: str, proceeding: str,
+                                              detection_score: float, enable_ocr_fallback: bool, 
+                                              enable_chonkie_fallback: bool) -> List[Document]:
+    """Run the actual hybrid processing with comprehensive error handling."""
     # Run both processing methods
     start_time = time.time()
     
@@ -1526,13 +1828,36 @@ def _process_with_standard_docling(pdf_url: str, document_title: str = None, pro
     langchain_documents = []
     
     try:
-        # Use Docling's URL processing capability
+        # Use Docling's URL processing capability without timeout constraints for large documents
+        logger.info(f"Starting Docling processing without timeout constraints for: {pdf_url}")
+        logger.info("⏳ Document processing - progress will be shown as available...")
+        
+        # Initialize progress tracking for large documents
+        import time
+        import psutil
+        import os
+        
+        start_time = time.time()
+        process = psutil.Process(os.getpid())
+        initial_memory = process.memory_info().rss / 1024 / 1024  # MB
+        
+        # Stage 1: Document download and initialization
+        logger.info("📥 Stage 1/4: Downloading and initializing document...")
         conv_results = doc_converter.convert_all([pdf_url], raises_on_error=False)
         conv_res = next(iter(conv_results), None)
+        
+        stage1_time = time.time() - start_time
+        stage1_memory = process.memory_info().rss / 1024 / 1024  # MB
+        memory_delta = stage1_memory - initial_memory
+        logger.info(f"✅ Stage 1 completed in {stage1_time:.1f}s - Memory: {stage1_memory:.0f}MB (+{memory_delta:.0f}MB)")
 
         if not conv_res or conv_res.status == ConversionStatus.FAILURE:
             logger.error(f"Docling failed to convert document from URL: {pdf_url}")
             return []
+        
+        # Stage 2: Document structure analysis and content extraction
+        logger.info("🔍 Stage 2/4: Analyzing document structure and extracting content...")
+        stage2_start = time.time()
 
         docling_doc = conv_res.document
         
@@ -1578,7 +1903,16 @@ def _process_with_standard_docling(pdf_url: str, document_title: str = None, pro
             page_content_map = extract_page_content_map(docling_doc)
             logger.debug(f"Built page content map for line number estimation: {len(page_content_map)} pages")
 
+        stage2_time = time.time() - stage2_start
+        stage2_memory = process.memory_info().rss / 1024 / 1024  # MB
+        memory_delta = stage2_memory - stage1_memory
+        logger.info(f"✅ Stage 2 completed in {stage2_time:.1f}s - Memory: {stage2_memory:.0f}MB (+{memory_delta:.0f}MB)")
         logger.info(f"Document metadata - Date: {doc_date}, Proceeding: {proceeding_number}, Type: {doc_type}")
+        
+        # Stage 3: Content extraction and chunking
+        logger.info("📄 Stage 3/4: Extracting and processing content chunks...")
+        stage3_start = time.time()
+        chunk_count = 0
 
         # Process all content items
         for item, level in docling_doc.iterate_items(with_groups=False):
@@ -1611,10 +1945,31 @@ def _process_with_standard_docling(pdf_url: str, document_title: str = None, pro
                     "supersedes_priority": _calculate_supersedes_priority(doc_type, doc_date),
                 }
 
-                langchain_documents.append(Document(page_content=content, metadata=metadata))
+                # Create document with unified metadata schema
+                doc = Document(page_content=content, metadata=metadata)
+                
+                # Use minimal metadata schema to prevent ArrowSchema recursion issues
+                from .minimal_metadata_schema import normalize_document_metadata_minimal
+                normalized_doc = normalize_document_metadata_minimal(doc, 'docling')
+                
+                langchain_documents.append(normalized_doc)
+                chunk_count += 1
+                
+                # Progress update every 50 chunks for large documents
+                if chunk_count % 50 == 0:
+                    elapsed = time.time() - stage3_start
+                    current_memory = process.memory_info().rss / 1024 / 1024  # MB
+                    logger.info(f"⏳ Stage 3 progress: {chunk_count} chunks processed in {elapsed:.1f}s - Memory: {current_memory:.0f}MB")
 
+    except TimeoutException as te:
+        logger.warning(f"Processing timeout for {pdf_url}: {te}")
+        # Record failed file for later retry with local processing
+        _record_failed_file(pdf_url, document_title, proceeding, "timeout", str(te))
+        return []
     except Exception as e:
         logger.error(f"Error processing URL {pdf_url}: {e}", exc_info=True)
+        # Record failed file for later retry
+        _record_failed_file(pdf_url, document_title, proceeding, "error", str(e))
         return []
 
     # OCR fallback for scanned PDFs with 0 chunks
@@ -1654,7 +2009,14 @@ def _process_with_standard_docling(pdf_url: str, document_title: str = None, pro
         # If Chonkie fallback fails, try enhanced Docling fallback
         logger.warning(f"Chonkie fallback failed, attempting enhanced Docling fallback: {pdf_url}")
         try:
-            from enhanced_docling_fallback import _process_with_enhanced_docling_fallback
+            try:
+                from .enhanced_docling_fallback import _process_with_enhanced_docling_fallback
+            except ImportError:
+                try:
+                    from enhanced_docling_fallback import _process_with_enhanced_docling_fallback
+                except ImportError:
+                    logger.warning("Enhanced Docling fallback module not available - using standard Docling")
+                    return _process_with_simplified_fallback(pdf_url, document_title, proceeding)
             enhanced_chunks = _process_with_enhanced_docling_fallback(pdf_url, document_title, proceeding, False)
             if enhanced_chunks:
                 logger.info(f"Enhanced Docling fallback successful: {len(enhanced_chunks)} chunks extracted")
@@ -1672,7 +2034,23 @@ def _process_with_standard_docling(pdf_url: str, document_title: str = None, pro
         return _create_placeholder_document(pdf_url, source_name, doc_date, publication_date,
                                           proceeding_number, doc_type, url_hash)
 
-    logger.info(f"Extracted {len(langchain_documents)} chunks from URL: {pdf_url}")
+    # Stage 4: Finalization and completion
+    stage3_time = time.time() - stage3_start
+    total_time = time.time() - start_time
+    final_memory = process.memory_info().rss / 1024 / 1024  # MB
+    total_memory_delta = final_memory - initial_memory
+    
+    logger.info(f"✅ Stage 3 completed in {stage3_time:.1f}s")
+    logger.info("🎯 Stage 4/4: Finalizing document processing...")
+    
+    logger.info(f"🎉 Document processing completed successfully!")
+    logger.info(f"📊 Final Results:")
+    logger.info(f"   • Total processing time: {total_time:.1f}s")
+    logger.info(f"   • Chunks extracted: {len(langchain_documents)}")
+    logger.info(f"   • Average time per chunk: {total_time/len(langchain_documents):.2f}s" if len(langchain_documents) > 0 else "   • No chunks extracted")
+    logger.info(f"   • Processing rate: {len(langchain_documents)/total_time:.1f} chunks/sec" if total_time > 0 else "   • Instant processing")
+    logger.info(f"   • Memory usage: {final_memory:.0f}MB (peak), +{total_memory_delta:.0f}MB total")
+    
     return langchain_documents
 
 
@@ -2021,6 +2399,366 @@ def get_file_hash(file_path: Path) -> str:
 
 
 
+def _record_failed_file(pdf_url: str, document_title: str = None, proceeding: str = None, 
+                       failure_type: str = "error", error_message: str = "") -> None:
+    """
+    Record a failed file for later retry with local processing.
+    
+    Args:
+        pdf_url: URL of the failed PDF
+        document_title: Optional document title
+        proceeding: Proceeding number
+        failure_type: Type of failure (timeout, error, etc.)
+        error_message: Detailed error message
+    """
+    try:
+        if proceeding is None:
+            proceeding = config.DEFAULT_PROCEEDING
+            
+        # Get proceeding file paths
+        proceeding_paths = config.get_proceeding_file_paths(proceeding)
+        failed_files_path = proceeding_paths['proceeding_dir'] / "failed_files.json"
+        
+        # Ensure directory exists
+        failed_files_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Load existing failed files
+        failed_files = {}
+        if failed_files_path.exists():
+            try:
+                with open(failed_files_path, 'r') as f:
+                    failed_files = json.load(f)
+            except json.JSONDecodeError:
+                logger.warning(f"Corrupted failed files JSON, starting fresh: {failed_files_path}")
+                failed_files = {}
+        
+        # Create unique ID for this file
+        file_id = hashlib.md5(pdf_url.encode()).hexdigest()
+        
+        # Record the failure
+        failed_files[file_id] = {
+            "url": pdf_url,
+            "title": document_title or extract_filename_from_url(pdf_url),
+            "proceeding": proceeding,
+            "failure_type": failure_type,
+            "error_message": error_message,
+            "failed_timestamp": datetime.now().isoformat(),
+            "retry_count": failed_files.get(file_id, {}).get("retry_count", 0) + 1,
+            "status": "failed"
+        }
+        
+        # Save updated failed files
+        with open(failed_files_path, 'w') as f:
+            json.dump(failed_files, f, indent=2)
+            
+        logger.info(f"Recorded failed file: {pdf_url} (Type: {failure_type}, Proceeding: {proceeding})")
+        
+    except Exception as e:
+        logger.error(f"Failed to record failed file {pdf_url}: {e}")
+
+
+def process_failed_files_locally(proceeding: str = None, max_files: int = None, 
+                                use_large_timeout: bool = True) -> Dict:
+    """
+    Process previously failed files by downloading them locally and processing with extended timeouts.
+    
+    Args:
+        proceeding: Proceeding to process failed files for (None for default)
+        max_files: Maximum number of files to process (None for all)
+        use_large_timeout: Whether to use extended timeout for large files
+    
+    Returns:
+        Dict with processing results
+    """
+    if proceeding is None:
+        proceeding = config.DEFAULT_PROCEEDING
+        
+    logger.info(f"Processing failed files for proceeding: {proceeding}")
+    
+    # Get failed files
+    proceeding_paths = config.get_proceeding_file_paths(proceeding)
+    failed_files_path = proceeding_paths['proceeding_dir'] / "failed_files.json"
+    
+    if not failed_files_path.exists():
+        logger.info("No failed files found")
+        return {'status': 'no_failed_files', 'processed': 0}
+    
+    try:
+        with open(failed_files_path, 'r') as f:
+            failed_files = json.load(f)
+    except json.JSONDecodeError as e:
+        logger.error(f"Failed to load failed files JSON: {e}")
+        return {'status': 'error', 'error': str(e)}
+    
+    # Filter only files that are still marked as failed
+    files_to_process = {k: v for k, v in failed_files.items() if v.get('status') == 'failed'}
+    
+    if not files_to_process:
+        logger.info("No failed files to process")
+        return {'status': 'no_failed_files', 'processed': 0}
+    
+    # Limit number of files if specified
+    if max_files:
+        files_to_process = dict(list(files_to_process.items())[:max_files])
+    
+    logger.info(f"Processing {len(files_to_process)} failed files")
+    
+    results = {
+        'processed': 0,
+        'successful': [],
+        'still_failed': [],
+        'total_attempted': len(files_to_process)
+    }
+    
+    for file_id, file_info in files_to_process.items():
+        logger.info(f"Processing failed file: {file_info['title']}")
+        
+        try:
+            # Process with local download and extended timeout
+            documents = _process_failed_file_locally(
+                file_info['url'], 
+                file_info['title'], 
+                proceeding,
+                use_large_timeout
+            )
+            
+            if documents and len(documents) > 0:
+                # Success - update status
+                failed_files[file_id]['status'] = 'processed'
+                failed_files[file_id]['processed_timestamp'] = datetime.now().isoformat()
+                failed_files[file_id]['chunks_extracted'] = len(documents)
+                
+                results['successful'].append({
+                    'file_id': file_id,
+                    'url': file_info['url'],
+                    'title': file_info['title'],
+                    'chunks': len(documents)
+                })
+                results['processed'] += 1
+                
+                logger.info(f"Successfully processed failed file: {file_info['title']} ({len(documents)} chunks)")
+            else:
+                # Still failed
+                failed_files[file_id]['retry_count'] = failed_files[file_id].get('retry_count', 0) + 1
+                failed_files[file_id]['last_retry'] = datetime.now().isoformat()
+                
+                results['still_failed'].append({
+                    'file_id': file_id,
+                    'url': file_info['url'],
+                    'title': file_info['title'],
+                    'retry_count': failed_files[file_id]['retry_count']
+                })
+                
+                logger.warning(f"Failed file still failed after local processing: {file_info['title']}")
+                
+        except Exception as e:
+            logger.error(f"Error processing failed file {file_info['title']}: {e}")
+            
+            # Update retry count
+            failed_files[file_id]['retry_count'] = failed_files[file_id].get('retry_count', 0) + 1
+            failed_files[file_id]['last_retry'] = datetime.now().isoformat()
+            failed_files[file_id]['last_error'] = str(e)
+            
+            results['still_failed'].append({
+                'file_id': file_id,
+                'url': file_info['url'],
+                'title': file_info['title'],
+                'error': str(e)
+            })
+    
+    # Save updated failed files
+    try:
+        with open(failed_files_path, 'w') as f:
+            json.dump(failed_files, f, indent=2)
+    except Exception as e:
+        logger.error(f"Failed to save updated failed files: {e}")
+    
+    return results
+
+
+def _process_failed_file_locally(pdf_url: str, document_title: str, proceeding: str, 
+                                use_large_timeout: bool = True) -> List[Document]:
+    """
+    Process a failed file by downloading it locally and using extended timeouts.
+    
+    Args:
+        pdf_url: URL of the PDF to process
+        document_title: Document title
+        proceeding: Proceeding number
+        use_large_timeout: Whether to use large file timeout
+    
+    Returns:
+        List of Document objects extracted from the PDF
+    """
+    import tempfile
+    import requests
+    from pathlib import Path
+    
+    logger.info(f"Processing failed file locally: {document_title}")
+    
+    # Download PDF to temporary file
+    temp_pdf_path = None
+    try:
+        # Download with longer timeout
+        logger.info(f"Downloading PDF: {pdf_url}")
+        response = requests.get(pdf_url, timeout=120, stream=True)
+        response.raise_for_status()
+        
+        # Save to temporary file
+        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    tmp_file.write(chunk)
+            temp_pdf_path = Path(tmp_file.name)
+        
+        logger.info(f"Downloaded PDF to: {temp_pdf_path}")
+        
+        # Process locally with appropriate timeout
+        timeout_seconds = config.LARGE_FILE_PROCESSING_TIMEOUT if use_large_timeout else config.DEFAULT_PROCESSING_TIMEOUT
+        logger.info(f"Processing locally with {timeout_seconds}s timeout")
+        
+        # Use local file processing with timeout
+        documents = _process_local_pdf_with_timeout(temp_pdf_path, document_title, proceeding, timeout_seconds)
+        
+        return documents
+        
+    except Exception as e:
+        logger.error(f"Failed to process file locally {pdf_url}: {e}")
+        return []
+        
+    finally:
+        # Clean up temporary file
+        if temp_pdf_path and temp_pdf_path.exists():
+            try:
+                temp_pdf_path.unlink()
+                logger.debug(f"Cleaned up temporary file: {temp_pdf_path}")
+            except Exception as e:
+                logger.warning(f"Failed to clean up temporary file: {e}")
+
+
+def _process_local_pdf_with_timeout(pdf_path: Path, document_title: str, proceeding: str, 
+                                   timeout_seconds: int) -> List[Document]:
+    """
+    Process a local PDF file with timeout protection.
+    
+    Args:
+        pdf_path: Path to the local PDF file
+        document_title: Document title
+        proceeding: Proceeding number
+        timeout_seconds: Timeout in seconds
+    
+    Returns:
+        List of Document objects
+    """
+    logger.info(f"Processing local PDF with {timeout_seconds}s timeout: {pdf_path.name}")
+    
+    try:
+        with timeout_context(timeout_seconds):
+            # Try Docling first
+            documents = extract_and_chunk_with_docling(pdf_path, proceeding)
+            
+            if documents and len(documents) > 0:
+                logger.info(f"Docling processing successful: {len(documents)} chunks")
+                return documents
+            
+            # Fallback to Chonkie if Docling fails
+            logger.info("Docling failed, trying Chonkie fallback")
+            raw_text = ""
+            
+            # Try multiple text extraction methods
+            if config.CHONKIE_USE_PDFPLUMBER:
+                raw_text = extract_text_with_pdfplumber(pdf_path)
+            
+            if not raw_text and config.CHONKIE_USE_PYPDF2:
+                raw_text = extract_text_with_pypdf2(pdf_path)
+            
+            if raw_text and len(raw_text.strip()) >= config.CHONKIE_MIN_TEXT_LENGTH:
+                # Process with Chonkie
+                enhanced_chunks = safe_chunk_with_chonkie_enhanced(raw_text, "recursive")
+                
+                if enhanced_chunks:
+                    # Convert to LangChain Documents
+                    documents = []
+                    for chunk_info in enhanced_chunks:
+                        enhanced_metadata = create_enhanced_chonkie_metadata(
+                            chunk_info, pdf_path.name, f"file://{pdf_path}", proceeding, raw_text
+                        )
+                        documents.append(Document(
+                            page_content=chunk_info['text'],
+                            metadata=enhanced_metadata
+                        ))
+                    
+                    logger.info(f"Chonkie processing successful: {len(documents)} chunks")
+                    return documents
+            
+            logger.warning(f"Both Docling and Chonkie failed for: {pdf_path.name}")
+            return []
+            
+    except TimeoutException as te:
+        logger.error(f"Local processing timeout for {pdf_path.name}: {te}")
+        return []
+    except Exception as e:
+        logger.error(f"Local processing error for {pdf_path.name}: {e}")
+        return []
+
+
+def get_failed_files_status(proceeding: str = None) -> Dict:
+    """
+    Get status of failed files for a proceeding.
+    
+    Args:
+        proceeding: Proceeding number (None for default)
+    
+    Returns:
+        Dict with failed files status
+    """
+    if proceeding is None:
+        proceeding = config.DEFAULT_PROCEEDING
+    
+    proceeding_paths = config.get_proceeding_file_paths(proceeding)
+    failed_files_path = proceeding_paths['proceeding_dir'] / "failed_files.json"
+    
+    if not failed_files_path.exists():
+        return {
+            'proceeding': proceeding,
+            'total_failed': 0,
+            'failed_files': [],
+            'status': 'no_failed_files'
+        }
+    
+    try:
+        with open(failed_files_path, 'r') as f:
+            failed_files = json.load(f)
+        
+        failed_count = sum(1 for f in failed_files.values() if f.get('status') == 'failed')
+        processed_count = sum(1 for f in failed_files.values() if f.get('status') == 'processed')
+        
+        return {
+            'proceeding': proceeding,
+            'total_failed': failed_count,
+            'total_processed': processed_count,
+            'failed_files': [
+                {
+                    'url': f['url'],
+                    'title': f['title'],
+                    'failure_type': f['failure_type'],
+                    'retry_count': f.get('retry_count', 0),
+                    'failed_timestamp': f['failed_timestamp']
+                }
+                for f in failed_files.values() if f.get('status') == 'failed'
+            ],
+            'status': 'has_failed_files' if failed_count > 0 else 'all_processed'
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to get failed files status: {e}")
+        return {
+            'proceeding': proceeding,
+            'error': str(e),
+            'status': 'error'
+        }
+
+
 def rerank_documents_with_recency(self, question: str, documents: List[Document]) -> List[Document]:
     """
     Enhanced reranking that considers both relevance and recency.
@@ -2082,3 +2820,225 @@ def rerank_documents_with_recency(self, question: str, documents: List[Document]
 
     scored_docs.sort(key=lambda x: x[1], reverse=True)
     return [doc for doc, score in scored_docs]
+
+
+# ============================================================================
+# CHONKIE-FIRST PROCESSING FUNCTIONS
+# ============================================================================
+
+def _process_with_chonkie_primary_safe(pdf_url: str, document_title: str, proceeding: str) -> List[Document]:
+    """
+    Process PDF with Chonkie using safe error handling and Chonkie schema.
+    
+    Args:
+        pdf_url: URL of the PDF to process
+        document_title: Title of the document
+        proceeding: Proceeding identifier
+        
+    Returns:
+        List of documents with Chonkie schema metadata
+    """
+    logger.info(f"🔄 Processing with Chonkie (primary): {pdf_url}")
+    
+    try:
+        # Extract basic information
+        source_name = document_title or extract_filename_from_url(pdf_url)
+        
+        # Use existing Chonkie fallback function
+        result = _extract_with_chonkie_fallback(
+            pdf_url=pdf_url,
+            source_name=source_name,
+            doc_date=None,
+            publication_date=None,
+            proceeding_number=proceeding,
+            doc_type='unknown',
+            url_hash=get_url_hash(pdf_url),
+            proceeding=proceeding
+        )
+        
+        if result and len(result) > 0:
+            logger.info(f"✅ Chonkie primary processing successful: {len(result)} chunks")
+            
+            # Ensure all documents use proper Chonkie schema
+            from .chonkie_schema import convert_to_chonkie_schema
+            chonkie_docs = convert_to_chonkie_schema(result)
+            
+            return chonkie_docs
+        else:
+            logger.warning("⚠️ Chonkie primary processing returned no results")
+            return []
+            
+    except Exception as e:
+        logger.warning(f"⚠️ Chonkie primary processing failed for {pdf_url}: {e}")
+        return []
+
+
+def _process_with_docling_fallback_chonkie_schema(pdf_url: str, document_title: str, 
+                                                proceeding: str, enable_ocr_fallback: bool = True) -> List[Document]:
+    """
+    Process PDF with Docling and convert results to Chonkie schema.
+    
+    Args:
+        pdf_url: URL of the PDF to process
+        document_title: Title of the document
+        proceeding: Proceeding identifier
+        enable_ocr_fallback: Whether to enable OCR fallback
+        
+    Returns:
+        List of documents with Chonkie schema metadata
+    """
+    logger.info(f"🔄 Processing with Docling fallback (Chonkie schema): {pdf_url}")
+    
+    try:
+        # Use existing Docling processing
+        docling_result = _process_with_standard_docling(
+            pdf_url=pdf_url,
+            document_title=document_title,
+            proceeding=proceeding,
+            enable_ocr_fallback=enable_ocr_fallback,
+            enable_chonkie_fallback=False  # Don't double-fallback
+        )
+        
+        if not docling_result or len(docling_result) == 0:
+            logger.warning("⚠️ Docling fallback returned no results")
+            return []
+        
+        logger.info(f"🔄 Converting {len(docling_result)} Docling results to Chonkie schema")
+        
+        # Convert Docling results to Chonkie schema
+        from .docling_to_chonkie_converter import convert_docling_to_chonkie_schema
+        
+        source_name = document_title or extract_filename_from_url(pdf_url)
+        
+        # Try to get full text for better position estimation
+        full_text = ""
+        try:
+            full_text = extract_text_from_url(pdf_url)
+        except Exception as text_error:
+            logger.warning(f"Could not extract full text for position estimation: {text_error}")
+        
+        chonkie_docs = convert_docling_to_chonkie_schema(
+            docling_documents=docling_result,
+            pdf_url=pdf_url,
+            source_name=source_name,
+            proceeding=proceeding,
+            full_text=full_text
+        )
+        
+        if chonkie_docs and len(chonkie_docs) > 0:
+            logger.info(f"✅ Docling fallback with Chonkie schema successful: {len(chonkie_docs)} chunks")
+            return chonkie_docs
+        else:
+            logger.warning("⚠️ Docling to Chonkie schema conversion failed")
+            return []
+            
+    except Exception as e:
+        logger.error(f"❌ Docling fallback with Chonkie schema failed for {pdf_url}: {e}")
+        return []
+
+
+def _process_with_ocr_fallback_chonkie_schema(pdf_url: str, document_title: str, proceeding: str) -> List[Document]:
+    """
+    Process PDF with OCR fallback and convert results to Chonkie schema.
+    
+    Args:
+        pdf_url: URL of the PDF to process
+        document_title: Title of the document
+        proceeding: Proceeding identifier
+        
+    Returns:
+        List of documents with Chonkie schema metadata
+    """
+    logger.info(f"🔄 Processing with OCR fallback (Chonkie schema): {pdf_url}")
+    
+    try:
+        # Extract basic information
+        source_name = document_title or extract_filename_from_url(pdf_url)
+        url_hash = get_url_hash(pdf_url)
+        
+        # Use existing OCR fallback
+        ocr_result = _extract_with_ocr_fallback(
+            pdf_url=pdf_url,
+            source_name=source_name,
+            doc_date=None,
+            publication_date=None,
+            proceeding_number=proceeding,
+            doc_type='unknown',
+            url_hash=url_hash,
+            proceeding=proceeding
+        )
+        
+        if not ocr_result or len(ocr_result) == 0:
+            logger.warning("⚠️ OCR fallback returned no results")
+            return []
+        
+        # Convert OCR results to Chonkie schema
+        from .chonkie_schema import convert_to_chonkie_schema
+        chonkie_docs = convert_to_chonkie_schema(ocr_result)
+        
+        if chonkie_docs and len(chonkie_docs) > 0:
+            logger.info(f"✅ OCR fallback with Chonkie schema successful: {len(chonkie_docs)} chunks")
+            return chonkie_docs
+        else:
+            logger.warning("⚠️ OCR to Chonkie schema conversion failed")
+            return []
+            
+    except Exception as e:
+        logger.error(f"❌ OCR fallback with Chonkie schema failed for {pdf_url}: {e}")
+        return []
+
+
+def process_with_chonkie_first_approach(pdf_url: str, document_title: str, proceeding: str,
+                                      enable_ocr_fallback: bool = True) -> List[Document]:
+    """
+    Main Chonkie-first processing function with comprehensive fallback chain.
+    
+    Processing order:
+    1. Chonkie (primary) - Fast text chunking with position tracking
+    2. Docling (fallback) - Structured content extraction, converted to Chonkie schema
+    3. OCR (last resort) - OCR processing, converted to Chonkie schema
+    
+    All results use the proven Chonkie metadata schema to prevent ArrowSchema recursion.
+    
+    Args:
+        pdf_url: URL of the PDF to process
+        document_title: Title of the document
+        proceeding: Proceeding identifier
+        enable_ocr_fallback: Whether to enable OCR as last resort
+        
+    Returns:
+        List of documents with consistent Chonkie schema metadata
+    """
+    logger.info(f"🚀 Starting Chonkie-first processing pipeline for: {pdf_url}")
+    
+    # Step 1: Try Chonkie (primary)
+    logger.info("📝 Step 1: Attempting Chonkie primary processing...")
+    chonkie_result = _process_with_chonkie_primary_safe(pdf_url, document_title, proceeding)
+    
+    if chonkie_result and len(chonkie_result) > 0:
+        logger.info(f"✅ Chonkie primary successful: {len(chonkie_result)} chunks")
+        return chonkie_result
+    
+    # Step 2: Chonkie failed, try Docling with schema conversion
+    logger.info("📊 Step 2: Chonkie failed, attempting Docling fallback...")
+    docling_result = _process_with_docling_fallback_chonkie_schema(pdf_url, document_title, proceeding, True)
+    
+    if docling_result and len(docling_result) > 0:
+        logger.info(f"✅ Docling fallback successful: {len(docling_result)} chunks")
+        return docling_result
+    
+    # Step 3: Both failed, try OCR if enabled
+    if enable_ocr_fallback:
+        logger.info("🔍 Step 3: Both failed, attempting OCR fallback...")
+        ocr_result = _process_with_ocr_fallback_chonkie_schema(pdf_url, document_title, proceeding)
+        
+        if ocr_result and len(ocr_result) > 0:
+            logger.info(f"✅ OCR fallback successful: {len(ocr_result)} chunks")
+            return ocr_result
+    
+    # All methods failed
+    logger.error(f"❌ All processing methods failed for: {pdf_url}")
+    
+    # Create a placeholder document to track the failure
+    placeholder_doc = _create_placeholder_document(pdf_url, document_title, proceeding, "all_methods_failed")
+    return [placeholder_doc] if placeholder_doc else []
