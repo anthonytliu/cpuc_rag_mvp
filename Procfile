@@ -1,0 +1,2 @@
+web: streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+release: python -c "from src.core.config import get_active_proceedings; print(f'Found {len(get_active_proceedings())} active proceedings')"

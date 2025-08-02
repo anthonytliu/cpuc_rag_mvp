@@ -1,0 +1,147 @@
+# Development files
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+
+# Virtual environments (Railway will create its own)
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Large data directories (should be in cloud storage)
+# Exclude all data directories since we're using cloud storage
+data/
+
+# Vector database files - all variations
+*.lance
+*.lance/
+*_documents.lance
+*_documents.lance/
+*_metadata.lance
+*_metadata.lance/
+*.parquet
+*.arrow
+*.feather
+document_hashes.json
+processing_checkpoint.json
+
+# Specific LanceDB patterns
+**/*.lance
+**/data/*.lance
+**/_transactions/
+**/_versions/
+**/data/
+
+# Large binary files
+*.pdf
+*.docx
+*.xlsx
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Development tools
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.spyderproject
+.spyproject
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+checkpoint_*/
+
+# Test files and reports
+test_*.py
+*_test.py
+tests/
+comprehensive_system_test_report.txt
+test_results/
+
+# Documentation (will be served from git)
+*.md
+docs/
+README.md
+
+# Git files (Railway will clone fresh from repo)
+.git/
+.gitignore
+.gitattributes
+.gitlfs/
+
+# Large Git LFS objects
+*.lfs
+.git/lfs/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
